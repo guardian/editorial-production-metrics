@@ -1,0 +1,5 @@
+name: atom-workshop
+mappings:
+  - prefix: atomworkshop
+    port: 9050
+    path: /

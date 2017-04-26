@@ -1,0 +1,7 @@
+target
+.idea
+logs/
+node_modules/
+
+public/build
+

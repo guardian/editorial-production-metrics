@@ -1,0 +1,149 @@
+@()
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <title>Atom Workshop</title>
+        <link rel="stylesheet" href="@routes.Assets.versioned("build/main.css")">
+    </head>
+
+    <body>
+        <div class="wrap">
+
+                <!-- Top toolbar -->
+            <div class="toolbar">
+
+                <header class="toolbar__container">
+                    <a class="toolbar__title" href="/">
+                        <div class="toolbar__logo"></div>
+                        <div class="toolbar__page-icon"></div>
+                        <div class="toolbar__title__hover-state">
+                            <span class="toolbar__title__hover-state__subtitle">Back to</span><br />
+                            <span class="toolbar__title__hover-state__title">Dashboard</span>
+                        </div>
+                    </a>
+                </header>
+
+
+                <div class="toolbar__container">
+                    <nav class="main-nav" role="navigation">
+                        <ul class="main-nav__list">
+                            <li class="toolbar__item main-nav__item">
+                                Plain text
+                            </li>
+                            <li class="toolbar__item toolbar__item--no-spacing main-nav__item">
+                                <a href="#" class="toolbar__button main-nav__link">Link 1</a>
+                            </li>
+                            <li class="toolbar__item toolbar__item--no-spacing main-nav__item">
+                                <a href="#" class="toolbar__button main-nav__link">Link 2</a>
+                            </li>
+                            <li class="main-nav__item toolbar__item toolbar__item--no-spacing ">
+                                <label class="toolbar__item__dropdown-label toolbar__button" >Toolbar dropdown
+                                    <select class="toolbar__item__dropdown">
+                                        <option value="#">Option 1</option>
+                                        <option value="#">Option 2</option>
+                                        <option value="#">Option 3</option>
+                                        <option value="#">Option 4</option>
+                                    </select>
+                                </label>
+                            </li>
+                        </ul>
+                    </nav>
+                    <button class="toolbar__item toolbar__button">Button</button>
+                </div>
+            </div>
+
+            <div class="page">
+
+                <main class="container" role="main">
+
+                    <section class="page__section">
+
+                        <h2 class="page__subheading">Atom Workshop</h2>
+
+                        <h1>Header 1</h1>
+                        <h2>Header 2</h2>
+                        <h3>Header 3</h3>
+
+                        <h1 class="page__heading">Page heading</h1>
+                        <h2 class="page__subheading">Page subheading</h2>
+                        <p class="paragraph">Paragraph. The narwhal, or narwhale (Monodon monoceros), is a medium-sized toothed whale that possesses a large "tusk" from a protruding canine tooth. It lives year-round in the Arctic waters around Greenland, Canada, and Russia. It is one of two living species of whale in the Monodontidae family, along with the beluga whale. The narwhal males are distinguished by a long, straight, helical tusk, which is an elongated upper left canine. The narwhal was one of many species described by Carl Linnaeus in his publication Systema Naturae in 1758.</p>
+
+                        <p class="paragraph">Like the beluga, narwhals are medium-sized whales. For both sexes, excluding the male's tusk, the total body size can range from 3.95 to 5.5 m (13.0 to 18.0 ft); the males are slightly larger than the females. The average weight of an adult narwhal is 800 to 1,600 kg (1,800 to 3,500 lb). At around 11 to 13 years old, the males become sexually mature; females become sexually mature at about 5 to 8 years old. Narwhals do not have a dorsal fin, and their neck vertebrae are jointed like those of other mammals, not fused as in dolphins and most whales.</p>
+
+                    </section>
+
+                    <section class="page__section">
+
+                        <h2 class="page__subheading">Forms</h2>
+
+                        <form class="form">
+
+                            <div class="form__row">
+                                <label for="field-1" class="form__label">Form label</label>
+                                <input id="field-1" type="text" class="form__field" placeholder="Form fields will take up the width of their container">
+                            </div>
+
+                            <div class="form__row">
+                                <label for="field-2" class="form__label">Form label</label>
+                                <select class="form__field form__field--select" name="select1" id="field-2">
+                                    <option value="#">Option 1</option>
+                                    <option value="#">Option 2</option>
+                                    <option value="#">Option 3</option>
+                                    <option value="#">Option 4</option>
+                                </select>
+                            </div>
+
+                        </form>
+
+                    </section>
+
+                    <section class="page__section">
+
+                        <h2 class="page__subheading">Tables</h2>
+
+                        <div class="page__section">
+                            <table class="table">
+                                <tr class="table__header-row">
+                                    <th class="table__header">Table header</th>
+                                    <th class="table__header">Table header</th>
+                                    <th class="table__header">Table header</th>
+                                    <th class="table__header">Table header</th>
+                                </tr>
+                                <tr class="table__row">
+                                    <td class="table__item">
+                                        <a class="table__link" href="#">Link inside a table cell</a>
+                                    </td>
+                                    <td class="table__item">Some data</td>
+                                    <td class="table__item">More data</td>
+                                    <td class="table__item">Even more data</td>
+                                </tr>
+                                <tr class="table__row table__row--highlight">
+                                    <td class="table__item">
+                                        <a class="table__link" href="#">A highlighted table cell</a>
+                                    </td>
+                                    <td class="table__item">Some data</td>
+                                    <td class="table__item">More data</td>
+                                    <td class="table__item">Even more data</td>
+                                </tr>
+                                <tr class="table__row">
+                                    <td class="table__item">
+                                        <a class="table__link" href="#">Link inside a table cell</a>
+                                    </td>
+                                    <td class="table__item">Some data</td>
+                                    <td class="table__item">More data</td>
+                                    <td class="table__item">Even more data</td>
+                                </tr>
+                            </table>
+                        </div>
+
+                    </section>
+
+                </main>
+
+            </div>
+        </div>
+        <script src="@routes.Assets.versioned("build/app.js")" type="application/javascript"></script>
+    </body>
+</html>

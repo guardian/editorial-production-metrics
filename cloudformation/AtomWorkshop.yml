@@ -1,0 +1,256 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  VpcId:
+    Type: String
+    Description: VpcId of your existing Virtual Private Cloud (VPC)
+  GuardianIpRange:
+    Type: String
+    Description: Ip range for the office
+    Default: 77.91.248.0/21
+  InstanceType:
+    Type: String
+    Description: AWS instance type for the autoscaling group.
+    Default: t2.micro
+    AllowedValues:
+    - t2.micro
+    - t2.small
+    - t2.medium
+  App:
+    Type: String
+    Description: Name of the app
+  Stack:
+    Type: String
+    Description: Name of the stack
+  Stage:
+    Type: String
+    Description: Name of the stage
+    AllowedValues:
+    - CODE
+    - PROD
+  ImageId:
+    Type: String
+    Description: AMI ID
+  PrivateSubnets:
+    Type: List<AWS::EC2::Subnet::Id>
+    Description: The list of SubnetIds in your Virtual Private Cloud (VPC)
+  PublicSubnets:
+    Type: List<AWS::EC2::Subnet::Id>
+    Description: Subnets to use in VPC for public internet-facing ELB
+  KeyName:
+    Type: AWS::EC2::KeyPair::KeyName
+    Description: Name of an existing key pair, which will be given root access to
+      the instances
+  ELBSSLCertificate:
+    Type: String
+    Description: ELB SSL Certificate ARN
+  ELKKinesisStream:
+    Type: String
+    Description: Name of the kinesis stream for logging to ELK (logs.gutools)
+  VulnerabilityScanningSecurityGroup:
+    Type: AWS::EC2::SecurityGroup::Id
+    Description: Security group that grants access to the account's Vulnerability Scanner
+Mappings:
+  Config:
+    IpRange:
+      CODE: 77.91.248.0/21
+      PROD: 0.0.0.0/0
+    DesiredCapacity:
+      CODE: 1
+      PROD: 3
+    MaxSize:
+      CODE: 2
+      PROD: 6
+    MinSize:
+      CODE: 1
+      PROD: 3
+Resources:
+  LaunchConfig:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Properties:
+      IamInstanceProfile: !Sub ${InstanceProfile.Arn}
+      ImageId: !Ref ImageId
+      InstanceType: !Ref InstanceType
+      KeyName: !Ref KeyName
+      SecurityGroups:
+        - Ref: SSHSecurityGroup
+        - Ref: InstanceSecurityGroup
+        - Ref: VulnerabilityScanningSecurityGroup
+      UserData:
+        Fn::Base64:
+          !Sub |
+              #!/bin/bash -ev
+              aws s3 cp s3://composer-dist/flexible/${Stage}/${App}/${App}_1.0_all.deb /tmp
+              dpkg -i /tmp/${App}_1.0_all.deb
+  LoadBalancerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Permit HTTPS access on port 443, egress to port 9000
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: '443'
+        ToPort: '443'
+        CidrIp: !FindInMap [ Config, IpRange, !Ref Stage ]
+      SecurityGroupEgress:
+      - IpProtocol: tcp
+        FromPort: '9000'
+        ToPort: '9000'
+        CidrIp: '0.0.0.0/0'
+  SSHSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow SSH access from the office
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: '22'
+        ToPort: '22'
+        CidrIp: '10.0.0.0/8'
+  InstanceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow instance access from the office
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: '9000'
+        ToPort: '9000'
+        CidrIp: !Ref GuardianIpRange
+      - IpProtocol: tcp
+        FromPort: '9000'
+        ToPort: '9000'
+        SourceSecurityGroupId: !Ref LoadBalancerSecurityGroup
+  AutoScalingGroup:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      VPCZoneIdentifier: !Ref PrivateSubnets
+      Cooldown: '300'
+      DesiredCapacity: !FindInMap [ Config, DesiredCapacity, !Ref Stage ]
+      MaxSize: !FindInMap [ Config, MaxSize, !Ref Stage ]
+      MinSize: !FindInMap [ Config, MinSize, !Ref Stage ]
+      LoadBalancerNames:
+      - Ref: LoadBalancer
+      HealthCheckGracePeriod: 300
+      HealthCheckType: ELB
+      LaunchConfigurationName:
+        Ref: LaunchConfig
+      Tags:
+      - Key: App
+        Value: !Ref App
+        PropagateAtLaunch: true
+      - Key: Stack
+        Value: !Ref Stack
+        PropagateAtLaunch: true
+      - Key: Stage
+        Value: !Ref Stage
+        PropagateAtLaunch: true
+  LoadBalancer:
+    Type: AWS::ElasticLoadBalancing::LoadBalancer
+    Properties:
+      Scheme: internet-facing
+      SecurityGroups:
+      - Ref: LoadBalancerSecurityGroup
+      Subnets: !Ref PublicSubnets
+      Listeners:
+      - Protocol: HTTPS
+        LoadBalancerPort: '443'
+        InstancePort: '9000'
+        SSLCertificateId: !Ref ELBSSLCertificate
+      HealthCheck:
+        HealthyThreshold: '2'
+        Interval: '10'
+        Target: HTTP:9000/healthcheck
+        Timeout: '5'
+        UnhealthyThreshold: '10'
+      ConnectionDrainingPolicy:
+        Enabled: true
+        Timeout: 60 
+      Tags:
+      - Key: App
+        Value: !Ref App
+      - Key: Stack
+        Value: !Ref Stack
+      - Key: Stage
+        Value: !Ref Stage
+  Role:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        -
+          Effect: Allow
+          Principal:
+            Service: ec2.amazonaws.com
+          Action: sts:AssumeRole
+      Policies:
+      - PolicyName: GithubTeamKeysPolicy
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - s3:GetObject
+            Resource:
+            - arn:aws:s3:::github-public-keys/*
+          - Effect: Allow
+            Action:
+            - s3:ListBucket
+            Resource:
+            - arn:aws:s3:::github-public-keys
+      - PolicyName: S3ConfigPolicy
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - s3:ListBucket
+            - s3:GetObject
+            Resource:
+            - !Sub arn:aws:s3:::composer-dist/*
+      - PolicyName: DescribeEC2Policy
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - EC2:Describe*
+            Resource: '*'
+      - PolicyName: FetchDynamoConfigPolicy
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+              - dynamodb:ListTables
+            Resource: "*"
+          - Effect: Allow
+            Action:
+              - dynamodb:DescribeTable
+              - dynamodb:GetItem
+            Resource: !Sub arn:aws:dynamodb:eu-west-1:743583969668:table/config-${Stack}
+      - PolicyName: ELKKinesisPolicy
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - kinesis:PutRecord
+            - kinesis:DescribeStream
+            Resource: !Sub arn:aws:kinesis:eu-west-1:743583969668:stream/${ELKKinesisStream}
+      - PolicyName: AtomWorkshopPanDomainPolicy
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+              - s3:GetObject
+              Resource:
+              - arn:aws:s3:::pan-domain-auth-settings/*
+      Path: /
+  InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: /
+      Roles:
+      - Ref: Role

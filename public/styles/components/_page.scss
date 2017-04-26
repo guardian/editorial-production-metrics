@@ -1,0 +1,19 @@
+/* -------------------------------------- */
+/* Page content styles                    */
+/* -------------------------------------- */
+
+.page {
+
+  &__subheading {
+    margin-bottom: 20px;
+    border-bottom: 1px solid $greyBorderColor;
+  }
+
+  &__section {
+    margin-bottom: 20px;
+
+    &:not(:last-child) {
+      border-bottom: 1px solid $greyBorderColor;
+    }
+  }
+}
