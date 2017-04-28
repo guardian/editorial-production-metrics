@@ -238,7 +238,7 @@ Resources:
             - kinesis:PutRecord
             - kinesis:DescribeStream
             Resource: !Sub arn:aws:kinesis:eu-west-1:743583969668:stream/${ELKKinesisStream}
-      - PolicyName: AtomWorkshopPanDomainPolicy
+      - PolicyName: EditorialProductionMetricsPanDomainPolicy
         PolicyDocument:
           Version: '2012-10-17'
           Statement:

@@ -1,5 +1,5 @@
 {
-  "name": "atom-workshop",
+  "name": "editorial-production-metrics",
   "version": "1.0.0",
   "description": "A tool for creating multiple atom types.",
   "main": "public/index.html",
@@ -9,13 +9,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/guardian/atom-workshop.git"
+    "url": "https://github.com/guardian/editorial-production-metrics.git"
   },
   "author": "The Guardian",
   "bugs": {
-    "url": "https://github.com/guardian/atom-workshop/issues"
+    "url": "https://github.com/guardian/editorial-production-metrics/issues"
   },
-  "homepage": "https://github.com/guardian/atom-workshop",
+  "homepage": "https://github.com/guardian/editorial-production-metrics",
   "devDependencies": {
     "babel-core": "^6.21.0",
     "babel-loader": "^6.2.10",

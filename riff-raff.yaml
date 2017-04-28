@@ -2,13 +2,13 @@ regions: [eu-west-1]
 stacks: [flexible]
 
 deployments:
-  atom-workshop:
+  editorial-production-metrics:
     type: autoscaling
     parameters:
       bucket: composer-dist
-  atom-workshop-ami-update:
+  editorial-production-metrics-ami-update:
     type: ami-cloudformation-parameter
-    app: atom-workshop
+    app: editorial-production-metrics
     parameters:
       amiTags:
         Recipe: editorial-tools-basic

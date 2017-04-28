@@ -9,7 +9,7 @@ import com.gu.cm.{Mode, Configuration => ConfigurationMagic}
 object Config extends AwsInstanceTags {
 
   val stage = readTag("Stage") getOrElse "DEV"
-  val appName = readTag("App") getOrElse "atom-workshop"
+  val appName = readTag("App") getOrElse "editorial-production-metrics"
   val stack = readTag("Stack") getOrElse "flexible"
   val region = services.EC2Client.region
 

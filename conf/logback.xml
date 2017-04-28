@@ -1,5 +1,5 @@
 <configuration>
-    <contextName>atom-workshop</contextName>
+    <contextName>editorial-production-metrics</contextName>
 
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${application.home}/logs/application.log</file>

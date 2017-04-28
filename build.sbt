@@ -1,4 +1,4 @@
-name := "atom-workshop"
+name := "editorial-production-metrics"
 version := "1.0"
 
 scalaVersion := "2.11.8"
@@ -35,11 +35,11 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala, RiffRaffArtifact
 
     debianPackageDependencies := Seq("openjdk-8-jre-headless"),
     maintainer := "Editorial Tools <digitalcms.dev@guardian.co.uk>",
-    packageSummary := "Atom Workshop",
+    packageSummary := "Editorial Production Metrics",
     packageDescription := """A single place for atoms of all types""",
 
     riffRaffArtifactResources ++= Seq(
-      baseDirectory.value / "cloudformation" / "AtomWorkshop.yml" -> s"packages/cloudformation/AtomWorkshop.yml"
+      baseDirectory.value / "cloudformation" / "EditorialProductionMetrics.yml" -> s"packages/cloudformation/EditorialProductionMetrics.yml"
     ),
     javaOptions in Universal ++= Seq(
       "-Dpidfile.path=/dev/null"

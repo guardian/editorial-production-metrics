@@ -1,5 +1,5 @@
-name: atom-workshop
+name: editorial-production-metrics
 mappings:
-  - prefix: atomworkshop
-    port: 9050
+  - prefix: editorialproductionmetrics
+    port: 9051
     path: /
