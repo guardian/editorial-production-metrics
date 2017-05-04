@@ -56,13 +56,13 @@ Mappings:
       PROD: 0.0.0.0/0
     DesiredCapacity:
       CODE: 1
-      PROD: 3
+      PROD: 1
     MaxSize:
       CODE: 2
-      PROD: 6
+      PROD: 2
     MinSize:
       CODE: 1
-      PROD: 3
+      PROD: 1
 Resources:
   LaunchConfig:
     Type: AWS::AutoScaling::LaunchConfiguration
