@@ -22,8 +22,14 @@ module.exports = {
                 loader: ExtractTextPlugin.extract({
                     fallbackLoader: 'style-loader',
                     loader: 'css-loader?sourceMap'
-                })
+                }),
+                exclude: /flexboxgrid/
             },
+            {
+              test: /\.css$/,
+              loader: 'style-loader!css-loader',
+              include: /flexboxgrid/
+            }
             {
                 test: /\.woff(2)?(\?v=[0-9].[0-9].[0-9])?$/,
                 loader: "url-loader?mimetype=application/font-woff&limit=10000"
