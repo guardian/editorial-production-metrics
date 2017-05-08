@@ -38,12 +38,15 @@ const baseLabelStyles = {
     fontFamily: sansSerif,
     fontSize: 12,
     letterSpacing,
-    padding: -5,
+    padding: 10,
     fill: primary,
     stroke: 'transparent'
 };
 
-const centeredLabelStyles = {textAnchor: 'middle', ...baseLabelStyles};
+const centeredLabelStyles = {
+    textAnchor: 'middle',
+    ...baseLabelStyles
+};
 // *
 // * Strokes
 // *
@@ -85,10 +88,10 @@ export default {
                 ticks: {
                     fill: 'transparent',
                     padding: 10,
-                    size: 1,
-                    stroke: 'transparent'
+                    size: 4,
+                    stroke: '#fff'
                 },
-                tickLabels: baseLabelStyles
+                tickLabels: {...baseLabelStyles, padding: -5}
             },
             ...baseProps
         },
