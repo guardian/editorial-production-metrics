@@ -51,7 +51,15 @@ module.exports = {
     },
 
     resolve: {
-        extensions: ['.js', '.jsx', '.json', '.scss']
+        extensions: ['.js', '.jsx', '.json', '.scss'],
+        alias: {
+            actions: path.resolve(__dirname, '../public/js/actions/'),
+            components: path.resolve(__dirname, '../public/js/components/'),
+            containers: path.resolve(__dirname, '../public/js/containers/'),
+            reducers: path.resolve(__dirname, '../public/js/reducers/'),
+            services: path.resolve(__dirname, '../public/js/services/'),
+            util: path.resolve(__dirname, '../public/js/util/')
+        }
     },
 
     plugins: [new ExtractTextPlugin('main.css')]
