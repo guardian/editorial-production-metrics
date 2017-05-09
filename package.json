@@ -4,8 +4,8 @@
   "description": "A tool for creating multiple atom types.",
   "main": "public/index.html",
   "scripts": {
-    "build-dev": "webpack ./public/js/app.js ./public/build/app.js --config ./conf/webpack.conf.js --watch",
-    "build": "webpack -p ./public/js/app.js ./public/build/app.js --config ./conf/webpack.conf.js"
+    "build-dev": "webpack ./public/js/index.js ./public/build/app.js --config ./conf/webpack.conf.js --watch",
+    "build": "webpack -p ./public/js/index.js ./public/build/app.js --config ./conf/webpack.conf.js"
   },
   "repository": {
     "type": "git",
