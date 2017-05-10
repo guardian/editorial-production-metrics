@@ -44,7 +44,7 @@ const Charts = ({startedInComposer, neverInWorkflow}) => {
             <Row>
                 <Col xs={6} md={4}>
                     <LineChart
-                        title={'Content started in Composer'}
+                        title={'Content in paper started in digital tools'}
                         domain={{y: [0, 100]}}
                         theme={customisedTheme}
                         series={[
@@ -71,7 +71,7 @@ const Charts = ({startedInComposer, neverInWorkflow}) => {
                 </Col>
                 <Col xs={6} md={4}>
                     <LineChart
-                        title={'Content started in InCopy'}
+                        title={'Digital only content started in InCopy'}
                         domain={{y: [0, 100]}}
                         theme={customisedTheme}
                         series={[
@@ -98,7 +98,7 @@ const Charts = ({startedInComposer, neverInWorkflow}) => {
                 </Col>
                 <Col xs={6} md={4}>
                     <LineChart
-                        title={'Content started in InCopy'}
+                        title={'Print only content produced'}
                         domain={{y: [0, 100]}}
                         theme={customisedTheme}
                         series={[
