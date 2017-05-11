@@ -1,10 +1,10 @@
 import {combineReducers} from 'redux';
-import chartStartedInComposerReducer from './chartStartedInComposerReducer';
-import chartNeverInWorkflowReducer from './chartNeverInWorkflowReducer';
+import chartReducer from './chartReducer';
+import updateFilterReducer from './updateFilterReducer';
 
 const rootReducer = combineReducers({
-    startedInComposer: chartStartedInComposerReducer,
-    neverInWorkflow: chartNeverInWorkflowReducer
+    filterVals: updateFilterReducer,
+    charts: chartReducer
 });
 
 export default rootReducer;

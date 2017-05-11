@@ -11,11 +11,11 @@ class App extends React.Component {
     render() {
         return (
             <Page>
-                <Filters onSelectChange={this.props.actions.filterDesk} />
-                <Charts
-                    startedInComposer={this.props.startedInComposer}
-                    neverInWorkflow={this.props.neverInWorkflow}
+                <Filters
+                    onSelectChange={this.props.actions.filterDesk}
+                    filterVals={this.props.filterVals}
                 />
+                <Charts charts={this.props.charts} />
             </Page>
         );
     }
@@ -23,8 +23,8 @@ class App extends React.Component {
 
 function mapStateToProps(state) {
     return {
-        startedInComposer: state.startedInComposer,
-        neverInWorkflow: state.neverInWorkflow
+        filterVals: state.filterVals,
+        charts: state.charts
     };
 }
 

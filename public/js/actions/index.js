@@ -1,16 +1,25 @@
 import fetch from 'unfetch';
 import getChartData from 'services/getChartData';
 
-function updateChart(data) {
+function updateCharts(data) {
     return {
-        type: 'UPDATE_CHART',
+        type: 'UPDATE_CHARTS',
         dataPoints: data
     };
 }
 
-export function filterDesk(deskName = null) {
-    return dispatch => {
-        return getChartData(deskName).then(chartData =>
-            dispatch(updateChart(chartData)));
+function updateFilter(filterObj) {
+    return {
+        type: 'UPDATE_FILTER',
+        filterObj: filterObj
+    };
+}
+
+export function filterDesk(filterObj = {}) {
+    return (dispatch, getState) => {
+        dispatch(updateFilter(filterObj));
+
+        return getChartData(getState().filterVals).then(charts =>
+            dispatch(updateCharts(charts)));
     };
 }
