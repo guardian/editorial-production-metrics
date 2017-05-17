@@ -49,6 +49,27 @@ Parameters:
   VulnerabilityScanningSecurityGroup:
     Type: AWS::EC2::SecurityGroup::Id
     Description: Security group that grants access to the account's Vulnerability Scanner
+  DBInstanceType:
+    Type: String
+    Description: AWS instances type for the rds database
+    Default: db.t2.micro
+    AllowedValues:
+    - db.t2.micro
+    - db.t2.small
+    - db.t2.medium
+  PostgresEngineVersion:
+    Type: String
+    Description: Version of postgres to use
+  DBUsername:
+    Type: String
+    Description: Master username for the DB instance
+  DBPassword:
+    Type: String
+    Description: Password for the DB instance
+  DBPort:
+    Type: String
+    Description: Port number for the database instance
+    Default: 5432
 Mappings:
   Config:
     IpRange:
@@ -106,6 +127,16 @@ Resources:
         FromPort: '22'
         ToPort: '22'
         CidrIp: '10.0.0.0/8'
+  DBSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: "DB security group servers"
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: !Ref DBPort
+        ToPort: !Ref DBPort
+        SourceSecurityGroupId: !Ref InstanceSecurityGroup
   InstanceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -254,3 +285,31 @@ Resources:
       Path: /
       Roles:
       - Ref: Role
+  DBSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupDescription: "Private subnet for postgres database"
+      SubnetIds: !Ref PrivateSubnets
+  PostgresInstance:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      AllocatedStorage: "5"
+      AutoMinorVersionUpgrade: true
+      BackupRetentionPeriod: "1"
+      DBInstanceClass: !Ref DBInstanceType
+      DBInstanceIdentifier: !Sub ${App}-${Stage}
+      DBSubnetGroupName: !Ref DBSubnetGroup
+      DBName: "metrics"
+      Engine: "postgres"
+      EngineVersion: !Ref PostgresEngineVersion
+      MasterUsername: !Ref DBUsername
+      MasterUserPassword: !Ref DBPassword
+      MultiAZ: false
+      Port: !Ref DBPort
+      Tags:
+      - Key: Stage
+        Value: !Ref Stage
+      - Key: Stack
+        Value: !Ref Stack
+      VPCSecurityGroups:
+      - !Ref DBSecurityGroup
