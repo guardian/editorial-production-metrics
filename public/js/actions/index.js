@@ -1,4 +1,3 @@
-import fetch from 'unfetch';
 import getChartData from 'services/getChartData';
 
 function updateCharts(data) {

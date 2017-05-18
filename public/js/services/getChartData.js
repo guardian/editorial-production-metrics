@@ -1,3 +1,5 @@
+import fetch from 'unfetch';
+
 export default function getChartData(filterVals) {
     const reqParams = `?office=${filterVals.office}&desk=${filterVals.desk}&section=${filterVals.section}`;
     return Promise
