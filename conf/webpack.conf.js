@@ -6,9 +6,11 @@ module.exports = {
     module: {
         loaders: [
             {
-                test:    /\.js$/,
+                test: /\.js$/,
                 exclude: /node_modules/,
-                loaders: ['babel-loader?presets[]=es2015&presets[]=react&plugins[]=transform-object-assign']
+                loaders: [
+                    'babel-loader?presets[]=es2015&presets[]=react&plugins[]=transform-object-assign'
+                ]
             },
             {
                 test: /\.scss$/,
@@ -22,15 +24,21 @@ module.exports = {
                 loader: ExtractTextPlugin.extract({
                     fallbackLoader: 'style-loader',
                     loader: 'css-loader?sourceMap'
-                })
+                }),
+                exclude: /flexboxgrid/
+            },
+            {
+                test: /\.css$/,
+                loader: 'style-loader!css-loader',
+                include: /flexboxgrid/
             },
             {
                 test: /\.woff(2)?(\?v=[0-9].[0-9].[0-9])?$/,
-                loader: "url-loader?mimetype=application/font-woff&limit=10000"
+                loader: 'url-loader?mimetype=application/font-woff&limit=10000'
             },
             {
                 test: /\.(ttf|eot|svg|gif|png)(\?v=[0-9].[0-9].[0-9])?$/,
-                loader: "file-loader?name=[name].[ext]"
+                loader: 'file-loader?name=[name].[ext]'
             }
         ]
     },
@@ -39,7 +47,5 @@ module.exports = {
         extensions: ['.js', '.jsx', '.json', '.scss']
     },
 
-    plugins: [
-        new ExtractTextPlugin('main.css')
-    ]
+    plugins: [new ExtractTextPlugin('main.css')]
 };
