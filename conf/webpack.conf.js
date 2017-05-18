@@ -8,9 +8,16 @@ module.exports = {
             {
                 test: /\.js$/,
                 exclude: /node_modules/,
-                loaders: [
-                    'babel-loader?presets[]=es2015&presets[]=react&plugins[]=transform-object-assign'
-                ]
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        presets: ['es2015', 'react'],
+                        plugins: [
+                            'transform-object-assign',
+                            'transform-object-rest-spread'
+                        ]
+                    }
+                }
             },
             {
                 test: /\.scss$/,
