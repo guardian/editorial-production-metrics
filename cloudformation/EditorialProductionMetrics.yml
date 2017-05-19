@@ -66,6 +66,7 @@ Parameters:
   DBPassword:
     Type: String
     Description: Password for the DB instance
+    NoEcho: true
   DBPort:
     Type: String
     Description: Port number for the database instance
