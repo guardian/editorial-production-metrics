@@ -14,12 +14,16 @@ for the composer AWS account from [janus](https://janus.gutools.co.uk). You'll a
  - Install Client Side Dependencies with `./scripts/setup.sh`
  - Run using sbt: `sbt "run 9051"`. (For quick restart you should run `sbt` and then `run 9051`, so that you can exit
   the application without exiting sbt.)
-  
+
 ## Compiling Client Side Dependencies
 
 This project requires Node version 6. To manage different versions of node you can use [node version manager](https://github.com/creationix/nvm).
-You can compile client side dependencies with `yarn build` or `npm run build`. 
+You can compile client side dependencies with `yarn build` or `npm run build`.
 Alternatively to compile client side assets on change run `yarn build-dev` or `npm run build-dev`
+
+### Graph Styling
+
+The styling for the graphs can be found in [theme.js](https://github.com/guardian/editorial-production-metrics/tree/master/public/js/components/ChartTheme/theme.js)
 
 ## Running Client and Server
 Use `./scripts/start.sh` to run the client and server

@@ -4,8 +4,8 @@
   "description": "A tool for creating multiple atom types.",
   "main": "public/index.html",
   "scripts": {
-    "build-dev": "webpack ./public/js/app.js ./public/build/app.js --config ./conf/webpack.conf.js --watch",
-    "build": "webpack -p ./public/js/app.js ./public/build/app.js --config ./conf/webpack.conf.js"
+    "build-dev": "webpack ./public/js/index.js ./public/build/app.js --config ./conf/webpack.conf.js --watch",
+    "build": "webpack -p ./public/js/index.js ./public/build/app.js --config ./conf/webpack.conf.js"
   },
   "repository": {
     "type": "git",
@@ -20,6 +20,7 @@
     "babel-core": "^6.21.0",
     "babel-loader": "^6.2.10",
     "babel-plugin-transform-object-assign": "^6.8.0",
+    "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "babel-preset-es2015": "^6.18.0",
     "babel-preset-react": "^6.16.0",
     "css-loader": "^0.26.1",
@@ -29,6 +30,16 @@
     "sass-loader": "^4.1.1",
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.7",
-    "webpack": "beta"
+    "webpack": "2.5.0"
+  },
+  "dependencies": {
+    "formidable-charts": "^0.0.7",
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4",
+    "react-flexbox-grid": "^1.1.3",
+    "react-redux": "^5.0.4",
+    "redux": "^3.6.0",
+    "redux-thunk": "^2.2.0",
+    "unfetch": "^2.1.2"
   }
 }
