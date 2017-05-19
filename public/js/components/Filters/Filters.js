@@ -1,7 +1,7 @@
 import React from 'react';
 import {Grid, Row, Col} from 'react-flexbox-grid';
 
-const Filters = ({onSelectChange, filterVals}) => {
+const Filters = ({onSelectChange, filterVals, updating}) => {
     return (
         <form className="form">
             <Grid fluid>
@@ -16,6 +16,7 @@ const Filters = ({onSelectChange, filterVals}) => {
                                         office: event.target.value
                                     })}
                                     value={filterVals.office}
+                                    disabled={updating}
                                 >
                                     <option value="all">All</option>
                                     <option value="uk">UK</option>
@@ -36,6 +37,7 @@ const Filters = ({onSelectChange, filterVals}) => {
                                         desk: event.target.value
                                     })}
                                     value={filterVals.desk}
+                                    disabled={updating}
                                 >
                                     <option value="all">All</option>
                                     <option value="news">News</option>
@@ -55,6 +57,7 @@ const Filters = ({onSelectChange, filterVals}) => {
                                         section: event.target.value
                                     })}
                                     value={filterVals.section}
+                                    disabled={updating}
                                 >
                                     <option value="all">All</option>
                                     <option value="news">News</option>

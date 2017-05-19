@@ -14,8 +14,12 @@ class App extends React.Component {
                 <Filters
                     onSelectChange={this.props.actions.filterDesk}
                     filterVals={this.props.filterVals}
+                    updating={this.props.updating}
                 />
-                <Charts charts={this.props.charts} />
+                <Charts
+                    charts={this.props.charts}
+                    updating={this.props.updating}
+                />
             </Page>
         );
     }
@@ -24,7 +28,8 @@ class App extends React.Component {
 function mapStateToProps(state) {
     return {
         filterVals: state.filterVals,
-        charts: state.charts
+        charts: state.charts,
+        updating: state.updatingBool
     };
 }
 
