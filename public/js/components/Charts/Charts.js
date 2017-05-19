@@ -1,90 +1,62 @@
 import React from 'react';
 import {LineChart, Themes} from 'formidable-charts';
 import {Grid, Row, Col} from 'react-flexbox-grid';
+import Chart from './Chart';
+
 import ChartTheme from '../ChartTheme/theme';
 
 const customisedTheme = Object.assign({}, Themes.simple, ChartTheme);
 
-const Charts = ({charts}) => {
+const Charts = ({charts, updating}) => {
     return (
         <Grid fluid>
             <Row>
                 <Col xs={12} md={6}>
-                    <LineChart
+                    <Chart
                         title="Content started in Composer"
-                        domain={{y: [0, 100]}}
-                        theme={customisedTheme}
                         series={charts.startedInComposer}
-                        xAxis={{
-                            label: 'Day of week',
-                            tickFormat: tick => tick.toFixed()
-                        }}
-                        yAxis={{
-                            label: 'percentage'
-                        }}
+                        xLabel="Day of week"
+                        yLabel="Percentage"
+                        updating={updating}
                     />
                 </Col>
                 <Col xs={12} md={6}>
-                    <LineChart
+                    <Chart
                         title="Content never in Workflow"
-                        domain={{y: [0, 100]}}
-                        theme={customisedTheme}
                         series={charts.neverInWorkflow}
-                        xAxis={{
-                            label: 'Day of week',
-                            tickFormat: tick => tick.toFixed()
-                        }}
-                        yAxis={{
-                            label: 'percentage'
-                        }}
+                        xLabel="Day of week"
+                        yLabel="Percentage"
+                        updating={updating}
                     />
                 </Col>
             </Row>
 
             <Row>
                 <Col xs={6} md={4}>
-                    <LineChart
+                    <Chart
                         title="Content in paper started in digital tools"
-                        domain={{y: [0, 100]}}
-                        theme={customisedTheme}
                         series={charts.paperStartedInDigital}
-                        xAxis={{
-                            label: 'Day of week',
-                            tickFormat: tick => tick.toFixed()
-                        }}
-                        yAxis={{
-                            label: 'percentage'
-                        }}
+                        xLabel="Day of week"
+                        yLabel="Percentage"
+                        updating={updating}
                     />
                 </Col>
                 <Col xs={6} md={4}>
-                    <LineChart
+                    <Chart
                         title="Digital only content started in InCopy"
-                        domain={{y: [0, 100]}}
-                        theme={customisedTheme}
                         series={charts.digitalStartedInInCopy}
-                        xAxis={{
-                            label: 'Day of week',
-                            tickFormat: tick => tick.toFixed()
-                        }}
-                        yAxis={{
-                            label: 'percentage'
-                        }}
+                        xLabel="Day of week"
+                        yLabel="Percentage"
+                        updating={updating}
                     />
                 </Col>
                 <Col xs={6} md={4}>
-                    <LineChart
+                    <Chart
                         title="Print only content produced"
-                        domain={{y: [0, 100]}}
-                        theme={customisedTheme}
                         series={charts.printOnly}
-                        xAxis={{
-                            label: 'Day of week',
-                            tickFormat: tick => tick.toFixed()
-                        }}
-                        yAxis={{
-                            label: 'percentage'
-                        }}
+                        xLabel="Day of week"
+                        yLabel="Percentage"
+                        updating={updating}
                     />
                 </Col>
             </Row>
