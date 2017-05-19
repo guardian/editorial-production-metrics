@@ -11,7 +11,7 @@ const Charts = ({charts}) => {
             <Row>
                 <Col xs={12} md={6}>
                     <LineChart
-                        title={'Content started in Composer'}
+                        title="Content started in Composer"
                         domain={{y: [0, 100]}}
                         theme={customisedTheme}
                         series={charts.startedInComposer}
@@ -26,7 +26,7 @@ const Charts = ({charts}) => {
                 </Col>
                 <Col xs={12} md={6}>
                     <LineChart
-                        title={'Content never in Workflow'}
+                        title="Content never in Workflow"
                         domain={{y: [0, 100]}}
                         theme={customisedTheme}
                         series={charts.neverInWorkflow}
@@ -44,7 +44,7 @@ const Charts = ({charts}) => {
             <Row>
                 <Col xs={6} md={4}>
                     <LineChart
-                        title={'Content in paper started in digital tools'}
+                        title="Content in paper started in digital tools"
                         domain={{y: [0, 100]}}
                         theme={customisedTheme}
                         series={charts.paperStartedInDigital}
@@ -59,7 +59,7 @@ const Charts = ({charts}) => {
                 </Col>
                 <Col xs={6} md={4}>
                     <LineChart
-                        title={'Digital only content started in InCopy'}
+                        title="Digital only content started in InCopy"
                         domain={{y: [0, 100]}}
                         theme={customisedTheme}
                         series={charts.digitalStartedInInCopy}
@@ -74,7 +74,7 @@ const Charts = ({charts}) => {
                 </Col>
                 <Col xs={6} md={4}>
                     <LineChart
-                        title={'Print only content produced'}
+                        title="Print only content produced"
                         domain={{y: [0, 100]}}
                         theme={customisedTheme}
                         series={charts.printOnly}

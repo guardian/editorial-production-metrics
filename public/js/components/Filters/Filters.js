@@ -3,17 +3,15 @@ import {Grid, Row, Col} from 'react-flexbox-grid';
 
 const Filters = ({onSelectChange, filterVals}) => {
     return (
-        <form className={'form'}>
+        <form className="form">
             <Grid fluid>
                 <Row>
                     <Col xs={12} md={4}>
-                        <div className={'form__row'}>
+                        <div className="form__row">
                             <label>
                                 Filter by Office:
                                 <select
-                                    className={
-                                        'form__field form__field--select'
-                                    }
+                                    className="form__field form__field--select"
                                     onChange={event => onSelectChange({
                                         office: event.target.value
                                     })}
@@ -29,13 +27,11 @@ const Filters = ({onSelectChange, filterVals}) => {
                     </Col>
 
                     <Col xs={12} md={4}>
-                        <div className={'form__row'}>
+                        <div className="form__row">
                             <label>
                                 Filter by Desk:
                                 <select
-                                    className={
-                                        'form__field form__field--select'
-                                    }
+                                    className="form__field form__field--select"
                                     onChange={event => onSelectChange({
                                         desk: event.target.value
                                     })}
@@ -50,13 +46,11 @@ const Filters = ({onSelectChange, filterVals}) => {
                         </div>
                     </Col>
                     <Col xs={12} md={4}>
-                        <div className={'form__row'}>
+                        <div className="form__row">
                             <label>
                                 Filter by Section:
                                 <select
-                                    className={
-                                        'form__field form__field--select'
-                                    }
+                                    className="form__field form__field--select"
                                     onChange={event => onSelectChange({
                                         section: event.target.value
                                     })}
