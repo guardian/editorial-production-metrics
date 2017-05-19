@@ -4,8 +4,8 @@
   "description": "A tool for creating multiple atom types.",
   "main": "public/index.html",
   "scripts": {
-    "build-dev": "webpack ./public/js/app.js ./public/build/app.js --config ./conf/webpack.conf.js --watch",
-    "build": "webpack -p ./public/js/app.js ./public/build/app.js --config ./conf/webpack.conf.js"
+    "build-dev": "webpack ./public/js/index.js ./public/build/app.js --config ./conf/webpack.conf.js --watch",
+    "build": "webpack -p ./public/js/index.js ./public/build/app.js --config ./conf/webpack.conf.js"
   },
   "repository": {
     "type": "git",
@@ -36,6 +36,10 @@
     "formidable-charts": "^0.0.7",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
-    "react-flexbox-grid": "^1.1.3"
+    "react-flexbox-grid": "^1.1.3",
+    "react-redux": "^5.0.4",
+    "redux": "^3.6.0",
+    "redux-thunk": "^2.2.0",
+    "unfetch": "^2.1.2"
   }
 }
