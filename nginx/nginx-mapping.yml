@@ -1,5 +1,5 @@
 name: editorial-production-metrics
 mappings:
-  - prefix: editorialproductionmetrics
+  - prefix: productionmetrics
     port: 9051
     path: /
