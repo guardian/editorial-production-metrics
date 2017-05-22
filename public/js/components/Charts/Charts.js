@@ -7,7 +7,10 @@ import ChartTheme from '../ChartTheme/theme';
 
 const customisedTheme = Object.assign({}, Themes.simple, ChartTheme);
 
-const Charts = ({charts, updating}) => {
+const Charts = ({charts, updating, time}) => {
+    const xLabelByTime = time === '7days' || time === '30days'
+        ? 'Days'
+        : 'Months';
     return (
         <Grid fluid>
             <Row>
@@ -15,7 +18,7 @@ const Charts = ({charts, updating}) => {
                     <Chart
                         title="Content started in Composer"
                         series={charts.startedInComposer}
-                        xLabel="Day of week"
+                        xLabel={xLabelByTime}
                         yLabel="Percentage"
                         updating={updating}
                     />
@@ -24,7 +27,7 @@ const Charts = ({charts, updating}) => {
                     <Chart
                         title="Content never in Workflow"
                         series={charts.neverInWorkflow}
-                        xLabel="Day of week"
+                        xLabel={xLabelByTime}
                         yLabel="Percentage"
                         updating={updating}
                     />
@@ -36,7 +39,7 @@ const Charts = ({charts, updating}) => {
                     <Chart
                         title="Content in paper started in digital tools"
                         series={charts.paperStartedInDigital}
-                        xLabel="Day of week"
+                        xLabel={xLabelByTime}
                         yLabel="Percentage"
                         updating={updating}
                     />
@@ -45,7 +48,7 @@ const Charts = ({charts, updating}) => {
                     <Chart
                         title="Digital only content started in InCopy"
                         series={charts.digitalStartedInInCopy}
-                        xLabel="Day of week"
+                        xLabel={xLabelByTime}
                         yLabel="Percentage"
                         updating={updating}
                     />
@@ -54,7 +57,7 @@ const Charts = ({charts, updating}) => {
                     <Chart
                         title="Print only content produced"
                         series={charts.printOnly}
-                        xLabel="Day of week"
+                        xLabel={xLabelByTime}
                         yLabel="Percentage"
                         updating={updating}
                     />

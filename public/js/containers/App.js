@@ -18,6 +18,7 @@ class App extends React.Component {
                 />
                 <Charts
                     charts={this.props.charts}
+                    time={this.props.filterVals.time}
                     updating={this.props.updating}
                 />
             </Page>

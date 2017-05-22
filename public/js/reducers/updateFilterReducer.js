@@ -1,7 +1,8 @@
 const initialState = {
     office: 'all',
     desk: 'all',
-    section: 'all'
+    section: 'all',
+    time: '7days'
 };
 
 export default function graphData(state = initialState, action) {
