@@ -11,17 +11,17 @@ import ch.qos.logback.core.{Appender, LayoutBase}
 import com.google.inject.AbstractModule
 
 
-class LogConfig extends AbstractModule {
+class LogConfig(config: Config) extends AbstractModule {
 
   val rootLogger = LoggerFactory.getLogger(SLFLogger.ROOT_LOGGER_NAME).asInstanceOf[LogbackLogger]
 
   def configure {
     rootLogger.info("bootstrapping kinesis appender if configured correctly")
-    val stack = Config.stack
-    val app = Config.appName
-    val stage = Config.stage
+    val stack = config.stack
+    val app = config.appName
+    val stage = config.stage
 
-    Logger.info(s"bootstrapping kinesis appender with $stack -> $app -> $stage -> ${Config.elkKinesisStream}")
+    Logger.info(s"bootstrapping kinesis appender with $stack -> $app -> $stage -> ${config.elkKinesisStream}")
     val context = rootLogger.getLoggerContext
 
     val layout = new LogstashLayout()
@@ -31,18 +31,18 @@ class LogConfig extends AbstractModule {
 
     val appender = new KinesisAppender()
     appender.setBufferSize(1000)
-    appender.setRegion(Config.region.toString)
-    appender.setStreamName(Config.elkKinesisStream)
+    appender.setRegion(config.region.toString)
+    appender.setStreamName(config.elkKinesisStream)
     appender.setContext(context)
     appender.setLayout(layout.asInstanceOf[LayoutBase[Nothing]])
-    appender.setCredentialsProvider(Config.awsCredentialsProvider)
+    appender.setCredentialsProvider(config.awsCredentialsProvider)
 
     appender.start()
 
     rootLogger.addAppender(appender.asInstanceOf[Appender[ILoggingEvent]])
     rootLogger.info("Configured kinesis appender")
   }
-  if (Config.elkLoggingEnabled) {
+  if (config.elkLoggingEnabled) {
     configure
   }
 
