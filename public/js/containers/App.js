@@ -8,6 +8,10 @@ import Filters from 'components/Filters/Filters';
 import Charts from 'components/Charts/Charts';
 
 class App extends React.Component {
+    componentDidMount() {
+        this.props.actions.filterDesk();
+    }
+
     render() {
         return (
             <Page>
