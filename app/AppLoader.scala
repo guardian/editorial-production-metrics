@@ -1,6 +1,6 @@
 import play.api.{Application, ApplicationLoader, LoggerConfigurator}
 import play.api.ApplicationLoader.Context
-import play.Logger
+import com.gu.cm.ConfigurationLoader
 
 class AppLoader extends ApplicationLoader {
 
@@ -8,7 +8,9 @@ class AppLoader extends ApplicationLoader {
     LoggerConfigurator(context.environment.classLoader).foreach {
       _.configure(context.environment)
     }
-    new AppComponents(context).application
+
+    val contextWithConfiguration = ConfigurationLoader.playContext("editorial-production-metrics", context)
+    new AppComponents(contextWithConfiguration).application
   }
 
 }
