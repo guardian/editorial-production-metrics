@@ -76,9 +76,6 @@ Mappings:
     IpRange:
       CODE: 77.91.248.0/21
       PROD: 0.0.0.0/0
-    DesiredCapacity:
-      CODE: 1
-      PROD: 1
     MaxSize:
       CODE: 2
       PROD: 2
@@ -157,7 +154,6 @@ Resources:
     Properties:
       VPCZoneIdentifier: !Ref PrivateSubnets
       Cooldown: '300'
-      DesiredCapacity: !FindInMap [ Config, DesiredCapacity, !Ref Stage ]
       MaxSize: !FindInMap [ Config, MaxSize, !Ref Stage ]
       MinSize: !FindInMap [ Config, MinSize, !Ref Stage ]
       LoadBalancerNames:
