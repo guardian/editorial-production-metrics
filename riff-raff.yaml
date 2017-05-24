@@ -6,6 +6,8 @@ deployments:
     type: autoscaling
     parameters:
       bucket: composer-dist
+    dependencies:
+    - editorial-production-metrics-ami-update
   editorial-production-metrics-ami-update:
     type: ami-cloudformation-parameter
     app: editorial-production-metrics
