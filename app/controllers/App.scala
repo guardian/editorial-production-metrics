@@ -2,14 +2,14 @@ package controllers
 
 import cats.syntax.either._
 import config.Config
-import db.MetricsDB
+import database.MetricsDB
 import play.api.Logger
 import play.api.libs.ws.WSClient
 import play.api.mvc._
 import util.Utils._
 import util.Parser._
 
-class App(val wsClient: WSClient, val config: Config) extends Controller with PanDomainAuthActions {
+class App(val wsClient: WSClient, val config: Config, val db: MetricsDB) extends Controller with PanDomainAuthActions {
 
   def index = Action {
     Logger.info(s"I am the ${config.appName}")
@@ -23,9 +23,5 @@ class App(val wsClient: WSClient, val config: Config) extends Controller with Pa
       data <- jsonToInCopyData(json)
     } yield data
     Ok
-  }
-
-  def test = Action {
-    Ok(MetricsDB.getMetricsBystoryBundleId("1").toString)
   }
 }
