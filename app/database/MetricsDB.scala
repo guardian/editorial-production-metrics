@@ -21,10 +21,24 @@ class MetricsDB(configuration: Config) {
         querySchema[ComposerMetric]("composer_metrics")
       })
 
+  def insertComposerMetric(metric: ComposerMetric) =
+    dbContext.run(
+      quote {
+        querySchema[ComposerMetric]("composer_metrics").insert(lift(metric))
+      }
+    )
+
   def getForks =
     dbContext.run(
       quote {
         querySchema[Fork]("forks")
+      }
+    )
+
+  def insertFork(fork: Fork) =
+    dbContext.run(
+      quote {
+        querySchema[Fork]("forks").insert(lift(fork))
       }
     )
 
@@ -35,10 +49,24 @@ class MetricsDB(configuration: Config) {
       }
     )
 
+  def insertInCopyMetric(metric: InCopyMetric) =
+    dbContext.run(
+      quote {
+        querySchema[InCopyMetric]("incopy_metrics").insert(lift(metric))
+      }
+    )
+
   def getPublishingMetrics =
     dbContext.run(
       quote{
         querySchema[Metric]("metrics")
+      }
+    )
+
+  def insertPublishingMetric(metric: Metric) =
+    dbContext.run(
+      quote {
+        querySchema[Metric]("metrics").insert(lift(metric))
       }
     )
 }
