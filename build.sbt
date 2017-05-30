@@ -16,7 +16,9 @@ libraryDependencies ++= Seq(
   "com.gu"                 %% "configuration-magic-core"     %  "1.3.0",
   "com.gu"                 %% "configuration-magic-play2-4"  % "1.3.0",
   "com.gu"                 %% "pan-domain-auth-play_2-5"     % "0.4.1",
-  "org.postgresql"         % "postgresql"                    % "42.1.1"
+  "org.postgresql"         % "postgresql"                    % "42.1.1",
+  "io.circe"               %% "circe-parser"                 % "0.7.0",
+  "io.circe"               %% "circe-generic"                % "0.7.0"
 )
 routesGenerator := InjectedRoutesGenerator
 

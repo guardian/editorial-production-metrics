@@ -1,5 +1,9 @@
 GET     /                           controllers.App.index
 
+POST    /api/incopy/created         controllers.App.createdInCopyContent
+
+GET     /test                       controllers.App.test
+
 GET     /healthcheck                controllers.Healthcheck.healthcheck
 
 GET     /oauthCallback              controllers.Login.oauthCallback
