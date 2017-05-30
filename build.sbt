@@ -18,7 +18,8 @@ libraryDependencies ++= Seq(
   "com.gu"                 %% "pan-domain-auth-play_2-5"     % "0.4.1",
   "org.postgresql"         % "postgresql"                    % "42.1.1",
   "io.circe"               %% "circe-parser"                 % "0.7.0",
-  "io.circe"               %% "circe-generic"                % "0.7.0"
+  "io.circe"               %% "circe-generic"                % "0.7.0",
+  "io.getquill"            % "quill-jdbc_2.11"               % "1.2.1"
 )
 routesGenerator := InjectedRoutesGenerator
 

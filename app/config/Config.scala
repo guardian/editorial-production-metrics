@@ -27,4 +27,6 @@ class Config(config: Configuration) extends AwsInstanceTags {
   val pandaAuthCallback = getConfigString("panda.authCallback")
   val pandaSystem = getConfigString("panda.system")
 
+  val dbConfig = config.underlying.getConfig("ctx")
+
 }
