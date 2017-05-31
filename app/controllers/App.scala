@@ -16,7 +16,7 @@ class App(val wsClient: WSClient, val config: Config, val db: MetricsDB) extends
     Ok(views.html.index())
   }
 
-  def createdInCopyContent = AuthiAction { req =>
+  def createdInCopyContent = AuthAction { req =>
     val x = for {
       body <- extractRequestBody(req.body.asJson.map(_.toString))
       json <- stringToJson(body)
