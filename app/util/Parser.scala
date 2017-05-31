@@ -17,5 +17,4 @@ object Parser {
 
   def jsonToInCopyData(json: Json): Either[ProductionMetricsError, InCopyData] =
     json.as[InCopyData].fold(processException, Right(_))
-
 }
