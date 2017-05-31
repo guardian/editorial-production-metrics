@@ -11,12 +11,12 @@ import util.Parser._
 
 class App(val wsClient: WSClient, val config: Config, val db: MetricsDB) extends Controller with PanDomainAuthActions {
 
-  def index = Action {
+  def index = AuthAction {
     Logger.info(s"I am the ${config.appName}")
     Ok(views.html.index())
   }
 
-  def createdInCopyContent = Action { req =>
+  def createdInCopyContent = AuthiAction { req =>
     val x = for {
       body <- extractRequestBody(req.body.asJson.map(_.toString))
       json <- stringToJson(body)
