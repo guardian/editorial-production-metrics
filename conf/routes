@@ -1,5 +1,7 @@
 GET     /                           controllers.App.index
 
+GET     /api/startedInComposer      controllers.App.startedInComposer(desk: Option[String], startDate: Option[String], endDate: Option[String])
+
 POST    /api/incopy/created         controllers.App.createdInCopyContent
 
 GET     /healthcheck                controllers.Healthcheck.healthcheck
