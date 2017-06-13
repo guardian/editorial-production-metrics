@@ -14,11 +14,21 @@ function updateFilter(filterObj) {
     };
 }
 
+function updateProgress(updatingBool) {
+    return {
+        type: 'UPDATE_PROGRESS',
+        updatingBool: updatingBool
+    };
+}
+
 export function filterDesk(filterObj = {}) {
     return (dispatch, getState) => {
         dispatch(updateFilter(filterObj));
+        dispatch(updateProgress(true));
 
-        return getChartData(getState().filterVals).then(charts =>
-            dispatch(updateCharts(charts)));
+        return getChartData(getState().filterVals).then(charts => {
+            dispatch(updateProgress(false));
+            dispatch(updateCharts(charts));
+        });
     };
 }
