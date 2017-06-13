@@ -8,12 +8,7 @@ $loadingLabelHeight: 30px;
 .chart-wrap:after {
   content: 'Loading\2026'; // Ellipsis
   display: none;
-  text-align: center;
-  line-height: $loadingLabelHeight;
-  width: $loadingLabelWidth;
-  position: absolute;
-  top: calc(50% - #{$loadingLabelHeight} / 2);
-  left: calc(50% - #{$loadingLabelWidth} / 2);
+  @include center-absolutely(100px, 30px); // Center the chart wrap passing in the width and height
 }
 
 .chart-wrap:before {
