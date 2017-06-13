@@ -8,6 +8,10 @@ import Filters from 'components/Filters/Filters';
 import Charts from 'components/Charts/Charts';
 
 class App extends React.Component {
+    componentDidMount() {
+        this.props.actions.filterDesk();
+    }
+
     render() {
         return (
             <Page>
@@ -18,6 +22,7 @@ class App extends React.Component {
                 />
                 <Charts
                     charts={this.props.charts}
+                    time={this.props.filterVals.time}
                     updating={this.props.updating}
                 />
             </Page>
