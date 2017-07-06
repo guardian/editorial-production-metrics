@@ -25,9 +25,12 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala, RiffRaffArtifact
       "io.circe"               %% "circe-parser"                 % "0.7.0",
       "io.circe"               %% "circe-generic"                % "0.7.0",
       "io.getquill"            % "quill-jdbc_2.11"               % "1.2.1",
-      "com.amazonaws"          % "amazon-kinesis-client"         % "1.7.3",
+      "com.amazonaws"          % "amazon-kinesis-client"         % "1.7.6",
       "org.apache.thrift"      % "libthrift"                     % "0.9.2",
-      "com.twitter"            %% "scrooge-core"                 % "3.17.0"
+      "com.twitter"            %% "scrooge-core"                 % "3.17.0",
+      "com.typesafe.play"      %% "play-json"                    % "2.6.0",
+      // jackson-dataformat-cbor is required to resolve an incompatability between the version used in play-json and the one used in amazon-kinesis-client
+      "com.fasterxml.jackson.dataformat" % "jackson-dataformat-cbor" % "2.8.8"
     ),
     routesGenerator := InjectedRoutesGenerator,
 
