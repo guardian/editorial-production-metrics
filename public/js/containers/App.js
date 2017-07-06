@@ -1,6 +1,6 @@
 import React from 'react';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import * as Actions from 'actions';
 
 import Page from 'components/Page';
@@ -13,17 +13,18 @@ class App extends React.Component {
     }
 
     render() {
+        const { filterVals, updating, charts, actions } = this.props;
         return (
             <Page>
                 <Filters
-                    onSelectChange={this.props.actions.filterDesk}
-                    filterVals={this.props.filterVals}
-                    updating={this.props.updating}
+                    onSelectChange={actions.filterDesk}
+                    filterVals={filterVals}
+                    updating={updating}
                 />
                 <Charts
-                    charts={this.props.charts}
-                    time={this.props.filterVals.time}
-                    updating={this.props.updating}
+                    charts={charts}
+                    time={filterVals.time}
+                    updating={updating}
                 />
             </Page>
         );
@@ -31,10 +32,11 @@ class App extends React.Component {
 }
 
 function mapStateToProps(state) {
+    const { filterVals, charts, updatingBool } = state;
     return {
-        filterVals: state.filterVals,
-        charts: state.charts,
-        updating: state.updatingBool
+        filterVals: filterVals,
+        charts: charts,
+        updating: updatingBool
     };
 }
 

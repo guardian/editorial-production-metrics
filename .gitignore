@@ -2,6 +2,6 @@ target
 .idea
 logs/
 node_modules/
-
+.eslintrc.json
 public/build
 

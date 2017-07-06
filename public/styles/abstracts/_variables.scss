@@ -7,7 +7,6 @@
 /// $type List
 $text-font-stack: 'Guardian Agate Sans', Arial, sans-serif !default;
 $title-font-stack: 'Guardian Egyptian Text', Georgia, serif;
-
 /**
  * COLOURS
  *
@@ -83,3 +82,20 @@ $lightBrandColor: lighten($brandColor, 60);
 // Sizes
 $toolbarHeight: 50px;
 $standard-padding: 10px;
+
+/*
+Datepicker colours
+The following variables overwrite default values for the component's style.
+The complete list of overwritable variables here: https://github.com/airbnb/react-dates/blob/master/css/variables.scss
+*/
+
+$react-dates-color-primary: $slightDangerColor;
+$react-dates-color-primary-shade-1: $slightDangerColor;
+$react-dates-color-primary-shade-2: $cYellow;
+$react-dates-color-primary-shade-3: $cYellow;
+$react-dates-color-primary-shade-4: $dangerColor;
+$react-dates-color-secondary: $slightDangerColor;
+$react-dates-color-text-focus: $slightDangerColor;
+$react-dates-color-focus: $cYellow;
+@import '~react-dates/css/variables.scss';
+@import '~react-dates/css/styles.scss';
