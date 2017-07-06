@@ -11,5 +11,5 @@ object Config {
     new InstanceProfileCredentialsProvider(false)
   )
 
-  val streamName = "editorial-production-metrics-DEV"
+  val streamName = "editorial-production-metrics-publishing-metrics-DEV"
 }
