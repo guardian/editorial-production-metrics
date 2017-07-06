@@ -29,4 +29,6 @@ class Config(config: Configuration) extends AwsInstanceTags {
 
   val dbConfig = config.underlying.getConfig("ctx")
 
+  val publishingMetricsKinesisStream = getConfigString("kinesis.publishingMetricsStream")
+
 }
