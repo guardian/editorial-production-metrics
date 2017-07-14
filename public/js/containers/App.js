@@ -23,7 +23,8 @@ class App extends React.Component {
                 />
                 <Charts
                     charts={charts}
-                    time={filterVals.time}
+                    startDate={filterVals.startDate}
+                    endDate={filterVals.endDate}
                     updating={updating}
                 />
             </Page>

@@ -1,32 +1,29 @@
 import React from 'react';
-import {LineChart, Themes} from 'formidable-charts';
-import {Grid, Row, Col} from 'react-flexbox-grid';
-import Chart from './Chart';
+import { Themes } from 'formidable-charts';
+import { Grid, Row, Col } from 'react-flexbox-grid';
+import LineChartWrap from './LineChartWrap';
+import AreaChartWrap from './AreaChartWrap';
 
-import ChartTheme from '../ChartTheme/theme';
-
-const customisedTheme = Object.assign({}, Themes.simple, ChartTheme);
-
-const Charts = ({charts, updating, timeRange}) => {
-    const xLabelByTime = 'Days';
+const Charts = ({ charts, updating }) => {
     return (
         <Grid fluid>
             <Row>
                 <Col xs={12} md={6}>
-                    <Chart
-                        title="Content started in Composer"
-                        series={charts.startedInComposer}
-                        xLabel={xLabelByTime}
-                        yLabel="Percentage"
+                    <AreaChartWrap
+                        stacked={true}
+                        scale="time"
+                        title="Tool of origin: inCopy vs Composer"
+                        series={charts.composerVsInCopy}
+                        yLabel="Published Content %"
                         updating={updating}
                     />
                 </Col>
                 <Col xs={12} md={6}>
-                    <Chart
-                        title="Content never in Workflow"
-                        series={charts.neverInWorkflow}
-                        xLabel={xLabelByTime}
-                        yLabel="Percentage"
+                    <LineChartWrap
+                        scale="time"
+                        title="Content started in Composer"
+                        series={charts.startedInComposer}
+                        yLabel="Published Content %"
                         updating={updating}
                     />
                 </Col>
@@ -34,29 +31,38 @@ const Charts = ({charts, updating, timeRange}) => {
 
             <Row>
                 <Col xs={6} md={4}>
-                    <Chart
+                    <LineChartWrap
+                        scale="time"
+                        title="Content never in Workflow"
+                        series={charts.neverInWorkflow}
+                        yLabel="Published Content %"
+                        updating={updating}
+                    />
+                </Col>
+                <Col xs={6} md={4}>
+                    <LineChartWrap
+                        scale="time"
                         title="Content in paper started in digital tools"
                         series={charts.paperStartedInDigital}
-                        xLabel={xLabelByTime}
-                        yLabel="Percentage"
+                        yLabel="Published Content %"
                         updating={updating}
                     />
                 </Col>
                 <Col xs={6} md={4}>
-                    <Chart
+                    <LineChartWrap
+                        scale="time"
                         title="Digital only content started in InCopy"
                         series={charts.digitalStartedInInCopy}
-                        xLabel={xLabelByTime}
-                        yLabel="Percentage"
+                        yLabel="Published Content %"
                         updating={updating}
                     />
                 </Col>
                 <Col xs={6} md={4}>
-                    <Chart
+                    <LineChartWrap
+                        scale="time"
                         title="Print only content produced"
                         series={charts.printOnly}
-                        xLabel={xLabelByTime}
-                        yLabel="Percentage"
+                        yLabel="Published Content %"
                         updating={updating}
                     />
                 </Col>
