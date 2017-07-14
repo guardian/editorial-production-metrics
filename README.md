@@ -12,6 +12,7 @@ for the composer AWS account from [janus](https://janus.gutools.co.uk). You'll a
  - Setup the nginx mapping by following the instructions in the
  [dev-nginx readme](https://github.com/guardian/dev-nginx#install-config-for-an-application).
  - Install Client Side Dependencies with `./scripts/setup.sh`
+ - Set up the Postgres database: We use a RDS Posgres database running in the composer account in AWS. To connect to it locally run `./setup-ssh-tunnel.sh -t <Endpoint of of database without the port number>
  - Run using sbt: `sbt "run 9051"`. (For quick restart you should run `sbt` and then `run 9051`, so that you can exit
   the application without exiting sbt.)
 
