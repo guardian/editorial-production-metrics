@@ -7,10 +7,8 @@ import ChartTheme from '../ChartTheme/theme';
 
 const customisedTheme = Object.assign({}, Themes.simple, ChartTheme);
 
-const Charts = ({charts, updating, time}) => {
-    const xLabelByTime = time === '7days' || time === '30days'
-        ? 'Days'
-        : 'Months';
+const Charts = ({charts, updating, timeRange}) => {
+    const xLabelByTime = 'Days';
     return (
         <Grid fluid>
             <Row>

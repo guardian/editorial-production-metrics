@@ -1,4 +1,4 @@
-import {combineReducers} from 'redux';
+import { combineReducers } from 'redux';
 import chartReducer from './chartReducer';
 import updateFilterReducer from './updateFilterReducer';
 import updateProgressReducer from './updateProgressReducer';
