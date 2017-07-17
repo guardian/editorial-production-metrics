@@ -22,7 +22,7 @@ object PublishingSystem {
     }
   }
 
-  implicit val priorityFormat = Format(publishingSystemReads, publishingSystemWrites)
+  implicit val publishingSystemFormat = Format(publishingSystemReads, publishingSystemWrites)
 }
 
 case class Metrics (

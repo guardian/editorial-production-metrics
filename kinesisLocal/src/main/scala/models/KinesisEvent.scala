@@ -23,7 +23,7 @@ object PublishingSystem {
     }
   }
 
-  implicit val priorityFormat = Format(publishingSystemReads, publishingSystemWrites)
+  implicit val publishingSystenFormat = Format(publishingSystemReads, publishingSystemWrites)
 
 }
 
@@ -32,14 +32,14 @@ case object CreatedContent extends EventType
 case object ForkedContent extends EventType
 
 object EventType {
-  val publishingSystemWrites = new Writes[EventType] {
+  val eventTypeWrites = new Writes[EventType] {
     override def writes(priority: EventType): JsValue = priority match {
       case CreatedContent => JsString("CreatedContent")
       case ForkedContent => JsString("ForkedContent")
     }
   }
 
-  val publishingSystemReads = new Reads[EventType] {
+  val eventTypeReads = new Reads[EventType] {
     override def reads(json: JsValue): JsResult[EventType] = json match {
       case JsString("CreatedContent") => JsSuccess(CreatedContent)
       case JsString("ForkedContent")  => JsSuccess(ForkedContent)
@@ -47,7 +47,7 @@ object EventType {
     }
   }
 
-  implicit val priorityFormat = Format(publishingSystemReads, publishingSystemWrites)
+  implicit val eventFormat = Format(eventTypeReads, eventTypeWrites)
 
 }
 
