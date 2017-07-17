@@ -22,7 +22,7 @@ object EventType {
     }
   }
 
-  implicit val priorityFormat = Format(publishingSystemReads, publishingSystemWrites)
+  implicit val eventFormat = Format(publishingSystemReads, publishingSystemWrites)
 }
 
 case class KinesisEvent(
