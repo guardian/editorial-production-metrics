@@ -1,0 +1,8 @@
+@mixin center-absolutely($loadingLabelHeight, $loadingLabelWidth) {
+  text-align: center;
+  line-height: $loadingLabelHeight;
+  width: $loadingLabelWidth;
+  position: absolute;
+  top: calc(50% - #{$loadingLabelHeight} / 2);
+  left: calc(50% - #{$loadingLabelWidth} / 2);
+}

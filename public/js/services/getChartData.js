@@ -1,7 +1,10 @@
 import fetch from 'unfetch';
+import moment from 'moment';
 
 export default function getChartData(filterVals) {
-    const reqParams = `?office=${filterVals.office}&desk=${filterVals.desk}&section=${filterVals.section}`;
+    const formattedStartDate = moment(filterVals.startDate).format();
+    const formattedEndDate = moment(filterVals.endDate).format();
+    const reqParams = `?office=${filterVals.office}&desk=${filterVals.desk}&section=${filterVals.section}&startDate=${formattedStartDate}&endDate=${formattedEndDate}`;
     return Promise
         .all(
             [

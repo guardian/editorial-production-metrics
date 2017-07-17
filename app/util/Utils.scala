@@ -2,6 +2,7 @@ package util
 
 import io.circe.ParsingFailure
 import models.{InvalidJsonError, NoRequestBodyError, ProductionMetricsError, UnexpectedExceptionError}
+import play.api.Logger
 
 object Utils {
 
@@ -10,6 +11,7 @@ object Utils {
       case e: ParsingFailure => InvalidJsonError(e.message)
       case _ => UnexpectedExceptionError
     }
+    Logger.error(error.message, exception)
     Left(error)
   }
 

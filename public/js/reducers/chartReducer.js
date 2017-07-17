@@ -20,9 +20,9 @@ const initialState = {
 
 export default function chartReducer(state = initialState, action) {
     switch (action.type) {
-        case 'UPDATE_CHARTS':
-            return action.dataPoints;
-        default:
-            return state;
+    case 'UPDATE_CHARTS':
+        return action.dataPoints;
+    default:
+        return state;
     }
 }

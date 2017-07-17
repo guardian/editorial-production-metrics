@@ -1,0 +1,28 @@
+.chart-wrap {
+  position: relative;
+}
+
+$loadingLabelWidth: 100px;
+$loadingLabelHeight: 30px;
+
+.chart-wrap:after {
+  content: 'Loading\2026'; // Ellipsis
+  display: none;
+  @include center-absolutely(100px, 30px); // Center the chart wrap passing in the width and height
+}
+
+.chart-wrap:before {
+  content: '';
+  display: none;
+  background-color: rgba(0,0,0,0.7);
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+.chart-wrap__updating:after,
+.chart-wrap__updating:before {
+  display: block;
+}
