@@ -6,6 +6,7 @@ import router.Routes
 import config._
 import database.MetricsDB
 import db.{DBComponents, HikariCPComponents}
+import lib.kinesis.ProductionMetricsStreamReader
 import play.api.db.evolutions.EvolutionsComponents
 
 class AppComponents(context: Context)
@@ -17,6 +18,9 @@ class AppComponents(context: Context)
   //Lazy val needs to be accessed so that database evolutions are applied
   applicationEvolutions
   lazy val db = new MetricsDB(config)
+  lazy val kinesisStreamConsumer = new ProductionMetricsStreamReader(config.publishingMetricsKinesisStream, config.stage, config)
+  kinesisStreamConsumer.start
+
 
   lazy val router = new Routes(httpErrorHandler, appController, healthcheckController, loginController, assets)
   lazy val assets = new controllers.Assets(httpErrorHandler)
