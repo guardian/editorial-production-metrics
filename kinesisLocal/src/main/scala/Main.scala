@@ -1,9 +1,11 @@
-import models.{Composer, CreatedContent, KinesisEvent}
+import models.{CapiContent, CapiData, KinesisEvent}
+import play.api.libs.json.Json
 
 object Main {
   def main(args: Array[String]): Unit = {
 
-    val event = KinesisEvent(CreatedContent, Some("1"), None, 100, 1, Composer)
+    val testCapiData = CapiData("xyz1234", None, None, "2017-07-20T13:00:06Z", "sport", "incopy")
+    val event = KinesisEvent(CapiContent, Json.toJson(testCapiData))
     KinesisWriter.write(event)
   }
 }

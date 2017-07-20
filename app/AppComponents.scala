@@ -18,7 +18,7 @@ class AppComponents(context: Context)
   //Lazy val needs to be accessed so that database evolutions are applied
   applicationEvolutions
   lazy val db = new MetricsDB(config)
-  lazy val kinesisStreamConsumer = new ProductionMetricsStreamReader(config.publishingMetricsKinesisStream, config.stage, config)
+  lazy val kinesisStreamConsumer = new ProductionMetricsStreamReader(config.publishingMetricsKinesisStream, config.stage, config, db)
   kinesisStreamConsumer.start
 
 
