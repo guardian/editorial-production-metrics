@@ -1,17 +1,16 @@
 import java.nio.ByteBuffer
 import java.util.UUID
 
+import com.amazonaws.services.kinesis.AmazonKinesisClientBuilder
 import Config._
 import com.amazonaws.services.kinesis.model.PutRecordRequest
-import com.amazonaws.services.kinesis.{AmazonKinesis, AmazonKinesisClient}
 import io.circe.generic.auto._
 import io.circe.syntax._
 import models.KinesisEvent
 
 object KinesisWriter {
 
-  val client: AmazonKinesis = new AmazonKinesisClient(awsCredentialsProvider)
-  client.setRegion(region)
+  val client = AmazonKinesisClientBuilder.standard().withCredentials(awsCredentialsProvider).withRegion(region.getName).build()
 
   def write(event: KinesisEvent) = {
     val eventJson = event.asJson
