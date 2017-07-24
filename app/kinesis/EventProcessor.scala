@@ -1,6 +1,5 @@
 package lib.kinesis
 
-import java.io.IOException
 import java.util.concurrent.atomic.{AtomicInteger, AtomicLong}
 import java.util.{List => JList}
 
@@ -8,14 +7,12 @@ import com.amazonaws.services.kinesis.clientlibrary.interfaces.{IRecordProcessor
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.ShutdownReason
 import com.amazonaws.services.kinesis.model.Record
 import lib.kinesis.EventProcessor.EventWithSize
-import models.{CannotDeserializeKinesisEvent, KinesisEvent, ProductionMetricsError}
+import models.{KinesisEvent, ProductionMetricsError}
 import play.api.Logger
-import play.api.libs.json.{JsResultException, Json}
 import util.Parser._
 
 import scala.collection.JavaConverters._
 import scala.concurrent.duration._
-
 
 abstract class EventProcessor[T <: KinesisEvent](
   checkpointInterval: Duration = 30.seconds,

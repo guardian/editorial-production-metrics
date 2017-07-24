@@ -41,8 +41,6 @@ object ProductionMetricsStreamReader {
 
     val codec = KinesisEvent
 
-
-
     override protected def processEvent(eventWithSize: EventWithSize[KinesisEvent]): Unit =
       println(s"Processed event ${eventWithSize.event}")
   }

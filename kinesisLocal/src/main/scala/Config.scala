@@ -4,7 +4,7 @@ import com.amazonaws.regions.{Region, Regions}
 
 object Config {
 
-  val region = Option(Regions.getCurrentRegion).getOrElse(Region.getRegion(Regions.EU_WEST_1))
+  val region: Region = Option(Regions.getCurrentRegion).getOrElse(Region.getRegion(Regions.EU_WEST_1))
 
   val awsCredentialsProvider = new AWSCredentialsProviderChain(
     new ProfileCredentialsProvider("composer"),
