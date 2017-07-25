@@ -36,7 +36,6 @@ object ProductionMetricsStreamReader {
     extends EventProcessor[KinesisEvent](checkpointInterval, maxCheckpointBatchSize)
       with SingleEventProcessor[KinesisEvent] {
 
-
     def isActivated = true
 
     val codec = KinesisEvent
