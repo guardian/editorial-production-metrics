@@ -22,7 +22,12 @@ class MetricsDB(val dbContext: PostgresJdbcContext[SnakeCase]) {
       case "desk" =>
         filters.desk.fold(acc)(desk => acc.filter(m => m.commissioningDesk.map(_.toUpperCase) == lift(filters.desk.map(_.toUpperCase))))
       case "dateRange" =>
-        filters.dateRange.fold(acc)(dateRange => acc.filter(m => m.creationTime > lift(dateRange.from.get) && m.creationTime < lift(dateRange.to.get)))
+        filters.dateRange.fold(acc) {
+          case DateRange(None, None) => acc
+          case DateRange(Some(start), None) => acc.filter(m => m.creationTime > start)
+          case DateRange(None, Some(end)) => acc.filter(m => m.creationTime < end)
+          case DateRange(Some(start), Some(end)) => acc.filter(m => m.creationTime > start && m.creationTime < end)
+        }
       case _ => acc
     })
   }
@@ -66,12 +71,20 @@ class MetricsDB(val dbContext: PostgresJdbcContext[SnakeCase]) {
   def getPublishingMetrics(implicit filters: MetricsFilters): List[Metric] =
     dbContext.run(
       quote {
-        applyFilters(querySchema[Metric]("metrics"))
+        querySchema[Metric]("metrics")
       })
 
   def insertPublishingMetric(metric: Metric): Long =
     dbContext.run(
       quote {
         querySchema[Metric]("metrics").insert(lift(metric))
+      })
+
+  def getStartedIn(system: String)(implicit filters: MetricsFilters): List[(DateTime, Long)] =
+    dbContext.run(
+      quote {
+        applyFilters(querySchema[Metric]("metrics").filter(_.startingSystem == lift(system))).groupBy(m => m.creationTime).map {
+          case (date, metric) => (date, metric.size)
+        }
       })
 }
