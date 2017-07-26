@@ -1,17 +1,18 @@
 package lib.kinesis
 
 import java.util.UUID
+
 import com.amazonaws.auth.AWSCredentialsProviderChain
 import com.amazonaws.auth.profile.ProfileCredentialsProvider
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorFactory
+import com.gu.editorialproductionmetricsmodels.models.EventType.CapiContent
+import com.gu.editorialproductionmetricsmodels.models.{CapiData, KinesisEvent}
 import config.Config
 import database.MetricsDB
 import io.circe.Json
 import lib.kinesis.EventProcessor.EventWithSize
 import lib.kinesis.ProductionMetricsStreamReader.ProductionMetricsEventProcessor
-import models.EventType.CapiContent
 import models.db.Metric
-import models.{CapiData, KinesisEvent}
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import play.api.Logger

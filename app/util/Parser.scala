@@ -3,7 +3,8 @@ package util
 import cats.syntax.either._
 import io.circe.{Json, parser}
 import Utils._
-import models.{CapiData, InCopyData, KinesisEvent, ProductionMetricsError}
+import com.gu.editorialproductionmetricsmodels.models.{CapiData, KinesisEvent}
+import models.ProductionMetricsError
 import io.circe.generic.auto._
 
 object Parser {
@@ -25,9 +26,6 @@ object Parser {
     } yield parsedJson
     result.fold(processException, Right(_))
   }
-
-  def jsonToInCopyData(json: Json): Either[ProductionMetricsError, InCopyData] =
-    json.as[InCopyData].fold(processException, Right(_))
 
   def jsonToCapiData(json: Json): Either[ProductionMetricsError, CapiData] =
     json.as[CapiData].fold(processException, Right(_))

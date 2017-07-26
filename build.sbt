@@ -26,7 +26,8 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala, RiffRaffArtifact
       "com.beachape"           %% "enumeratum-circe"             % "1.5.14",
       "org.postgresql"         % "postgresql"                    % "42.1.1",
       "io.getquill"            % "quill-jdbc_2.11"               % "1.2.1",
-      "com.amazonaws"          % "amazon-kinesis-client"         % "1.7.6"
+      "com.amazonaws"          % "amazon-kinesis-client"         % "1.7.6",
+      "com.gu" %% "editorial-production-metrics-models-lib" % "0.1-SNAPSHOT"
     ),
     routesGenerator := InjectedRoutesGenerator,
 
@@ -62,6 +63,7 @@ lazy val kinesisLocal = (project in file("kinesisLocal"))
       "com.amazonaws"          % "amazon-kinesis-client"         % "1.7.6",
       "io.circe"               %% "circe-parser"                 % "0.7.0",
       "io.circe"               %% "circe-generic"                % "0.7.0",
-      "com.beachape"           %% "enumeratum-circe"             % "1.5.14"
+      "com.beachape"           %% "enumeratum-circe"             % "1.5.14",
+      "com.gu"                 %% "editorial-production-metrics-models-lib" % "0.1-SNAPSHOT"
     )
   )

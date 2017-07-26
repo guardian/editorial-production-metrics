@@ -1,7 +1,7 @@
-import models.{CapiData, KinesisEvent}
+import com.gu.editorialproductionmetricsmodels.models.EventType.CapiContent
+import com.gu.editorialproductionmetricsmodels.models.{CapiData, KinesisEvent}
 import io.circe.syntax._
 import io.circe.generic.auto._
-import models.EventType.CapiContent
 
 object Main {
   def main(args: Array[String]): Unit = {

@@ -4,9 +4,9 @@ import java.util.UUID
 import com.amazonaws.services.kinesis.AmazonKinesisClientBuilder
 import Config._
 import com.amazonaws.services.kinesis.model.PutRecordRequest
+import com.gu.editorialproductionmetricsmodels.models.KinesisEvent
 import io.circe.generic.auto._
 import io.circe.syntax._
-import models.KinesisEvent
 
 object KinesisWriter {
 

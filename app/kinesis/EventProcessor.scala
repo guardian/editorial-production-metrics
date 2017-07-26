@@ -1,16 +1,15 @@
 package lib.kinesis
 
-import java.io.IOException
 import java.util.concurrent.atomic.{AtomicInteger, AtomicLong}
 import java.util.{List => JList}
 
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.{IRecordProcessor, IRecordProcessorCheckpointer}
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.ShutdownReason
 import com.amazonaws.services.kinesis.model.Record
+import com.gu.editorialproductionmetricsmodels.models.KinesisEvent
 import lib.kinesis.EventProcessor.EventWithSize
-import models.{CannotDeserializeKinesisEvent, KinesisEvent, ProductionMetricsError}
+import models.ProductionMetricsError
 import play.api.Logger
-import play.api.libs.json.{JsResultException, Json}
 import util.Parser._
 
 import scala.collection.JavaConverters._
