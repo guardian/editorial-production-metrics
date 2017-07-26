@@ -12,8 +12,19 @@ class MetricsDB(val dbContext: PostgresJdbcContext[SnakeCase]) {
   private implicit val encodePublicationDate = MappedEncoding[DateTime, Date](d => d.toDate)
   private implicit val decodePublicationDate = MappedEncoding[Date, DateTime](d => new DateTime(d.getTime))
 
+  implicit class DateTimeQuotes(left: DateTime) {
+    def >(right: DateTime) = quote(infix"$left > $right".as[Boolean])
+    def <(right: DateTime) = quote(infix"$left < $right".as[Boolean])
+  }
+
   private def applyFilters(q: Quoted[Query[Metric]])(implicit filters: MetricsFilters): Quoted[Query[Metric]] = quote {
-    q.filter(metric => metric.commissioningDesk.map(_.toUpperCase) == lift(filters.desk.map(_.toUpperCase)))
+    filters.filtersList.foldLeft(q)((acc, filterName) => filterName match {
+      case "desk" =>
+        filters.desk.fold(acc)(desk => acc.filter(m => m.commissioningDesk.map(_.toUpperCase) == lift(filters.desk.map(_.toUpperCase))))
+      case "dateRange" =>
+        filters.dateRange.fold(acc)(dateRange => acc.filter(m => m.creationTime > lift(dateRange.from.get) && m.creationTime < lift(dateRange.to.get)))
+      case _ => acc
+    })
   }
 
   def getComposerMetrics: List[ComposerMetric] =

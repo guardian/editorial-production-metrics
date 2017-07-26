@@ -9,14 +9,16 @@ case class DateRange (from: Option[DateTime], to: Option[DateTime])
 
 case class MetricsFilters(
   dateRange: Option[DateRange],
-  desk: Option[String]
+  desk: Option[String],
+  filtersList: List[String]
 )
 
 object MetricsFilters {
   def apply(queryString: Map[String, Seq[String]]): MetricsFilters =
     MetricsFilters(
       dateRange = extractDateRange(queryString),
-      desk = getOptionFromQS("desk", queryString)
+      desk = getOptionFromQS("desk", queryString),
+      filtersList = List("dateRange", "desk")
     )
 
   private def getOptionFromQS(key: String, qs: Map[String, Seq[String]]): Option[String] = qs.get(key).flatMap(_.headOption)

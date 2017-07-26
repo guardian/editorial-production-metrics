@@ -4,7 +4,7 @@ import config.Config
 import database.MetricsDB
 import io.circe.syntax._
 import models.db.Metric._
-import models.db.{Metric, MetricsFilters}
+import models.db.MetricsFilters
 import play.api.Logger
 import play.api.libs.ws.WSClient
 import play.api.mvc._
