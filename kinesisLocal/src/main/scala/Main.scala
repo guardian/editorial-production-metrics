@@ -1,4 +1,6 @@
-import models.{Composer, CreatedContent, KinesisEvent}
+import models.EventType.CreatedContent
+import models.KinesisEvent
+import models.PublishingSystem.Composer
 
 object Main {
   def main(args: Array[String]): Unit = {

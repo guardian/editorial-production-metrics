@@ -11,6 +11,7 @@ import lib.kinesis.EventProcessor.EventWithSize
 import models.{CannotDeserializeKinesisEvent, KinesisEvent, ProductionMetricsError}
 import play.api.Logger
 import play.api.libs.json.{JsResultException, Json}
+import util.Parser._
 
 import scala.collection.JavaConverters._
 import scala.concurrent.duration._
@@ -43,20 +44,8 @@ abstract class EventProcessor[T <: KinesisEvent](
   }
 
   def deserializeEvent(data: Array[Byte]): Either[ProductionMetricsError, KinesisEvent] ={
-    try {
-      val jsonAsString = new String(data)
-      val json = Json.parse(jsonAsString)
-      val event = json.as[KinesisEvent]
-      Right(event)
-    }
-    catch {
-      case e: JsResultException =>
-        Left(CannotDeserializeKinesisEvent(s"Event from kinesis steam could not be deserialized as KinesisEvent ${e.errors}"))
-      case e: IOException =>
-        Left(CannotDeserializeKinesisEvent(s"IO error in deserialising kinesis stream event ${e.getMessage}"))
-      case e: Throwable =>
-        Left(CannotDeserializeKinesisEvent(s"Unexpected exception when deserializing event from kinesis stream $e"))
-    }
+    val jsonAsString = new String(data)
+    stringToKinesisEvent(jsonAsString)
   }
 
   private def processRecordsIfActivated(records: JList[Record], checkpointer: IRecordProcessorCheckpointer): Unit = {
@@ -64,10 +53,9 @@ abstract class EventProcessor[T <: KinesisEvent](
       val buffer = record.getData.array
       deserializeEvent(buffer) match {
         case Right(event) => Some(EventWithSize(event, buffer.length))
-        case Left(error) => {
+        case Left(error) =>
           Logger.error(error.message)
           None
-        }
       }
     }
 

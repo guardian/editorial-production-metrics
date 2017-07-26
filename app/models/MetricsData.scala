@@ -1,28 +1,13 @@
 package models
 
-import play.api.libs.json._
+import enumeratum.{CirceEnum, Enum, EnumEntry}
 
-sealed trait PublishingSystem
-case object Composer extends PublishingSystem
-case object InCopy extends PublishingSystem
+sealed trait PublishingSystem extends EnumEntry
+case object PublishingSystem extends Enum[PublishingSystem] with CirceEnum[PublishingSystem] {
+  case object Composer extends PublishingSystem
+  case object InCopy extends PublishingSystem
 
-object PublishingSystem {
-  val publishingSystemWrites = new Writes[PublishingSystem] {
-    override def writes(priority: PublishingSystem): JsValue = priority match {
-      case Composer => JsString("Composer")
-      case InCopy    => JsString("InCopy")
-    }
-  }
-
-  val publishingSystemReads = new Reads[PublishingSystem] {
-    override def reads(json: JsValue): JsResult[PublishingSystem] = json match {
-      case JsString("Composer") => JsSuccess(Composer)
-      case JsString("InCopy")     => JsSuccess(InCopy)
-      case _                      => JsError("Invalid publishing system")
-    }
-  }
-
-  implicit val publishingSystemFormat = Format(publishingSystemReads, publishingSystemWrites)
+  val values = findValues
 }
 
 case class Metrics (

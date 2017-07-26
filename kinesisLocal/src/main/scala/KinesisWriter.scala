@@ -1,11 +1,12 @@
 import java.nio.ByteBuffer
 import java.util.UUID
 
-import com.amazonaws.services.kinesis.{AmazonKinesis, AmazonKinesisClient}
 import Config._
 import com.amazonaws.services.kinesis.model.PutRecordRequest
+import com.amazonaws.services.kinesis.{AmazonKinesis, AmazonKinesisClient}
+import io.circe.generic.auto._
+import io.circe.syntax._
 import models.KinesisEvent
-import play.api.libs.json.Json
 
 object KinesisWriter {
 
@@ -13,8 +14,8 @@ object KinesisWriter {
   client.setRegion(region)
 
   def write(event: KinesisEvent) = {
-    val eventJson = Json.toJson(event)
-    val eventString = Json.stringify(eventJson)
+    val eventJson = event.asJson
+    val eventString = eventJson.toString()
     postToKinesis(eventString)
   }
 

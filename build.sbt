@@ -21,12 +21,12 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala, RiffRaffArtifact
       "com.gu"                 %% "configuration-magic-core"     %  "1.3.0",
       "com.gu"                 %% "configuration-magic-play2-4"  % "1.3.0",
       "com.gu"                 %% "pan-domain-auth-play_2-5"     % "0.4.1",
+      "io.circe"               %% "circe-parser"                 % "0.7.0",
+      "io.circe"               %% "circe-generic"                % "0.7.0",
+      "com.beachape"           %% "enumeratum-circe"             % "1.5.14",
       "org.postgresql"         % "postgresql"                    % "42.1.1",
       "io.getquill"            % "quill-jdbc_2.11"               % "1.2.1",
-      "com.amazonaws"          % "amazon-kinesis-client"         % "1.7.6",
-      "com.typesafe.play"      %% "play-json"                    % "2.6.0",
-      // jackson-dataformat-cbor is required to resolve an incompatability between the version used in play-json and the one used in amazon-kinesis-client
-      "com.fasterxml.jackson.dataformat" % "jackson-dataformat-cbor" % "2.8.8"
+      "com.amazonaws"          % "amazon-kinesis-client"         % "1.7.6"
     ),
     routesGenerator := InjectedRoutesGenerator,
 
@@ -63,8 +63,8 @@ lazy val kinesisLocal = (project in file("kinesisLocal"))
     libraryDependencies ++= Seq(
       "com.amazonaws"          % "aws-java-sdk-core"             % awsVersion,
       "com.amazonaws"          % "amazon-kinesis-client"         % "1.7.6",
-      "com.typesafe.play"      %% "play-json"                    % "2.6.0",
-// jackson-dataformat-cbor is required to resolve an incompatability between the version used in play-json and the one used in amazon-kinesis-client
-      "com.fasterxml.jackson.dataformat" % "jackson-dataformat-cbor" % "2.8.8"
+      "io.circe"               %% "circe-parser"                 % "0.7.0",
+      "io.circe"               %% "circe-generic"                % "0.7.0",
+      "com.beachape"           %% "enumeratum-circe"             % "1.5.14"
     )
   )

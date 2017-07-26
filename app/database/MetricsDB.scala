@@ -1,7 +1,6 @@
 package database
 
 import java.util.Date
-import config.Config
 import io.getquill.{PostgresJdbcContext, SnakeCase}
 import models.db._
 import org.joda.time.DateTime

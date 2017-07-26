@@ -1,5 +1,8 @@
 package models.db
 
+import io.circe._
+import io.circe.generic.semiauto._
+import io.circe.syntax._
 import org.joda.time.DateTime
 
 case class Metric(
@@ -13,6 +16,13 @@ case class Metric(
     inNewspaper: Boolean,
     creationTime: DateTime,
     roundTrip: Boolean)
+object Metric {
+  private val datePattern = "yyyy-MM-dd'T'HH:mm:ss'Z'"
+  implicit val timeEncoder = new Encoder[DateTime] {
+    def apply(d: DateTime) = d.toString(datePattern).asJson
+  }
+  implicit val metricEncoder: Encoder[Metric] = deriveEncoder
+}
 
 case class InCopyMetric(
     storyBundleId: String,
