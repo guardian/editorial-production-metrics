@@ -2,12 +2,12 @@ package controllers
 
 import config.Config
 import database.MetricsDB
-import models.db.{ComposerMetric, MetricsFilters$, Metric}
+import io.circe.syntax._
 import models.db.Metric._
+import models.db.{Metric, MetricsFilters}
 import play.api.Logger
 import play.api.libs.ws.WSClient
 import play.api.mvc._
-import io.circe.syntax._
 
 class App(val wsClient: WSClient, val config: Config, val db: MetricsDB) extends Controller with PanDomainAuthActions {
 

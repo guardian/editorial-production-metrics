@@ -2,16 +2,19 @@ package database
 
 import java.util.Date
 
-import config.Config
 import io.getquill.{PostgresJdbcContext, SnakeCase}
 import models.db._
 import org.joda.time.DateTime
 
-class MetricsDB(dbContext: PostgresJdbcContext[SnakeCase]) {
+class MetricsDB(val dbContext: PostgresJdbcContext[SnakeCase]) {
   import dbContext._
 
   private implicit val encodePublicationDate = MappedEncoding[DateTime, Date](d => d.toDate)
   private implicit val decodePublicationDate = MappedEncoding[Date, DateTime](d => new DateTime(d.getTime))
+
+  private def applyFilters(q: Quoted[Query[Metric]])(implicit filters: MetricsFilters): Quoted[Query[Metric]] = quote {
+    q.filter(metric => metric.commissioningDesk.map(_.toUpperCase) == lift(filters.desk.map(_.toUpperCase)))
+  }
 
   def getComposerMetrics: List[ComposerMetric] =
     dbContext.run(
@@ -52,7 +55,7 @@ class MetricsDB(dbContext: PostgresJdbcContext[SnakeCase]) {
   def getPublishingMetrics(implicit filters: MetricsFilters): List[Metric] =
     dbContext.run(
       quote {
-        new MetricsQuery(dbContext).applyFilters(querySchema[Metric]("metrics"))
+        applyFilters(querySchema[Metric]("metrics"))
       })
 
   def insertPublishingMetric(metric: Metric): Long =
