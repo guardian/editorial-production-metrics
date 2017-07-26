@@ -12,30 +12,6 @@ class MetricsDB(dbContext: PostgresJdbcContext[SnakeCase]) {
   private implicit val encodePublicationDate = MappedEncoding[DateTime, Date](d => d.toDate)
   private implicit val decodePublicationDate = MappedEncoding[Date, DateTime](d => new DateTime(d.getTime))
 
-  def deskFilter(desk: Option[String]): Option[String] => Boolean = {
-    desk.map(
-      deskName => {value: Option[String] => value.map(_ == deskName).getOrElse((x: Option[String]) => true)}
-    ).getOrElse{(x: Option[String]) => true}
-  }
-
-  def dateFilter(startDate: Option[DateTime], f: (DateTime, DateTime) => Boolean): (DateTime) => Boolean = {
-    startDate.map(
-      start => {value: DateTime => f(value, start)}
-    ).getOrElse(_ => true)
-  }
-
-  def getMetricsByStartingSystem(desk: Option[String], startDate: Option[DateTime], endDate: Option[DateTime]) = {
-    dbContext.run(
-      quote {
-        querySchema[Metric]("metrics")
-          .filter(x => deskFilter(desk)(x.commissioningDesk))
-          .filter(x => dateFilter(startDate, _.getMillis >=_.getMillis)(x.creationTime))
-          .filter(x => dateFilter(endDate, _.getMillis <= _.getMillis)(x.creationTime))
-          .groupBy(x => x.startingSystem == "composer")
-      }
-    )
-  }
-
   def getComposerMetrics =
     dbContext.run(
       quote{

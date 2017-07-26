@@ -23,7 +23,7 @@ class AppComponents(context: Context)
   lazy val dbContext = new PostgresJdbcContext[SnakeCase](config.dbConfig)
   lazy val db = new MetricsDB(dbContext)
 
-  lazy val kinesisStreamConsumer = new ProductionMetricsStreamReader(config.publishingMetricsKinesisStream, config.stage, config)
+  lazy val kinesisStreamConsumer = new ProductionMetricsStreamReader(config.publishingMetricsKinesisStream, config.stage, config, db)
   kinesisStreamConsumer.start
 
   //Closes connection to db on app termination

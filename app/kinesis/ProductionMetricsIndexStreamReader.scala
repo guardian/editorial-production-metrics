@@ -1,19 +1,22 @@
 package lib.kinesis
 
 import java.util.UUID
+
 import com.amazonaws.auth.AWSCredentialsProviderChain
 import com.amazonaws.auth.profile.ProfileCredentialsProvider
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorFactory
 import config.Config
 import database.MetricsDB
+import io.circe.Json
 import lib.kinesis.EventProcessor.EventWithSize
 import lib.kinesis.ProductionMetricsStreamReader.ProductionMetricsEventProcessor
+import models.EventType.CapiContent
 import models.db.Metric
-import models.{CapiContent, CapiData, KinesisEvent}
+import models.{CapiData, KinesisEvent}
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import play.api.Logger
-import play.api.libs.json.JsValue
+import util.Parser
 
 import scala.concurrent.duration.{Duration, _}
 
@@ -71,18 +74,19 @@ object ProductionMetricsStreamReader {
       }
     }
 
-    private def processCapiEvent(json: JsValue) = {
-      try {
-        val data = json.as[CapiData]
-        for {
-          date <- convertStringToDateTime(data.creationDate)
-          metric = Metric(UUID.randomUUID().toString, data.startingSystem, Some(data.composerId), data.storyBundleId,
-            Some(data.commissioningDesk), None, false, false, date, false)
-        } yield db.insertPublishingMetric(metric)
+    private def processCapiEvent(json: Json) =
+      Parser.jsonToCapiData(json) match {
+        case Right(data) => putCapiDataInDB(data)
+        case Left(error) => Logger.error(error.message)
       }
-      catch {
-        case e: Throwable => Logger.error(s"Could not process event with json ${json}. ${e}")
-      }
+
+
+    def putCapiDataInDB(data: CapiData) = {
+      for {
+        date <- convertStringToDateTime(data.creationDate)
+        metric = Metric(UUID.randomUUID().toString, data.startingSystem, Some(data.composerId), data.storyBundleId,
+          Some(data.commissioningDesk), None, false, false, date, false)
+      } yield db.insertPublishingMetric(metric)
     }
   }
 }
