@@ -8,7 +8,6 @@ import db.{DBComponents, HikariCPComponents}
 import io.getquill.{PostgresJdbcContext, SnakeCase}
 import lib.kinesis.ProductionMetricsStreamReader
 import play.api.db.evolutions.EvolutionsComponents
-
 import scala.concurrent.Future
 
 class AppComponents(context: Context)

@@ -1,7 +1,6 @@
 package lib.kinesis
 
 import java.util.UUID
-
 import com.amazonaws.auth.AWSCredentialsProviderChain
 import com.amazonaws.auth.profile.ProfileCredentialsProvider
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorFactory
