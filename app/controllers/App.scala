@@ -18,8 +18,8 @@ class App(val wsClient: WSClient, val config: Config, val db: MetricsDB) extends
   }
 
   def getStartedInComposer = AuthAction { req =>
-    implicit val filters = MetricsFilters(req.queryString)
-    val result: List[(DateTime, Long)] = db.getStartedIn("composer")
+    implicit val filters = MetricsFilters(req.queryString).copy(startingSystem = Some("composer"))
+    val result = db.getStartedInSystem
 
     listToJson(result) match {
       case Right(j) => Ok(j.asJson.spaces4)
@@ -28,8 +28,8 @@ class App(val wsClient: WSClient, val config: Config, val db: MetricsDB) extends
   }
 
   def getStartedInInCopy = AuthAction { req =>
-    implicit val filters = MetricsFilters(req.queryString)
-    val result: List[(DateTime, Long)] = db.getStartedIn("incopy")
+    implicit val filters = MetricsFilters(req.queryString).copy(startingSystem = Some("incopy"))
+    val result = db.getStartedInSystem
 
     listToJson(result) match {
       case Right(j) => Ok(j.asJson.spaces4)

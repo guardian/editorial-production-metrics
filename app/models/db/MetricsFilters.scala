@@ -10,6 +10,7 @@ case class DateRange (from: Option[DateTime], to: Option[DateTime])
 case class MetricsFilters(
   dateRange: Option[DateRange],
   desk: Option[String],
+  startingSystem: Option[String] = None,
   filtersList: List[String]
 )
 
@@ -18,7 +19,7 @@ object MetricsFilters {
     MetricsFilters(
       dateRange = extractDateRange(queryString),
       desk = getOptionFromQS("desk", queryString),
-      filtersList = List("dateRange", "desk")
+      filtersList = List("dateRange", "desk", "startingSystem")
     )
 
   private def getOptionFromQS(key: String, qs: Map[String, Seq[String]]): Option[String] = qs.get(key).flatMap(_.headOption)
@@ -35,9 +36,13 @@ object MetricsFilters {
     val dateRange: Option[DateRange] = date.fold(None: Option[DateRange])(getDateRangeFromDateString)
 
     dateRange match {
-      case None => Some(DateRange(
-        from = getOptionFromQS("startDate", qs).flatMap(parseDate),
-        to = getOptionFromQS("endDate", qs).flatMap(parseDate)))
+      case None =>
+        val start = getOptionFromQS("startDate", qs).flatMap(parseDate)
+        val end = getOptionFromQS("endDate", qs).flatMap(parseDate)
+
+        if(start.isEmpty && end.isEmpty) None
+        else Some(DateRange(from = start, to = end))
+
       case Some(range) => Some(range)
     }
   }
