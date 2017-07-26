@@ -7,14 +7,14 @@ import scala.util.control.NonFatal
 
 case class DateRange (from: Option[DateTime], to: Option[DateTime])
 
-case class Filters(
+case class MetricsFilters(
   dateRange: Option[DateRange],
   desk: Option[String]
 )
 
-object Filters {
-  def apply(queryString: Map[String, Seq[String]]): Filters =
-    Filters(
+object MetricsFilters {
+  def apply(queryString: Map[String, Seq[String]]): MetricsFilters =
+    MetricsFilters(
       dateRange = extractDateRange(queryString),
       desk = getOptionFromQS("desk", queryString)
     )
@@ -34,8 +34,8 @@ object Filters {
 
     dateRange match {
       case None => Some(DateRange(
-        from = getOptionFromQS("date.from", qs).flatMap(parseDate),
-        to = getOptionFromQS("date.to", qs).flatMap(parseDate)))
+        from = getOptionFromQS("startDate", qs).flatMap(parseDate),
+        to = getOptionFromQS("endDate", qs).flatMap(parseDate)))
       case Some(range) => Some(range)
     }
   }

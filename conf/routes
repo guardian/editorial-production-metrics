@@ -1,6 +1,6 @@
 GET     /                           controllers.App.index
 
-GET    /api/incopy                  controllers.App.getInCopyContent()
+GET    /api/composer                controllers.App.getComposerContent()
 
 GET     /healthcheck                controllers.Healthcheck.healthcheck
 

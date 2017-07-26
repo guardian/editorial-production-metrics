@@ -2,10 +2,12 @@ package controllers
 
 import config.Config
 import database.MetricsDB
-import models.db.Filters
+import models.db.{ComposerMetric, MetricsFilters$, Metric}
+import models.db.Metric._
 import play.api.Logger
 import play.api.libs.ws.WSClient
 import play.api.mvc._
+import io.circe.syntax._
 
 class App(val wsClient: WSClient, val config: Config, val db: MetricsDB) extends Controller with PanDomainAuthActions {
 
@@ -14,10 +16,10 @@ class App(val wsClient: WSClient, val config: Config, val db: MetricsDB) extends
     Ok(views.html.index())
   }
 
-  def getInCopyContent = AuthAction { req =>
-    val queryString: Map[String, Seq[String]] = req.queryString
-    val filters = Filters(queryString)
-    println("filters", filters)
-    Ok("")
+  def getComposerContent = AuthAction { req =>
+    implicit val filters = MetricsFilters(req.queryString)
+    val result = db.getPublishingMetrics
+    println("res", result)
+    Ok(result.asJson.spaces4)
   }
 }
