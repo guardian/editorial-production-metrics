@@ -6,9 +6,8 @@ import io.getquill.{PostgresJdbcContext, SnakeCase}
 import models.db._
 import org.joda.time.DateTime
 
-class MetricsDB(configuration: Config) {
+class MetricsDB(dbContext: PostgresJdbcContext[SnakeCase]) {
 
-  lazy val dbContext = new PostgresJdbcContext[SnakeCase](configuration.dbConfig)
   import dbContext._
 
   private implicit val encodePublicationDate = MappedEncoding[DateTime, Date](d => d.toDate)
