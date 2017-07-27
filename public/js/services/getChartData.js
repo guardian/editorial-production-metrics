@@ -1,5 +1,6 @@
 import fetch from 'unfetch';
 import moment from 'moment';
+import R from 'ramda';
 
 export default function getChartData(filterVals) {
     const formattedStartDate = moment(filterVals.startDate).format();
@@ -12,14 +13,15 @@ export default function getChartData(filterVals) {
                 'neverInWorkflow',
                 'paperStartedInDigital',
                 'digitalStartedInInCopy',
-                'printOnly'
+                'printOnly',
+                'composerVsInCopy'
             ].map(chartType =>
                 fetch(
                     `https://ed-met-fakeapi.getsandbox.com/${chartType}${reqParams}`
                 )
                     .then(res => res.json())
                     .then(jsonRes => ({
-                        [chartType]: [jsonRes]
+                        [chartType]: R.flatten([jsonRes])
                     })))
         )
         .then(chartArr => Object.assign(...chartArr));

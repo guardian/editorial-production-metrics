@@ -1,21 +1,21 @@
 import React from 'react';
-import {LineChart, Themes} from 'formidable-charts';
+import { AreaChart , Themes } from 'formidable-charts';
 
 import ChartTheme from '../ChartTheme/theme';
 
 const customisedTheme = Object.assign({}, Themes.simple, ChartTheme);
 
-const Chart = ({title, series, xLabel, yLabel, updating}) => {
+const AreaChartWrap = ({ title, series, xLabel, yLabel, updating, scale, stacked }) => {
     return (
         <div className={`chart-wrap ${updating && 'chart-wrap__updating'}`}>
-            <LineChart
+            <AreaChart
+                stacked={stacked}
                 title={title}
-                domain={{y: [0, 100]}}
                 theme={customisedTheme}
                 series={series}
                 xAxis={{
                     label: xLabel,
-                    tickFormat: tick => tick.toFixed()
+                    scale
                 }}
                 yAxis={{
                     label: yLabel
@@ -25,4 +25,4 @@ const Chart = ({title, series, xLabel, yLabel, updating}) => {
     );
 };
 
-export default Chart;
+export default AreaChartWrap;

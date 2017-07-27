@@ -14,7 +14,8 @@ module.exports = {
                         presets: ['es2015', 'react'],
                         plugins: [
                             'transform-object-assign',
-                            'transform-object-rest-spread'
+                            'transform-object-rest-spread',
+                            'transform-class-properties'
                         ]
                     }
                 }

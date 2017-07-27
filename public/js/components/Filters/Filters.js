@@ -4,11 +4,9 @@ import moment from 'moment';
 import { DateRangePicker } from 'react-dates';
 
 class Filters extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = { focusedInput: null };
-    }
-
+    
+    state = { focusedInput: null };
+    
     render() {
         const { onSelectChange, filterVals, updating } = this.props;
         return (
