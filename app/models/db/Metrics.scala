@@ -1,5 +1,6 @@
 package models.db
 
+import enumeratum.{CirceEnum, Enum, EnumEntry}
 import io.circe._
 import io.circe.generic.semiauto._
 import io.circe.syntax._
@@ -22,6 +23,14 @@ object Metric {
     def apply(d: DateTime) = d.toString(datePattern).asJson
   }
   implicit val metricEncoder: Encoder[Metric] = deriveEncoder
+}
+
+sealed trait OriginatingSystem extends EnumEntry
+case object OriginatingSystem extends Enum[OriginatingSystem] with CirceEnum[OriginatingSystem] {
+  case object Composer extends OriginatingSystem
+  case object InCopy extends OriginatingSystem
+
+  val values = findValues
 }
 
 case class InCopyMetric(

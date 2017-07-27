@@ -1,5 +1,7 @@
 GET     /                           controllers.App.index
 
+GET     /api/startingSystem/:system controllers.App.getStartedIn(system: String)
+
 GET     /healthcheck                controllers.Healthcheck.healthcheck
 
 GET     /oauthCallback              controllers.Login.oauthCallback

@@ -5,6 +5,8 @@ import io.circe.{Json, parser}
 import Utils._
 import models.{InCopyData, KinesisEvent, ProductionMetricsError}
 import io.circe.generic.auto._
+import org.joda.time.DateTime
+import io.circe._, io.circe.parser._
 
 object Parser {
 
@@ -28,4 +30,13 @@ object Parser {
 
   def jsonToInCopyData(json: Json): Either[ProductionMetricsError, InCopyData] =
     json.as[InCopyData].fold(processException, Right(_))
+
+  def listToJson(list: List[(DateTime, Long)]): Either[ProductionMetricsError, Json] = {
+    val stringList = list.map { pair =>
+      s"""{ "x": "${pair._1}", "y": ${pair._2}}"""
+    }
+    val stringToParse = "[" + stringList.mkString(",") + "]"
+
+    parse(stringToParse).fold(processException, Right(_))
+  }
 }

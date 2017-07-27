@@ -36,12 +36,9 @@ object ProductionMetricsStreamReader {
     extends EventProcessor[KinesisEvent](checkpointInterval, maxCheckpointBatchSize)
       with SingleEventProcessor[KinesisEvent] {
 
-
     def isActivated = true
 
     val codec = KinesisEvent
-
-
 
     override protected def processEvent(eventWithSize: EventWithSize[KinesisEvent]): Unit =
       println(s"Processed event ${eventWithSize.event}")

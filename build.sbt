@@ -25,7 +25,7 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala, RiffRaffArtifact
       "io.circe"               %% "circe-generic"                % "0.7.0",
       "com.beachape"           %% "enumeratum-circe"             % "1.5.14",
       "org.postgresql"         % "postgresql"                    % "42.1.1",
-      "io.getquill"            % "quill-jdbc_2.11"               % "1.2.1",
+      "io.getquill"            %% "quill-jdbc"                   % "1.3.0",
       "com.amazonaws"          % "amazon-kinesis-client"         % "1.7.6"
     ),
     routesGenerator := InjectedRoutesGenerator,
