@@ -3,8 +3,7 @@ package controllers
 import config.Config
 import database.MetricsDB
 import io.circe.syntax._
-import models.db.MetricsFilters
-import org.joda.time.DateTime
+import models.db.{MetricsFilters, OriginatingSystem}
 import play.api.Logger
 import play.api.libs.ws.WSClient
 import play.api.mvc._
@@ -17,23 +16,18 @@ class App(val wsClient: WSClient, val config: Config, val db: MetricsDB) extends
     Ok(views.html.index())
   }
 
-  def getStartedInComposer = AuthAction { req =>
-    implicit val filters = MetricsFilters(req.queryString).copy(startingSystem = Some("composer"))
-    val result = db.getStartedInSystem
+  def getStartedIn(system: String) = AuthAction { req =>
+    OriginatingSystem.withNameOption(system) match {
+      case Some(s) =>
+        implicit val filters = MetricsFilters(req.queryString).copy(startingSystem = Some(s.entryName))
+        val result = db.getStartedInSystem
 
-    listToJson(result) match {
-      case Right(j) => Ok(j.asJson.spaces4)
-      case Left(_) => InternalServerError("Not able to parse json")
+        listToJson(result) match {
+          case Right(j) => Ok(j.asJson.spaces4)
+          case Left(_) => InternalServerError("Not able to parse json")
+        }
+      case None => BadRequest("The valid values for starting system are: composer and incopy")
     }
-  }
 
-  def getStartedInInCopy = AuthAction { req =>
-    implicit val filters = MetricsFilters(req.queryString).copy(startingSystem = Some("incopy"))
-    val result = db.getStartedInSystem
-
-    listToJson(result) match {
-      case Right(j) => Ok(j.asJson.spaces4)
-      case Left(_) => InternalServerError("Not able to parse json")
-    }
   }
 }

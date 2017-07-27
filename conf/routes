@@ -1,7 +1,6 @@
 GET     /                           controllers.App.index
 
-GET     /api/startedInComposer      controllers.App.getStartedInComposer()
-GET     /api/startedInInCopy        controllers.App.getStartedInInCopy()
+GET     /api/startingSystem/:system controllers.App.getStartedIn(system: String)
 
 GET     /healthcheck                controllers.Healthcheck.healthcheck
 

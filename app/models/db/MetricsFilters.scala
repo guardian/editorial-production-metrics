@@ -8,10 +8,10 @@ import scala.util.control.NonFatal
 case class DateRange (from: Option[DateTime], to: Option[DateTime])
 
 case class MetricsFilters(
-  dateRange: Option[DateRange],
-  desk: Option[String],
-  startingSystem: Option[String] = None,
-  filtersList: List[String]
+                           dateRange: Option[DateRange],
+                           desk: Option[String],
+                           startingSystem: Option[String] = None,
+                           filtersList: List[String]
 )
 
 object MetricsFilters {
