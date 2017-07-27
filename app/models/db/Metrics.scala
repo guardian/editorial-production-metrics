@@ -1,5 +1,6 @@
 package models.db
 
+import enumeratum.EnumEntry.Snakecase
 import enumeratum.{CirceEnum, Enum, EnumEntry}
 import io.circe._
 import io.circe.generic.semiauto._
@@ -25,7 +26,7 @@ object Metric {
   implicit val metricEncoder: Encoder[Metric] = deriveEncoder
 }
 
-sealed trait OriginatingSystem extends EnumEntry
+sealed trait OriginatingSystem extends EnumEntry with Snakecase
 case object OriginatingSystem extends Enum[OriginatingSystem] with CirceEnum[OriginatingSystem] {
   case object Composer extends OriginatingSystem
   case object InCopy extends OriginatingSystem
