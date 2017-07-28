@@ -20,8 +20,7 @@ class AppComponents(context: Context)
   //Lazy val needs to be accessed so that database evolutions are applied
   applicationEvolutions
   //Context is created here so we can add a stop hook to kill the db connection when the app terminates
-//  lazy val db = DatabaseConfig.forConfig("default").db
-  private lazy val dbConfig: DatabaseConfig[PostgresProfile] = DatabaseConfig.forConfig("slick.dbs.default")
+  private lazy val dbConfig: DatabaseConfig[PostgresProfile] = DatabaseConfig.forConfig("slick.dbs.default", configuration.underlying)
   implicit lazy val db: Database = dbConfig.db
   lazy val metricsDb = new MetricsDB(db)
 
