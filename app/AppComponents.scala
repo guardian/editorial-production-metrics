@@ -11,6 +11,8 @@ import slick.basic.DatabaseConfig
 import slick.jdbc.PostgresProfile
 import slick.jdbc.PostgresProfile.api._
 
+import scala.concurrent.Future
+
 class AppComponents(context: Context)
   extends BuiltInComponentsFromContext(context) with AhcWSComponents with EvolutionsComponents with DBComponents with HikariCPComponents {
 
@@ -21,14 +23,14 @@ class AppComponents(context: Context)
   applicationEvolutions
   //Context is created here so we can add a stop hook to kill the db connection when the app terminates
   private lazy val dbConfig: DatabaseConfig[PostgresProfile] = DatabaseConfig.forConfig("slick.dbs.default", configuration.underlying)
-  implicit lazy val db: Database = dbConfig.db
+  private lazy val db: Database = dbConfig.db
   lazy val metricsDb = new MetricsDB(db)
 
   lazy val kinesisStreamConsumer = new ProductionMetricsStreamReader(config.publishingMetricsKinesisStream, config.stage, config)
   kinesisStreamConsumer.start()
 
   //Closes connection to db on app termination
-//  applicationLifecycle.addStopHook(() => Future.successful(db.close()))
+  applicationLifecycle.addStopHook(() => Future.successful(db.close()))
 
   lazy val router = new Routes(httpErrorHandler, appController, healthcheckController, loginController, assets)
   lazy val assets = new controllers.Assets(httpErrorHandler)
