@@ -13,19 +13,19 @@ class App extends React.Component {
     }
 
     render() {
-        const { filterVals, updating, charts, actions } = this.props;
+        const { filterVals, isUpdating, charts, actions } = this.props;
         return (
             <Page>
                 <Filters
                     onSelectChange={actions.filterDesk}
                     filterVals={filterVals}
-                    updating={updating}
+                    isUpdating={isUpdating}
                 />
                 <Charts
                     charts={charts}
                     startDate={filterVals.startDate}
                     endDate={filterVals.endDate}
-                    updating={updating}
+                    isUpdating={isUpdating}
                 />
             </Page>
         );
@@ -33,11 +33,11 @@ class App extends React.Component {
 }
 
 function mapStateToProps(state) {
-    const { filterVals, charts, updatingBool } = state;
+    const { filterVals, charts, isUpdating } = state;
     return {
-        filterVals: filterVals,
-        charts: charts,
-        updating: updatingBool
+        filterVals,
+        charts,
+        isUpdating
     };
 }
 

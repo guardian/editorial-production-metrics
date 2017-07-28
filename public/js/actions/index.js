@@ -1,34 +1,34 @@
 import getChartData from 'services/getChartData';
 
-function updateCharts(data) {
+function updateComposerVsIncopyCharts(chartsData) {
     return {
         type: 'UPDATE_CHARTS',
-        dataPoints: data
+        chartsData
     };
 }
 
 function updateFilter(filterObj) {
     return {
         type: 'UPDATE_FILTER',
-        filterObj: filterObj
+        filterObj
     };
 }
 
-function updateProgress(updatingBool) {
+function toggleIsUpdatingCharts(isUpdating) {
     return {
         type: 'UPDATE_PROGRESS',
-        updatingBool: updatingBool
+        isUpdating
     };
 }
 
 export function filterDesk(filterObj = {}) {
     return (dispatch, getState) => {
         dispatch(updateFilter(filterObj));
-        dispatch(updateProgress(true));
+        dispatch(toggleIsUpdatingCharts(true));
 
-        return getChartData(getState().filterVals).then(charts => {
-            dispatch(updateProgress(false));
-            dispatch(updateCharts(charts));
+        return getChartData(getState().filterVals).then(chartsData => {
+            dispatch(toggleIsUpdatingCharts(false));
+            dispatch(updateComposerVsIncopyCharts(chartsData));
         });
     };
 }
