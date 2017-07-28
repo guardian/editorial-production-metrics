@@ -9,19 +9,6 @@ import scala.concurrent.Future
 
 class MetricsDB(val db: Database) {
 
-//  private def applyFilters(q: Quoted[Query[Metric]])(implicit filters: MetricsFilters): Quoted[Query[Metric]] = quote {
-//    filters.filtersList.foldLeft(q)((acc, filterName) => filterName match {
-//      case "desk" =>
-//        filters.desk.fold(acc)(desk => acc.filter(m => m.commissioningDesk.map(_.toUpperCase) == lift(filters.desk.map(_.toUpperCase))))
-//      case "startingSystem" =>
-//        filters.startingSystem.fold(acc)(startingSystem => acc.filter(m => m.startingSystem.toUpperCase == lift(startingSystem.toUpperCase)))
-//      case "dateRange" =>
-//        filters.dateRange.fold(acc)(dateRange =>
-//          acc.filter(m => m.creationTime > lift(dateRange.from.getOrElse(DateTime.now().minusYears(10))) && m.creationTime < lift(dateRange.to.getOrElse(DateTime.now()))))
-//      case _ => acc
-//    })
-//  }
-
   def getComposerMetrics: Future[Seq[ComposerMetric]] = db.run(composerMetricsTable.result)
 
   def insertComposerMetric(metric: ComposerMetric): Future[Int] = db.run(composerMetricsTable += metric)

@@ -19,7 +19,7 @@ class App(val wsClient: WSClient, val config: Config, val db: MetricsDB) extends
   def getStartedIn(system: String) = AuthAction { req =>
     OriginatingSystem.withNameOption(system) match {
       case Some(s) =>
-        implicit val filters = MetricsFilters(req.queryString).copy(startingSystem = Some(s))
+        implicit val filters = MetricsFilters(req.queryString).copy(originatingSystem = Some(s))
         val result = db.getStartedInSystem
 
 //        listToJson(result) match {
