@@ -1,12 +1,12 @@
 package util
 
 import cats.syntax.either._
-import io.circe.{Json, parser}
-import Utils._
-import models.{InCopyData, KinesisEvent, ProductionMetricsError}
 import io.circe.generic.auto._
+import io.circe.parser._
+import io.circe.{Json, parser}
+import models.{InCopyData, KinesisEvent, ProductionMetricsError}
 import org.joda.time.DateTime
-import io.circe._, io.circe.parser._
+import util.Utils._
 
 object Parser {
 

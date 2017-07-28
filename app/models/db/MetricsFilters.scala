@@ -1,17 +1,20 @@
 package models.db
 
+import models.db.Schema.DBMetric
 import org.joda.time.DateTime
 import org.joda.time.format.ISODateTimeFormat
+import slick.jdbc.PostgresProfile.api._
+import slick.lifted.{LiteralColumn, Rep}
 
 import scala.util.control.NonFatal
 
 case class DateRange (from: Option[DateTime], to: Option[DateTime])
 
 case class MetricsFilters(
-                           dateRange: Option[DateRange],
-                           desk: Option[String],
-                           startingSystem: Option[String] = None,
-                           filtersList: List[String]
+  dateRange: Option[DateRange],
+  desk: Option[String],
+  startingSystem: Option[OriginatingSystem] = None,
+  filtersList: List[String]
 )
 
 object MetricsFilters {
@@ -21,6 +24,13 @@ object MetricsFilters {
       desk = getOptionFromQS("desk", queryString),
       filtersList = List("dateRange", "desk", "startingSystem")
     )
+
+  private val TrueOptCol : Rep[Option[Boolean]] = LiteralColumn(Some(true))
+
+  def metricFilters(implicit filters: MetricsFilters): DBMetric => Rep[Option[Boolean]] = { metric =>
+    filters.desk.fold(TrueOptCol)(d => metric.commissioningDesk === d) &&
+    filters.startingSystem.fold(TrueOptCol)(s => metric.startingSystem.? === s.entryName)
+  }
 
   private def getOptionFromQS(key: String, qs: Map[String, Seq[String]]): Option[String] = qs.get(key).flatMap(_.headOption)
 

@@ -19,13 +19,14 @@ class App(val wsClient: WSClient, val config: Config, val db: MetricsDB) extends
   def getStartedIn(system: String) = AuthAction { req =>
     OriginatingSystem.withNameOption(system) match {
       case Some(s) =>
-        implicit val filters = MetricsFilters(req.queryString).copy(startingSystem = Some(s.entryName))
+        implicit val filters = MetricsFilters(req.queryString).copy(startingSystem = Some(s))
         val result = db.getStartedInSystem
 
-        listToJson(result) match {
-          case Right(j) => Ok(j.asJson.spaces4)
-          case Left(_) => InternalServerError("Not able to parse json")
-        }
+//        listToJson(result) match {
+//          case Right(j) => Ok(j.asJson.spaces4)
+//          case Left(_) => InternalServerError("Not able to parse json")
+//        }
+        Ok(result.asJson.spaces4)
       case None => BadRequest("The valid values for starting system are: composer and incopy")
     }
 
