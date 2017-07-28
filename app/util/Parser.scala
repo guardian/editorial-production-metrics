@@ -31,7 +31,7 @@ object Parser {
   def jsonToInCopyData(json: Json): Either[ProductionMetricsError, InCopyData] =
     json.as[InCopyData].fold(processException, Right(_))
 
-  def listToJson(list: List[(DateTime, Long)]): Either[ProductionMetricsError, Json] = {
+  def listToJson(list: Seq[(DateTime, Int)]): Either[ProductionMetricsError, Json] = {
     val stringList = list.map { pair =>
       s"""{ "x": "${pair._1}", "y": ${pair._2}}"""
     }

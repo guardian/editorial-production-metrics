@@ -64,6 +64,5 @@ object MetricsFilters {
     filters.desk.fold(TrueOptCol)(d => metric.commissioningDesk.toLowerCase === d.toLowerCase) &&
     filters.originatingSystem.fold(TrueOptCol)(os => metric.startingSystem.toLowerCase.? === os.entryName.toLowerCase) &&
     filters.dateRange.fold(TrueOptCol)(dr => metric.creationTime.? > dr.from && metric.creationTime.? < dr.to)
-
   }
 }
