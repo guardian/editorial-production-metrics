@@ -1,69 +1,28 @@
 package database
 
-import java.util.Date
-import io.getquill.{PostgresJdbcContext, SnakeCase}
+import com.github.tototoshi.slick.PostgresJodaSupport._
 import models.db._
+import slick.jdbc.PostgresProfile.api._
+import models.db.Schema._
 import org.joda.time.DateTime
+import util.AsyncHelpers._
 
-class MetricsDB(dbContext: PostgresJdbcContext[SnakeCase]) {
+class MetricsDB(val db: Database) {
 
-  import dbContext._
+  def getComposerMetrics: Seq[ComposerMetric] = await(db.run(composerMetricsTable.result))
+  def insertComposerMetric(metric: ComposerMetric): Int = await(db.run(composerMetricsTable += metric))
 
-  private implicit val encodePublicationDate = MappedEncoding[DateTime, Date](d => d.toDate)
-  private implicit val decodePublicationDate = MappedEncoding[Date, DateTime](d => new DateTime(d.getTime))
+  def getInCopyMetrics: Seq[InCopyMetric] = await(db.run(inCopyMetricsTable.result))
+  def insertInCopyMetric(metric: InCopyMetric): Int = await(db.run(inCopyMetricsTable += metric))
 
-  def getComposerMetrics =
-    dbContext.run(
-      quote{
-        querySchema[ComposerMetric]("composer_metrics")
-      })
+  def getPublishingMetrics: Seq[Metric] = await(db.run(metricsTable.result))
+  def insertPublishingMetric(metric: Metric): Int = await(db.run(metricsTable += metric))
 
-  def insertComposerMetric(metric: ComposerMetric) =
-    dbContext.run(
-      quote {
-        querySchema[ComposerMetric]("composer_metrics").insert(lift(metric))
-      }
-    )
+  def getForks: Seq[Fork] = await(db.run(forksTable.result))
+  def insertFork(fork: Fork): Int = await(db.run(forksTable += fork))
 
-  def getForks =
-    dbContext.run(
-      quote {
-        querySchema[Fork]("forks")
-      }
-    )
-
-  def insertFork(fork: Fork) =
-    dbContext.run(
-      quote {
-        querySchema[Fork]("forks").insert(lift(fork))
-      }
-    )
-
-  def getInCopyMetrics =
-    dbContext.run(
-      quote{
-        querySchema[InCopyMetric]("incopy_metrics")
-      }
-    )
-
-  def insertInCopyMetric(metric: InCopyMetric) =
-    dbContext.run(
-      quote {
-        querySchema[InCopyMetric]("incopy_metrics").insert(lift(metric))
-      }
-    )
-
-  def getPublishingMetrics =
-    dbContext.run(
-      quote{
-        querySchema[Metric]("metrics")
-      }
-    )
-
-  def insertPublishingMetric(metric: Metric) =
-    dbContext.run(
-      quote {
-        querySchema[Metric]("metrics").insert(lift(metric))
-      }
-    )
+  def getStartedInSystem(implicit filters: MetricsFilters): Seq[(DateTime, Int)] =
+    await(db.run(metricsTable.filter(MetricsFilters.metricFilters).groupBy(_.creationTime).map{
+      case (date, metric) => (date, metric.size)
+    }.result))
 }

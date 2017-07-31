@@ -15,7 +15,6 @@ import util.Parser._
 import scala.collection.JavaConverters._
 import scala.concurrent.duration._
 
-
 abstract class EventProcessor[T <: KinesisEvent](
   checkpointInterval: Duration = 30.seconds,
   maxCheckpointBatchSize: Int = 20)

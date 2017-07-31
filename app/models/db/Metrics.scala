@@ -1,5 +1,6 @@
 package models.db
 
+import com.gu.editorialproductionmetricsmodels.models.OriginatingSystem
 import io.circe._
 import io.circe.generic.semiauto._
 import io.circe.syntax._
@@ -7,16 +8,22 @@ import org.joda.time.DateTime
 
 case class Metric(
     id: String,
-    startingSystem: String,
+    startingSystem: OriginatingSystem,
     composerId: Option[String],
     storyBundleId: Option[String],
     commissioningDesk: Option[String],
     userDesk: Option[String],
-    inWorkflow: Boolean,
-    inNewspaper: Boolean,
+    inWorkflow: Option[Boolean],
+    inNewspaper: Option[Boolean],
     creationTime: DateTime,
-    roundTrip: Boolean)
+    roundTrip: Option[Boolean])
 object Metric {
+  def customApply(tuple: (String, String, Option[String],Option[String],Option[String],Option[String],Option[Boolean],Option[Boolean],DateTime,Option[Boolean])): Metric =
+    Metric(tuple._1, OriginatingSystem.withName(tuple._2), tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10)
+
+  def customUnapply(metric: Metric): Option[(String, String, Option[String],Option[String],Option[String],Option[String],Option[Boolean],Option[Boolean],DateTime,Option[Boolean])] =
+    Some((metric.id, metric.startingSystem.entryName, metric.composerId, metric.storyBundleId, metric.commissioningDesk, metric.userDesk, metric.inWorkflow, metric.inNewspaper, metric.creationTime, metric.roundTrip))
+
   private val datePattern = "yyyy-MM-dd'T'HH:mm:ss'Z'"
   implicit val timeEncoder = new Encoder[DateTime] {
     def apply(d: DateTime) = d.toString(datePattern).asJson
@@ -33,7 +40,7 @@ case class InCopyMetric(
 case class ComposerMetric(
     composerId: String,
     firstPublished: Option[DateTime],
-    createdInWorkflow: Boolean)
+    createdInWorkflow: Option[Boolean])
 
 case class Fork(
     id: String,

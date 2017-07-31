@@ -47,7 +47,6 @@ object ProductionMetricsStreamReader {
     extends EventProcessor[KinesisEvent](checkpointInterval, maxCheckpointBatchSize)
       with SingleEventProcessor[KinesisEvent] {
 
-
     def isActivated = true
 
     val codec = KinesisEvent
@@ -84,8 +83,8 @@ object ProductionMetricsStreamReader {
     def putCapiDataInDB(data: CapiData) = {
       for {
         date <- convertStringToDateTime(data.creationDate)
-        metric = Metric(UUID.randomUUID().toString, data.startingSystem, Some(data.composerId), data.storyBundleId,
-          Some(data.commissioningDesk), None, false, false, date, false)
+        metric = Metric(UUID.randomUUID().toString, data.originatingSystem, Some(data.composerId), data.storyBundleId,
+          Some(data.commissioningDesk), None, None, None, date, None)
       } yield db.insertPublishingMetric(metric)
     }
   }
