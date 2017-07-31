@@ -12,7 +12,9 @@ for the composer AWS account from [janus](https://janus.gutools.co.uk). You'll a
  - Setup the nginx mapping by following the instructions in the
  [dev-nginx readme](https://github.com/guardian/dev-nginx#install-config-for-an-application).
  - Install Client Side Dependencies with `./scripts/setup.sh`
- - Set up the Postgres database: We use a RDS Posgres database running in the composer account in AWS. To connect to it locally run `./setup-ssh-tunnel.sh -t <Endpoint of of database without the port number>
+ - Set up the Postgres database: We use a RDS Posgres database running in the composer account in AWS. To connect to it locally run `./setup-ssh-tunnel.sh -t <Endpoint of of database without the port number>` 
+ Get the endpoint by looking in the Composer AWS account.
+ - Run Client and Server: `./scripts/start.sh`
  - Run using sbt: `sbt "run 9051"`. (For quick restart you should run `sbt` and then `run 9051`, so that you can exit
   the application without exiting sbt.)
 
@@ -22,9 +24,13 @@ This project requires Node version 6. To manage different versions of node you c
 You can compile client side dependencies with `yarn build` or `npm run build`.
 Alternatively to compile client side assets on change run `yarn build-dev` or `npm run build-dev`
 
+## Adding Config Parameters
+
+There are 2 places these need to be added.
+1. The file in the `guconf-flexible` bucket. These are the DEV values for use locally
+2. The `config-flexible` dynamo table. These are the PROD values
+
 ### Graph Styling
 
 The styling for the graphs can be found in [theme.js](https://github.com/guardian/editorial-production-metrics/tree/master/public/js/components/ChartTheme/theme.js)
 
-## Running Client and Server
-Use `./scripts/start.sh` to run the client and server
