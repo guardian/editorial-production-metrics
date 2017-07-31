@@ -7,13 +7,19 @@ scalaVersion := "2.11.8"
 
 lazy val awsVersion = "1.11.77"
 
+val databaseDependencies = Seq(
+  ws,
+  evolutions,
+  jdbc,
+  "com.typesafe.slick" %% "slick" % "3.2.1",
+  "com.typesafe.slick" %% "slick-hikaricp" % "3.2.1",
+  "com.github.tototoshi" %% "slick-joda-mapper" % "2.3.0"
+)
+
 lazy val root = (project in file(".")).enablePlugins(PlayScala, RiffRaffArtifact, JDebPackaging)
   .settings(Defaults.coreDefaultSettings: _*)
   .settings(
     libraryDependencies ++= Seq(
-      ws,
-      evolutions,
-      jdbc,
       "com.amazonaws"          % "aws-java-sdk-core"             % awsVersion,
       "com.gu"                 % "kinesis-logback-appender"      % "1.3.0",
       "com.amazonaws"          % "aws-java-sdk-ec2"              % awsVersion,
@@ -25,9 +31,8 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala, RiffRaffArtifact
       "io.circe"               %% "circe-generic"                % "0.7.0",
       "com.beachape"           %% "enumeratum-circe"             % "1.5.14",
       "org.postgresql"         % "postgresql"                    % "42.1.1",
-      "io.getquill"            %% "quill-jdbc"                   % "1.3.0",
       "com.amazonaws"          % "amazon-kinesis-client"         % "1.7.6"
-    ),
+    ) ++ databaseDependencies,
     routesGenerator := InjectedRoutesGenerator,
 
     serverLoading in Debian := Systemd,

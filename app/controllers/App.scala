@@ -4,6 +4,7 @@ import config.Config
 import database.MetricsDB
 import io.circe.syntax._
 import models.db.{MetricsFilters, OriginatingSystem}
+import org.joda.time.DateTime
 import play.api.Logger
 import play.api.libs.ws.WSClient
 import play.api.mvc._
@@ -19,10 +20,9 @@ class App(val wsClient: WSClient, val config: Config, val db: MetricsDB) extends
   def getStartedIn(system: String) = AuthAction { req =>
     OriginatingSystem.withNameOption(system) match {
       case Some(s) =>
-        implicit val filters = MetricsFilters(req.queryString).copy(startingSystem = Some(s.entryName))
-        val result = db.getStartedInSystem
+        implicit val filters = MetricsFilters(req.queryString).copy(originatingSystem = Some(s))
 
-        listToJson(result) match {
+        listToJson(db.getStartedInSystem) match {
           case Right(j) => Ok(j.asJson.spaces4)
           case Left(_) => InternalServerError("Not able to parse json")
         }

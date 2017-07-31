@@ -1,28 +1,47 @@
 package models.db
 
+import com.github.tototoshi.slick.PostgresJodaSupport._
+import models.db.Schema.DBMetric
 import org.joda.time.DateTime
 import org.joda.time.format.ISODateTimeFormat
+import slick.jdbc.PostgresProfile.api._
+import slick.lifted.{LiteralColumn, Rep}
 
 import scala.util.control.NonFatal
 
-case class DateRange (from: Option[DateTime], to: Option[DateTime])
+case class DateRange (from: DateTime, to: DateTime)
 
 case class MetricsFilters(
-                           dateRange: Option[DateRange],
-                           desk: Option[String],
-                           startingSystem: Option[String] = None,
-                           filtersList: List[String]
+  dateRange: Option[DateRange] = None,
+  desk: Option[String] = None,
+  originatingSystem: Option[OriginatingSystem] = None
 )
 
 object MetricsFilters {
+  private val TrueOptCol : Rep[Option[Boolean]] = LiteralColumn(Some(true))
+
   def apply(queryString: Map[String, Seq[String]]): MetricsFilters =
     MetricsFilters(
       dateRange = extractDateRange(queryString),
       desk = getOptionFromQS("desk", queryString),
-      filtersList = List("dateRange", "desk", "startingSystem")
+      originatingSystem = OriginatingSystem.withNameOption(getOptionFromQS("originatingSystem", queryString).getOrElse(""))
     )
 
   private def getOptionFromQS(key: String, qs: Map[String, Seq[String]]): Option[String] = qs.get(key).flatMap(_.headOption)
+
+  private def extractDateRange(qs: Map[String, Seq[String]]): Option[DateRange] = {
+    val date: Option[String] = getOptionFromQS("date", qs)
+    val dateRange: Option[DateRange] = date.fold(None: Option[DateRange])(getDateRangeFromDateString)
+
+    dateRange match {
+      case None =>
+        Some(DateRange(
+          from = getOptionFromQS("startDate", qs).flatMap(parseDate).getOrElse(new DateTime(0)),
+          to = getOptionFromQS("endDate", qs).flatMap(parseDate).getOrElse(DateTime.now())))
+
+      case Some(range) => Some(range)
+    }
+  }
 
   private def parseDate(dateString: String): Option[DateTime] = dateString match {
     case "" => None
@@ -31,29 +50,19 @@ object MetricsFilters {
       catch { case NonFatal(_) => None }
   }
 
-  private def extractDateRange(qs: Map[String, Seq[String]]): Option[DateRange] = {
-    val date: Option[String] = getOptionFromQS("date", qs)
-    val dateRange: Option[DateRange] = date.fold(None: Option[DateRange])(getDateRangeFromDateString)
-
-    dateRange match {
-      case None =>
-        val start = getOptionFromQS("startDate", qs).flatMap(parseDate)
-        val end = getOptionFromQS("endDate", qs).flatMap(parseDate)
-
-        if(start.isEmpty && end.isEmpty) None
-        else Some(DateRange(from = start, to = end))
-
-      case Some(range) => Some(range)
-    }
-  }
-
   private def getDateRangeFromDateString(date: String): Option[DateRange] = date match {
     case "today" => Some(DateRange(
-      from = Some(DateTime.now().withTimeAtStartOfDay()),
-      to = Some(DateTime.now())))
+      from = DateTime.now().withTimeAtStartOfDay(),
+      to = DateTime.now()))
     case "yesterday" => Some(DateRange(
-      from = Some(DateTime.now().minusDays(1).withTimeAtStartOfDay()),
-      to = Some(DateTime.now().withTimeAtStartOfDay())))
+      from = DateTime.now().minusDays(1).withTimeAtStartOfDay(),
+      to = DateTime.now().withTimeAtStartOfDay()))
     case "" => None
+  }
+
+  def metricFilters(implicit filters: MetricsFilters): DBMetric => Rep[Option[Boolean]] = { metric =>
+    filters.desk.fold(TrueOptCol)(d => metric.commissioningDesk.toLowerCase === d.toLowerCase) &&
+    filters.originatingSystem.fold(TrueOptCol)(os => metric.startingSystem.toLowerCase.? === os.entryName.toLowerCase) &&
+    filters.dateRange.fold(TrueOptCol)(dr => metric.creationTime.? > dr.from && metric.creationTime.? < dr.to)
   }
 }
