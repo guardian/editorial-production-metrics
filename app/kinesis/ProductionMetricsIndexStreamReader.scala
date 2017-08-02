@@ -69,8 +69,16 @@ object ProductionMetricsStreamReader {
     def putCapiDataInDB(data: CapiData) = {
       for {
         date <- convertStringToDateTime(data.creationDate)
-        metric = Metric(UUID.randomUUID().toString, data.originatingSystem, Some(data.composerId), data.storyBundleId,
-          Some(data.commissioningDesk), None, None, None, date, None)
+        metric = Metric(id = UUID.randomUUID().toString,
+          startingSystem = data.originatingSystem,
+          composerId = Some(data.composerId),
+          storyBundleId = data.storyBundleId,
+          commissioningDesk = Some(data.commissioningDesk),
+          userDesk = None,
+          inWorkflow = None,
+          inNewspaper = None,
+          creationTime = date,
+          roundTrip = None)
       } yield db.insertPublishingMetric(metric)
     }
   }
