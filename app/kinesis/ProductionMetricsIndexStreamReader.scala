@@ -13,10 +13,9 @@ import io.circe.Json
 import lib.kinesis.EventProcessor.EventWithSize
 import lib.kinesis.ProductionMetricsStreamReader.ProductionMetricsEventProcessor
 import models.db.Metric
-import org.joda.time.DateTime
-import org.joda.time.format.DateTimeFormat
 import play.api.Logger
 import util.Parser
+import util.Utils.convertStringToDateTime
 
 import scala.concurrent.duration.{Duration, _}
 
@@ -57,19 +56,6 @@ object ProductionMetricsStreamReader {
       eventType match {
         case CapiContent => processCapiEvent(event.eventJson)
         case _ => Logger.error(s"Invalid event type on kinesis stream could not be processed ${event}")
-      }
-    }
-
-    private def convertStringToDateTime(dateTime: String): Option[DateTime] = {
-      val formatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-      try {
-        Some(formatter.parseDateTime(dateTime))
-      }
-      catch {
-        case e: Throwable => {
-          Logger.error(s"String $dateTime could not be converted to datetime. $e")
-          None
-        }
       }
     }
 

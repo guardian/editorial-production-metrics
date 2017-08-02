@@ -2,6 +2,8 @@ package util
 
 import io.circe.ParsingFailure
 import models.{InvalidJsonError, NoRequestBodyError, ProductionMetricsError, UnexpectedExceptionError}
+import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormat
 import play.api.Logger
 
 object Utils {
@@ -16,4 +18,17 @@ object Utils {
 
   def extractRequestBody(body: Option[String]): Either[ProductionMetricsError, String] =
     Either.cond(body.isDefined, body.get, NoRequestBodyError)
+
+  def convertStringToDateTime(dateTime: String): Option[DateTime] = {
+    val formatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+    try {
+      Some(formatter.parseDateTime(dateTime))
+    }
+    catch {
+      case e: Throwable => {
+        Logger.error(s"String $dateTime could not be converted to datetime. $e")
+        None
+      }
+    }
+  }
 }
