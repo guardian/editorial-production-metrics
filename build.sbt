@@ -11,18 +11,18 @@ val databaseDependencies = Seq(
   ws,
   evolutions,
   jdbc,
-  "com.typesafe.slick" %% "slick" % "3.2.1",
-  "com.typesafe.slick" %% "slick-hikaricp" % "3.2.1",
+  "com.typesafe.slick"   %% "slick"             % "3.2.1",
+  "com.typesafe.slick"   %% "slick-hikaricp"    % "3.2.1",
   "com.github.tototoshi" %% "slick-joda-mapper" % "2.3.0"
 )
 
 lazy val sharedDependencies = Seq(
-  "com.amazonaws"          % "aws-java-sdk-core"             % awsVersion,
-  "com.amazonaws"          % "amazon-kinesis-client"         % "1.7.6",
-  "io.circe"               %% "circe-parser"                 % "0.7.0",
-  "io.circe"               %% "circe-generic"                % "0.7.0",
-  "com.beachape"           %% "enumeratum-circe"             % "1.5.14",
-  "com.gu" %% "editorial-production-metrics-lib" % "0.1-SNAPSHOT"
+  "com.amazonaws"          % "aws-java-sdk-core"                 % awsVersion,
+  "com.amazonaws"          % "amazon-kinesis-client"             % "1.7.6",
+  "io.circe"               %% "circe-parser"                     % "0.7.0",
+  "io.circe"               %% "circe-generic"                    % "0.7.0",
+  "com.beachape"           %% "enumeratum-circe"                 % "1.5.14",
+  "com.gu"                 %% "editorial-production-metrics-lib" % "0.2"
 )
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala, RiffRaffArtifact, JDebPackaging)

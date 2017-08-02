@@ -61,7 +61,7 @@ object ProductionMetricsStreamReader {
     }
 
     private def convertStringToDateTime(dateTime: String): Option[DateTime] = {
-      val formatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ssZ")
+      val formatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
       try {
         Some(formatter.parseDateTime(dateTime))
       }

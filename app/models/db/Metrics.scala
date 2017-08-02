@@ -24,7 +24,7 @@ object Metric {
   def customUnapply(metric: Metric): Option[(String, String, Option[String],Option[String],Option[String],Option[String],Option[Boolean],Option[Boolean],DateTime,Option[Boolean])] =
     Some((metric.id, metric.startingSystem.entryName, metric.composerId, metric.storyBundleId, metric.commissioningDesk, metric.userDesk, metric.inWorkflow, metric.inNewspaper, metric.creationTime, metric.roundTrip))
 
-  private val datePattern = "yyyy-MM-dd'T'HH:mm:ss'Z'"
+  private val datePattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
   implicit val timeEncoder = new Encoder[DateTime] {
     def apply(d: DateTime) = d.toString(datePattern).asJson
   }
