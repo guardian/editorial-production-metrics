@@ -1,23 +1,21 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import * as Actions from 'actions';
-
+import { Actions } from 'jumpstate';
 import Page from 'components/Page';
 import Filters from 'components/Filters/Filters';
 import Charts from 'components/Charts/Charts';
 
 class App extends React.Component {
     componentDidMount() {
-        this.props.actions.filterDesk();
+        Actions.filterDesk(this.props.filterVals);
     }
 
     render() {
-        const { filterVals, isUpdating, charts, actions } = this.props;
+        const { filterVals, isUpdating, charts } = this.props;
         return (
             <Page>
                 <Filters
-                    onSelectChange={actions.filterDesk}
+                    onSelectChange={Actions.filterDesk}
                     filterVals={filterVals}
                     isUpdating={isUpdating}
                 />
@@ -41,10 +39,4 @@ function mapStateToProps(state) {
     };
 }
 
-function mapDispatchToProps(dispatch) {
-    return {
-        actions: bindActionCreators(Actions, dispatch)
-    };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps, null)(App);
