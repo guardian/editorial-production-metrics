@@ -26,8 +26,8 @@ class AppComponents(context: Context)
   private lazy val db: Database = dbConfig.db
   lazy val metricsDb = new MetricsDB(db)
 
-  lazy val kinesisStreamConsumer = new ProductionMetricsStreamReader(config.publishingMetricsKinesisStream, config.stage, config)
-  kinesisStreamConsumer.start()
+  lazy val kinesisStreamConsumer = new ProductionMetricsStreamReader(config.publishingMetricsKinesisStream, config.stage, config, metricsDb)
+  kinesisStreamConsumer.start
 
   //Closes connection to db on app termination
   applicationLifecycle.addStopHook(() => Future.successful(db.close()))

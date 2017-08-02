@@ -1,6 +1,7 @@
 package models.db
 
 import com.github.tototoshi.slick.PostgresJodaSupport._
+import com.gu.editorialproductionmetricsmodels.models.OriginatingSystem
 import org.joda.time.DateTime
 import slick.lifted.Tag
 import slick.jdbc.PostgresProfile.api._

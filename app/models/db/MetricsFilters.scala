@@ -1,6 +1,7 @@
 package models.db
 
 import com.github.tototoshi.slick.PostgresJodaSupport._
+import com.gu.editorialproductionmetricsmodels.models.OriginatingSystem
 import models.db.Schema.DBMetric
 import org.joda.time.DateTime
 import org.joda.time.format.ISODateTimeFormat

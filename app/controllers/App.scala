@@ -1,10 +1,10 @@
 package controllers
 
+import com.gu.editorialproductionmetricsmodels.models.OriginatingSystem
 import config.Config
 import database.MetricsDB
 import io.circe.syntax._
-import models.db.{MetricsFilters, OriginatingSystem}
-import org.joda.time.DateTime
+import models.db.MetricsFilters
 import play.api.Logger
 import play.api.libs.ws.WSClient
 import play.api.mvc._

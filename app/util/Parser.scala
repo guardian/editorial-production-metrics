@@ -1,12 +1,13 @@
 package util
 
 import cats.syntax.either._
-import io.circe.generic.auto._
-import io.circe.parser._
 import io.circe.{Json, parser}
-import models.{InCopyData, KinesisEvent, ProductionMetricsError}
+import com.gu.editorialproductionmetricsmodels.models.{CapiData, KinesisEvent}
+import models.ProductionMetricsError
+import io.circe.generic.auto._
 import org.joda.time.DateTime
 import util.Utils._
+import io.circe.parser._
 
 object Parser {
 
@@ -28,9 +29,6 @@ object Parser {
     result.fold(processException, Right(_))
   }
 
-  def jsonToInCopyData(json: Json): Either[ProductionMetricsError, InCopyData] =
-    json.as[InCopyData].fold(processException, Right(_))
-
   def listToJson(list: Seq[(DateTime, Int)]): Either[ProductionMetricsError, Json] = {
     val stringList = list.map { pair =>
       s"""{ "x": "${pair._1}", "y": ${pair._2}}"""
@@ -39,4 +37,6 @@ object Parser {
 
     parse(stringToParse).fold(processException, Right(_))
   }
+  def jsonToCapiData(json: Json): Either[ProductionMetricsError, CapiData] =
+    json.as[CapiData].fold(processException, Right(_))
 }
