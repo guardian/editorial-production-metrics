@@ -70,7 +70,7 @@ object ProductionMetricsStreamReader {
       for {
         date <- convertStringToDateTime(data.creationDate)
         metric = Metric(id = UUID.randomUUID().toString,
-          startingSystem = data.originatingSystem,
+          originatingSystem = data.originatingSystem,
           composerId = Some(data.composerId),
           storyBundleId = data.storyBundleId,
           commissioningDesk = Some(data.commissioningDesk),

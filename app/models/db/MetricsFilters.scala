@@ -63,7 +63,7 @@ object MetricsFilters {
 
   def metricFilters(implicit filters: MetricsFilters): DBMetric => Rep[Option[Boolean]] = { metric =>
     filters.desk.fold(TrueOptCol)(d => metric.commissioningDesk.toLowerCase === d.toLowerCase) &&
-    filters.originatingSystem.fold(TrueOptCol)(os => metric.startingSystem.toLowerCase.? === os.entryName.toLowerCase) &&
+    filters.originatingSystem.fold(TrueOptCol)(os => metric.originatingSystem.toLowerCase.? === os.entryName.toLowerCase) &&
     filters.dateRange.fold(TrueOptCol)(dr => metric.creationTime.? > dr.from && metric.creationTime.? < dr.to)
   }
 }

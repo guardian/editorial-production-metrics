@@ -18,7 +18,7 @@ object Schema {
     private implicit val originatingSystemEncDec = MappedColumnType.base[OriginatingSystem, String](os => os.entryName, name => OriginatingSystem.withName(name))
 
     def id                  = column[String]("id", O.PrimaryKey)
-    def startingSystem      = column[String]("starting_system")
+    def originatingSystem   = column[String]("originating_system")
     def composerId          = column[Option[String]]("composer_id")
     def storyBundleId       = column[Option[String]]("story_bundle_id")
     def commissioningDesk   = column[Option[String]]("commissioning_desk")
@@ -27,7 +27,7 @@ object Schema {
     def inNewspaper         = column[Option[Boolean]]("in_newspaper")
     def creationTime        = column[DateTime]("creation_time")
     def roundTrip           = column[Option[Boolean]]("round_trip")
-    def * = (id, startingSystem, composerId, storyBundleId, commissioningDesk, userDesk, inWorkflow, inNewspaper, creationTime, roundTrip) <> (Metric.customApply, Metric.customUnapply)
+    def * = (id, originatingSystem, composerId, storyBundleId, commissioningDesk, userDesk, inWorkflow, inNewspaper, creationTime, roundTrip) <> (Metric.customApply, Metric.customUnapply)
   }
 
   class DBInCopyMetric(tag: Tag) extends Table[InCopyMetric](tag, "incopy_metrics") {

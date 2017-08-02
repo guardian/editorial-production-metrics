@@ -26,7 +26,7 @@ class App(val wsClient: WSClient, val config: Config, val db: MetricsDB) extends
           case Right(j) => Ok(j.asJson.spaces4)
           case Left(_) => InternalServerError("Not able to parse json")
         }
-      case None => BadRequest("The valid values for starting system are: composer and incopy")
+      case None => BadRequest("The valid values for originating system are: composer and incopy")
     }
 
   }
