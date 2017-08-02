@@ -36,7 +36,6 @@
   },
   "dependencies": {
     "babel-plugin-transform-class-properties": "^6.24.1",
-    "d3": "^4.10.0",
     "formidable-charts": "^0.0.7",
     "moment": "^2.18.1",
     "ramda": "^0.24.1",

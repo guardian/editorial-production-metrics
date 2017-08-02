@@ -2,7 +2,7 @@ import getChartData from 'services/getChartData';
 
 function updateComposerVsIncopyCharts(chartsData) {
     return {
-        type: 'UPDATE_CHARTS',
+        type: 'UPDATE_COMPOSER_VS_INCOPY_CHARTS',
         chartsData
     };
 }

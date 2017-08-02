@@ -12,8 +12,8 @@ class Filters extends React.Component {
         return (
             <form className="form">
                 <Grid fluid>
-                    <Row>
-                        <Col xs={12} md={4}>
+                    <Row between="xs">
+                        <Col xs={9} md={4}>
                             <div className="form__row">
                                 <label>
                                     Filter by Office:
@@ -33,8 +33,7 @@ class Filters extends React.Component {
                                 </label>
                             </div>
                         </Col>
-
-                        <Col xs={12} md={4}>
+                        <Col xs={9} md={4}>
                             <div className="form__row">
                                 <label>
                                     Filter by Desk:
@@ -54,7 +53,7 @@ class Filters extends React.Component {
                                 </label>
                             </div>
                         </Col>
-                        <Col xs={12} md={4}>
+                        <Col xs={9} md={4}>
                             <div className="form__row">
                                 <label>
                                     Filter by Section:
@@ -74,10 +73,7 @@ class Filters extends React.Component {
                                 </label>
                             </div>
                         </Col>
-                    </Row>
-
-                    <Row>
-                        <Col xs={12} md={4}>
+                        <Col xs={9} md={4}>
                             <div className="form__row">
                                 <label>
                                     Time Range:
