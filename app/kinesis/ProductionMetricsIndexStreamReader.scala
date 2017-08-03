@@ -3,7 +3,6 @@ package lib.kinesis
 import java.util.UUID
 
 import com.amazonaws.auth.AWSCredentialsProviderChain
-import com.amazonaws.auth.profile.ProfileCredentialsProvider
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorFactory
 import com.gu.editorialproductionmetricsmodels.models.EventType.CapiContent
 import com.gu.editorialproductionmetricsmodels.models.{CapiData, KinesisEvent}
@@ -22,7 +21,7 @@ import scala.concurrent.duration.{Duration, _}
 class ProductionMetricsStreamReader(override val streamName: String, override val stage: String, override val config: Config, val db: MetricsDB)
   extends KinesisStreamReader {
 
-  val kinesisCredentialsProvider = new AWSCredentialsProviderChain(new ProfileCredentialsProvider("composer"))
+  val kinesisCredentialsProvider = config.awsCredentialsProvider
 
   val dynamoCredentialsProvider: AWSCredentialsProviderChain = kinesisCredentialsProvider
 
