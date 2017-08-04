@@ -5,9 +5,9 @@ import ChartTheme from '../ChartTheme/theme';
 
 const customisedTheme = Object.assign({}, Themes.simple, ChartTheme);
 
-const LineChartWrap = ({ title, series, xLabel, yLabel, updating, scale }) => {
+const LineChartWrap = ({ title, series, xLabel, yLabel, isUpdating, scale }) => {
     return (
-        <div className={`chart-wrap ${updating && 'chart-wrap__updating'}`}>
+        <div className={`chart-wrap ${isUpdating && 'chart-wrap__updating'}`}>
             <LineChart
                 title={title}
                 theme={customisedTheme}

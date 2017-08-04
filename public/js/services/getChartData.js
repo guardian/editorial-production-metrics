@@ -17,7 +17,7 @@ export default function getChartData(filterVals) {
                 'composerVsInCopy'
             ].map(chartType =>
                 fetch(
-                    `https://ed-met-fakeapi.getsandbox.com/${chartType}${reqParams}`
+                    `https://ed-prod-metrics.getsandbox.com/${chartType}${reqParams}`
                 )
                     .then(res => res.json())
                     .then(jsonRes => ({

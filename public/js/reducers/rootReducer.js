@@ -1,12 +1,12 @@
 import { combineReducers } from 'redux';
-import chartReducer from './chartReducer';
+import chartsReducer from './chartsReducer';
 import updateFilterReducer from './updateFilterReducer';
 import updateProgressReducer from './updateProgressReducer';
 
 const rootReducer = combineReducers({
     filterVals: updateFilterReducer,
-    charts: chartReducer,
-    updatingBool: updateProgressReducer
+    charts: chartsReducer,
+    isUpdating: updateProgressReducer
 });
 
 export default rootReducer;

@@ -8,12 +8,12 @@ class Filters extends React.Component {
     state = { focusedInput: null };
     
     render() {
-        const { onSelectChange, filterVals, updating } = this.props;
+        const { onSelectChange, filterVals, isUpdating } = this.props;
         return (
             <form className="form">
                 <Grid fluid>
-                    <Row>
-                        <Col xs={12} md={4}>
+                    <Row between="xs">
+                        <Col xs={9} md={4}>
                             <div className="form__row">
                                 <label>
                                     Filter by Office:
@@ -23,7 +23,7 @@ class Filters extends React.Component {
                                             office: event.target.value
                                         })}
                                         value={filterVals.office}
-                                        disabled={updating}
+                                        disabled={isUpdating}
                                     >
                                         <option value="all">All</option>
                                         <option value="uk">UK</option>
@@ -33,8 +33,7 @@ class Filters extends React.Component {
                                 </label>
                             </div>
                         </Col>
-
-                        <Col xs={12} md={4}>
+                        <Col xs={9} md={4}>
                             <div className="form__row">
                                 <label>
                                     Filter by Desk:
@@ -44,7 +43,7 @@ class Filters extends React.Component {
                                             desk: event.target.value
                                         })}
                                         value={filterVals.desk}
-                                        disabled={updating}
+                                        disabled={isUpdating}
                                     >
                                         <option value="all">All</option>
                                         <option value="news">News</option>
@@ -54,7 +53,7 @@ class Filters extends React.Component {
                                 </label>
                             </div>
                         </Col>
-                        <Col xs={12} md={4}>
+                        <Col xs={9} md={4}>
                             <div className="form__row">
                                 <label>
                                     Filter by Section:
@@ -64,7 +63,7 @@ class Filters extends React.Component {
                                             section: event.target.value
                                         })}
                                         value={filterVals.section}
-                                        disabled={updating}
+                                        disabled={isUpdating}
                                     >
                                         <option value="all">All</option>
                                         <option value="news">News</option>
@@ -74,10 +73,7 @@ class Filters extends React.Component {
                                 </label>
                             </div>
                         </Col>
-                    </Row>
-
-                    <Row>
-                        <Col xs={12} md={4}>
+                        <Col xs={9} md={4}>
                             <div className="form__row">
                                 <label>
                                     Time Range:
@@ -86,7 +82,7 @@ class Filters extends React.Component {
                                         initialVisibleMonth={() => moment().subtract(1, 'months')}
                                         orientation={window.innerWidth > 640 ? 'horizontal' : 'vertical'}
                                         displayFormat='DD/MM/YYYY'
-                                        disabled={updating}
+                                        disabled={isUpdating}
                                         startDate={filterVals.startDate}
                                         endDate={filterVals.endDate}
                                         onDatesChange={({ startDate, endDate }) => endDate > startDate ? onSelectChange({ startDate, endDate }) : false }
