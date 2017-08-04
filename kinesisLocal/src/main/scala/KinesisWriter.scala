@@ -26,6 +26,10 @@ object KinesisWriter {
     request.setPartitionKey(partitionKey)
     request.setStreamName(streamName)
     request.setData(streamEvent)
-    client.putRecord(request)
+    try {
+      client.putRecord(request)
+    } catch {
+      case e => println(s"Could not post to kinesis stream ${e.getMessage} ${e.getStackTrace}")
+    }
   }
 }
