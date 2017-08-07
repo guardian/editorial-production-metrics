@@ -1,5 +1,7 @@
 package models.db
 
+import java.sql.Timestamp
+
 import com.gu.editorialproductionmetricsmodels.models.OriginatingSystem
 import io.circe._
 import io.circe.generic.semiauto._
@@ -18,11 +20,11 @@ case class Metric(
     creationTime: DateTime,
     roundTrip: Option[Boolean])
 object Metric {
-  def customApply(tuple: (String, String, Option[String],Option[String],Option[String],Option[String],Option[Boolean],Option[Boolean],DateTime,Option[Boolean])): Metric =
-    Metric(tuple._1, OriginatingSystem.withName(tuple._2), tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10)
+  def customApply(tuple: (String, String, Option[String],Option[String],Option[String],Option[String],Option[Boolean],Option[Boolean],Timestamp,Option[Boolean])): Metric =
+    Metric(tuple._1, OriginatingSystem.withName(tuple._2), tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, new DateTime(tuple._9), tuple._10)
 
-  def customUnapply(metric: Metric): Option[(String, String, Option[String],Option[String],Option[String],Option[String],Option[Boolean],Option[Boolean],DateTime,Option[Boolean])] =
-    Some((metric.id, metric.originatingSystem.entryName, metric.composerId, metric.storyBundleId, metric.commissioningDesk, metric.userDesk, metric.inWorkflow, metric.inNewspaper, metric.creationTime, metric.roundTrip))
+  def customUnapply(metric: Metric): Option[(String, String, Option[String],Option[String],Option[String],Option[String],Option[Boolean],Option[Boolean],Timestamp,Option[Boolean])] =
+    Some((metric.id, metric.originatingSystem.entryName, metric.composerId, metric.storyBundleId, metric.commissioningDesk, metric.userDesk, metric.inWorkflow, metric.inNewspaper, new Timestamp(metric.creationTime.getMillis), metric.roundTrip))
 
   private val datePattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
   implicit val timeEncoder = new Encoder[DateTime] {
