@@ -22,7 +22,7 @@ trait KinesisStreamReader {
    * about how much of the stream we have consumed. The application
    * name should be unique for each stream and be less than 255
    * characters. */
-  lazy val applicationName: String = s"${streamName}_editorial_production_metrics_$stage"
+  lazy val applicationName: String = s"${streamName}_editorial_production_metrics_${stage}${config.devIdentifier}"
 
   /* only applies when there are no checkpoints */
   val initialPosition = InitialPositionInStream.LATEST

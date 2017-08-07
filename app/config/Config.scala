@@ -29,4 +29,7 @@ class Config(config: Configuration) extends AwsInstanceTags {
 
   val publishingMetricsKinesisStream = getConfigString("kinesis.publishingMetricsStream")
 
+//  This is for uniquely identifying the kinesis application when running the app locally on multiple DEV machines
+  val devIdentifier = if(stage == "DEV") getConfigString("user") else ""
+
 }
