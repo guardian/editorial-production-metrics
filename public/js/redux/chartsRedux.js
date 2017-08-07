@@ -1,5 +1,5 @@
 import { State, Actions, Effect } from 'jumpstate';
-import getChartData from 'services/getChartData';
+import api from 'services/api';
 import { createYTotalsList, createPartialsList, formattedSeries } from 'helpers/chartsHelpers';
 
 /* ------------- State Management ------------- */
@@ -7,10 +7,11 @@ import { createYTotalsList, createPartialsList, formattedSeries } from 'helpers/
 Effect('filterDesk', (filterObj) => {
     Actions.updateFilter(filterObj);
     Actions.toggleIsUpdatingCharts(true);
-    getChartData(filterObj).then(chartsData => {
-        Actions.toggleIsUpdatingCharts(false);
-        Actions.updateComposerVsIncopy(chartsData);
-    });
+    api.getComposerVsIncopy(filterObj.startDate, filterObj.endDate, filterObj.desk)
+        .then(composerVsInCopyData => {
+            Actions.toggleIsUpdatingCharts(false);
+            Actions.updateComposerVsIncopy(composerVsInCopyData);
+        });
 });
 
 const chartsRedux = State({
