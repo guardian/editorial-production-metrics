@@ -1,5 +1,7 @@
 package models.db
 
+import java.sql.Timestamp
+
 import com.github.tototoshi.slick.PostgresJodaSupport._
 import com.gu.editorialproductionmetricsmodels.models.OriginatingSystem
 import org.joda.time.DateTime
@@ -25,7 +27,7 @@ object Schema {
     def userDesk            = column[Option[String]]("user_desk")
     def inWorkflow          = column[Option[Boolean]]("in_workflow")
     def inNewspaper         = column[Option[Boolean]]("in_newspaper")
-    def creationTime        = column[DateTime]("creation_time")
+    def creationTime        = column[Timestamp]("creation_time")
     def roundTrip           = column[Option[Boolean]]("round_trip")
     def * = (id, originatingSystem, composerId, storyBundleId, commissioningDesk, userDesk, inWorkflow, inNewspaper, creationTime, roundTrip) <> (Metric.customApply, Metric.customUnapply)
   }

@@ -1,5 +1,7 @@
 package models.db
 
+import java.sql.Timestamp
+
 import com.github.tototoshi.slick.PostgresJodaSupport._
 import com.gu.editorialproductionmetricsmodels.models.OriginatingSystem
 import models.db.Schema.DBMetric
@@ -64,6 +66,6 @@ object MetricsFilters {
   def metricFilters(implicit filters: MetricsFilters): DBMetric => Rep[Option[Boolean]] = { metric =>
     filters.desk.fold(TrueOptCol)(d => metric.commissioningDesk.toLowerCase === d.toLowerCase) &&
     filters.originatingSystem.fold(TrueOptCol)(os => metric.originatingSystem.toLowerCase.? === os.entryName.toLowerCase) &&
-    filters.dateRange.fold(TrueOptCol)(dr => metric.creationTime.? > dr.from && metric.creationTime.? < dr.to)
+    filters.dateRange.fold(TrueOptCol)(dr => metric.creationTime.? >= new Timestamp(dr.from.getMillis) && metric.creationTime.? <= new Timestamp(dr.to.getMillis))
   }
 }
