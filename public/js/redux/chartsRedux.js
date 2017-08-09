@@ -31,25 +31,25 @@ const chartsRedux = State({
     updateComposerVsIncopy(state, composerVsInCopyData) {
         const totals = createYTotalsList(createPartialsList(composerVsInCopyData));
         const percentSeries = formattedSeries(composerVsInCopyData, totals);
-        return { composerVsInCopy: percentSeries };
+        return Object.assign({}, state, { composerVsInCopy: percentSeries });
     },
 
     getComposerVsIncopyFailed(state, error) {
-        return { 
+        return Object.assign({}, state, {
             errors: { 
                 hasErrors: true,
                 message: error
             }
-        };
+        });
     },
 
-    resetErrors() {
-        return {
+    resetErrors(state) {
+        return Object.assign({}, state, {
             errors: {
                 hasErrors: false,
                 message: null
             }
-        };
+        });
     }
 });
 
