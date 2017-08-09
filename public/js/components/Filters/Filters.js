@@ -20,7 +20,9 @@ class Filters extends React.Component {
                                     <select
                                         className="form__field form__field--select"
                                         onChange={event => onSelectChange({
-                                            office: event.target.value
+                                            office: event.target.value,
+                                            startDate: filterVals.startDate,
+                                            endDate: filterVals.endDate
                                         })}
                                         value={filterVals.office}
                                         disabled={isUpdating}
@@ -40,7 +42,9 @@ class Filters extends React.Component {
                                     <select
                                         className="form__field form__field--select"
                                         onChange={event => onSelectChange({
-                                            desk: event.target.value
+                                            desk: event.target.value,
+                                            startDate: filterVals.startDate,
+                                            endDate: filterVals.endDate
                                         })}
                                         value={filterVals.desk}
                                         disabled={isUpdating}
@@ -60,7 +64,9 @@ class Filters extends React.Component {
                                     <select
                                         className="form__field form__field--select"
                                         onChange={event => onSelectChange({
-                                            section: event.target.value
+                                            section: event.target.value,
+                                            startDate: filterVals.startDate,
+                                            endDate: filterVals.endDate
                                         })}
                                         value={filterVals.section}
                                         disabled={isUpdating}
