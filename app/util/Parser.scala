@@ -31,7 +31,7 @@ object Parser {
 
   def listToJson(list: Seq[(Long, Int)]): Either[ProductionMetricsError, Json] = {
     val stringList = list.map { pair =>
-      s"""{ "x": "${pair._1}", "y": ${pair._2}}"""
+      s"""{ "x": ${pair._1}, "y": ${pair._2}}"""
     }
     val stringToParse = "[" + stringList.mkString(",") + "]"
 
