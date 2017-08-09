@@ -29,7 +29,7 @@ object Parser {
     result.fold(processException, Right(_))
   }
 
-  def listToJson(list: Seq[(DateTime, Int)]): Either[ProductionMetricsError, Json] = {
+  def listToJson(list: Seq[(Long, Int)]): Either[ProductionMetricsError, Json] = {
     val stringList = list.map { pair =>
       s"""{ "x": "${pair._1}", "y": ${pair._2}}"""
     }

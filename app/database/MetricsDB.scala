@@ -27,8 +27,8 @@ class MetricsDB(val db: Database) {
 
   // This needs to return the data grouped by day. For this we've defined dateTrunc to tell Slick
   // to "import" the date_trunc function from postgresql
-  def getStartedInSystem(implicit filters: MetricsFilters): Seq[(DateTime, Int)] =
+  def getStartedInSystem(implicit filters: MetricsFilters): Seq[(Long, Int)] =
     await(db.run(metricsTable.filter(MetricsFilters.metricFilters).map(m => (m.id, dateTrunc("day", m.creationTime))).groupBy(_._2).map{
       case (date, metric) => (date, metric.size)
-    }.result)).map(pair => (new DateTime(pair._1), pair._2))
+    }.result)).map(pair => (new DateTime(pair._1).getMillis, pair._2))
 }
