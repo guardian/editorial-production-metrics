@@ -1,14 +1,15 @@
-.chart-wrap {
+.chart-wrap,
+.error {
   position: relative;
 }
 
 $loadingLabelWidth: 100px;
-$loadingLabelHeight: 30px;
+$loadingLabelHeight: 300px;
 
 .chart-wrap:after {
   content: 'Loading\2026'; // Ellipsis
   display: none;
-  @include center-absolutely(100px, 30px); // Center the chart wrap passing in the width and height
+  @include center-absolutely($loadingLabelWidth, $loadingLabelHeight); // Center the chart wrap passing in the width and height
 }
 
 .chart-wrap:before {
@@ -25,4 +26,21 @@ $loadingLabelHeight: 30px;
 .chart-wrap__updating:after,
 .chart-wrap__updating:before {
   display: block;
+}
+
+.error:before {
+  content: '';
+  display: block;
+  background-color: rgba(0,0,0,0.7);
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+.error:after {
+  content: 'An error has occurred';
+  display: block;
+  @include center-absolutely($loadingLabelWidth, $loadingLabelHeight); // Center the chart wrap passing in the width and height
 }

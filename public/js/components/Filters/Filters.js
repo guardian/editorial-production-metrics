@@ -12,29 +12,7 @@ class Filters extends React.Component {
         return (
             <form className="form">
                 <Grid fluid>
-                    <Row between="xs">
-                        <Col xs={9} md={4}>
-                            <div className="form__row">
-                                <label>
-                                    Filter by Office:
-                                    <select
-                                        className="form__field form__field--select"
-                                        onChange={event => onSelectChange({
-                                            office: event.target.value,
-                                            startDate: filterVals.startDate,
-                                            endDate: filterVals.endDate
-                                        })}
-                                        value={filterVals.office}
-                                        disabled={isUpdating}
-                                    >
-                                        <option value="all">All</option>
-                                        <option value="uk">UK</option>
-                                        <option value="au">AU</option>
-                                        <option value="us">US</option>
-                                    </select>
-                                </label>
-                            </div>
-                        </Col>
+                    <Row>
                         <Col xs={9} md={4}>
                             <div className="form__row">
                                 <label>
@@ -47,28 +25,6 @@ class Filters extends React.Component {
                                             endDate: filterVals.endDate
                                         })}
                                         value={filterVals.desk}
-                                        disabled={isUpdating}
-                                    >
-                                        <option value="all">All</option>
-                                        <option value="news">News</option>
-                                        <option value="opinion">Opinion</option>
-                                        <option value="sport">Sport</option>
-                                    </select>
-                                </label>
-                            </div>
-                        </Col>
-                        <Col xs={9} md={4}>
-                            <div className="form__row">
-                                <label>
-                                    Filter by Section:
-                                    <select
-                                        className="form__field form__field--select"
-                                        onChange={event => onSelectChange({
-                                            section: event.target.value,
-                                            startDate: filterVals.startDate,
-                                            endDate: filterVals.endDate
-                                        })}
-                                        value={filterVals.section}
                                         disabled={isUpdating}
                                     >
                                         <option value="all">All</option>
