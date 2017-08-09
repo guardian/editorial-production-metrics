@@ -1,6 +1,6 @@
 import { State, Actions, Effect } from 'jumpstate';
 import getChartData from 'services/getChartData';
-import { yTotals, createPartialsList, formattedSeries } from '../helpers/chartsHelpers';
+import { createYTotalsList, createPartialsList, formattedSeries } from 'helpers/chartsHelpers';
 
 /* ------------- State Management ------------- */
 
@@ -20,7 +20,7 @@ const chartsRedux = State({
 
     updateComposerVsIncopy(state, chartsData) {
         const series = chartsData.composerVsInCopy;
-        const totals = yTotals(createPartialsList(series));
+        const totals = createYTotalsList(createPartialsList(series));
         const percentSeries = formattedSeries(series, totals);
         return { composerVsInCopy: percentSeries };
     }
