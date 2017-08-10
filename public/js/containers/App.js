@@ -15,7 +15,6 @@ class App extends React.Component {
         return (
             <Page>
                 <Filters
-                    onSelectChange={Actions.filterDesk}
                     filterVals={filterVals}
                     isUpdating={isUpdating}
                 />
