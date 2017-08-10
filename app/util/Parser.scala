@@ -17,14 +17,14 @@ object Parser {
     } yield event
   }
 
-  def stringToTags(tagsString: String): Either[ProductionMetricsError, CommissioningDesks] = {
+  def stringToCommissioningDesks(tagsString: String): Either[ProductionMetricsError, CommissioningDesks] = {
     for {
       json <- stringToJson(tagsString)
-      tags <- jsonToTags(json)
+      tags <- jsonToCommissioningDesks(json)
     } yield tags
   }
 
-  private def jsonToTags(json: Json): Either[ProductionMetricsError, CommissioningDesks] = {
+  private def jsonToCommissioningDesks(json: Json): Either[ProductionMetricsError, CommissioningDesks] = {
     json.as[CommissioningDesks].fold(processException, m => Right(m))
   }
 

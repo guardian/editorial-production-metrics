@@ -33,13 +33,12 @@ class App(val wsClient: WSClient, val config: Config, val db: MetricsDB) extends
   }
 
   def getCommissioningDeskList = Action.async {
-    val queryParams = List(("type", "Tracking"),("limit", "1000"))
+    val queryParams = List(("type", "Tracking"),("limit", "100"))
     wsClient.url(config.tagManagerUrl).withQueryString(queryParams:_*).get.map(
-      response => stringToTags(response.body) match {
-        case Right(desks) => {
+      response => stringToCommissioningDesks(response.body) match {
+        case Right(desks) =>
           val deskNames = desks.data.map(desk => desk.data.path)
           Ok(deskNames.asJson.spaces4)
-        }
         case Left(_) => InternalServerError("Not able to parse json.")
       })
   }

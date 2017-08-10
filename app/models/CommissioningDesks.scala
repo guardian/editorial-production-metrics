@@ -1,6 +1,6 @@
 package models
 
-case class CommissioningDesks(total: Int, data: List[CommissioningDesk])
+case class CommissioningDesks(data: List[CommissioningDesk])
 
 case class CommissioningDesk(data: CommissioningDeskData)
 
