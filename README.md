@@ -8,7 +8,16 @@ You'll need the [AWS CLI](http://docs.aws.amazon.com/cli/latest/userguide/instal
 for the composer AWS account from [janus](https://janus.gutools.co.uk). You'll also need to follow the
 'Install SSL certificates' step in the [dev-nginx readme](https://github.com/guardian/dev-nginx). Then:
 
- - Fetch config from S3: `./fetch-config.sh`
+### Local Config
+
+This project uses [Configuration Magic](https://github.com/guardian/configuration-magic/) so you need to fetch a config file to use locally. There are 2 options and 2 scripts:
+ 
+ 1. `./fetch-DEV-config.sh` This uses the DEV database and DEV kinesis stream
+ 2. `.fetch-CODE-config.sh` This uses the CODE database and CODE kinesis stream.
+ 
+The DEV config is best to use when developing code that makes changes to the database or writes and reads from kinesis stream. The CODE config points to the CODE database and is populated with the same data as in the PROD database so is useful when data that reflects PROD is needed.
+
+ - Fetch config from S3 with one of the scripts above
  - Setup the nginx mapping by following the instructions in the
  [dev-nginx readme](https://github.com/guardian/dev-nginx#install-config-for-an-application).
  - Install Client Side Dependencies with `./scripts/setup.sh`
