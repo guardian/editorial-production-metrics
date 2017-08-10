@@ -14,7 +14,7 @@ const getOriginatingSystem = (system, startDate, endDate, desk) =>
         params: {
             startDate: moment(startDate).format(),
             endDate: moment(endDate).format(),
-            desk
+            desk: desk !== 'all' && desk || null
         }
     });
 

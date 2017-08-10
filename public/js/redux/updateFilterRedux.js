@@ -3,9 +3,7 @@ import moment from 'moment';
 
 const updateFilterRedux = State({
     initial: {
-        office: 'all',
-        desk: null,
-        section: 'all',
+        desk: 'all',
         startDate: moment().subtract(7,'d'),
         endDate: moment()
     },

@@ -2,13 +2,14 @@ import React from 'react';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import moment from 'moment';
 import { DateRangePicker } from 'react-dates';
+import  { Actions } from 'jumpstate';
 
 class Filters extends React.Component {
     
     state = { focusedInput: null };
     
     render() {
-        const { onSelectChange, filterVals, isUpdating } = this.props;
+        const { filterVals, isUpdating } = this.props;
         return (
             <form className="form">
                 <Grid fluid>
@@ -19,11 +20,7 @@ class Filters extends React.Component {
                                     Filter by Desk:
                                     <select
                                         className="form__field form__field--select"
-                                        onChange={event => onSelectChange({
-                                            desk: event.target.value,
-                                            startDate: filterVals.startDate,
-                                            endDate: filterVals.endDate
-                                        })}
+                                        onChange={event => Actions.filterDesk({ ...filterVals, desk: event.target.value })}
                                         value={filterVals.desk}
                                         disabled={isUpdating}
                                     >
@@ -47,7 +44,7 @@ class Filters extends React.Component {
                                         disabled={isUpdating}
                                         startDate={filterVals.startDate}
                                         endDate={filterVals.endDate}
-                                        onDatesChange={({ startDate, endDate }) => endDate > startDate ? onSelectChange({ startDate, endDate }) : false }
+                                        onDatesChange={({ startDate, endDate }) => endDate > startDate ? Actions.filterDesk({ ...filterVals, startDate, endDate }) : false }
                                         focusedInput={this.state.focusedInput}
                                         onFocusChange={focusedInput => this.setState({ focusedInput })}
                                         isOutsideRange={(day) => day.isAfter(moment())}
