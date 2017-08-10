@@ -8,7 +8,8 @@ import models.db.MetricsFilters
 import play.api.Logger
 import play.api.libs.ws.WSClient
 import play.api.mvc._
-import util.Parser.listToJson
+import util.Parser._
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class App(val wsClient: WSClient, val config: Config, val db: MetricsDB) extends Controller with PanDomainAuthActions {
 
@@ -29,5 +30,17 @@ class App(val wsClient: WSClient, val config: Config, val db: MetricsDB) extends
       case None => BadRequest("The valid values for originating system are: composer and incopy")
     }
 
+  }
+
+  def getCommissioningDeskList = Action.async {
+    val queryParams = List(("type", "Tracking"),("limit", "1000"))
+    wsClient.url(config.tagManagerUrl).withQueryString(queryParams:_*).get.map(
+      response => stringToTags(response.body) match {
+        case Right(desks) => {
+          val deskNames = desks.data.map(desk => desk.data.path)
+          Ok(deskNames.asJson.spaces4)
+        }
+        case Left(_) => InternalServerError("Not able to parse json.")
+      })
   }
 }

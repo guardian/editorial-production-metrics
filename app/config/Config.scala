@@ -29,6 +29,8 @@ class Config(config: Configuration) extends AwsInstanceTags {
 
   val publishingMetricsKinesisStream = getConfigString("kinesis.publishingMetricsStream")
 
+  val tagManagerUrl = s"${config.getString("tagManager.url").getOrElse("http://tagmanager.gutools.co.uk")}/hyper/tags"
+
 //  This is for uniquely identifying the kinesis application when running the app locally on multiple DEV machines
   val devIdentifier = if(stage == "DEV") getConfigString("user") else ""
 

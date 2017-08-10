@@ -1,6 +1,7 @@
 GET     /                                 controllers.App.index
 
 GET     /api/originatingSystem/:system    controllers.App.getStartedIn(system: String)
+GET     /api/commissioningDesks           controllers.App.getCommissioningDeskList
 
 GET     /healthcheck                      controllers.Healthcheck.healthcheck
 
