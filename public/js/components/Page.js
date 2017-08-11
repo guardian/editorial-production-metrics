@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { Component } from 'react';
 
-class Page extends React.Component {
+export default class Page extends Component {
     render() {
         return (
             <div>
@@ -10,5 +10,3 @@ class Page extends React.Component {
         );
     }
 }
-
-export default Page;

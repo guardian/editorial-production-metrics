@@ -15,7 +15,7 @@ const Charts = ({ charts, isUpdating }) => {
                         series={charts.composerVsInCopy}
                         yLabel="Published Content %"
                         isUpdating={isUpdating}
-                        errors={charts.errors}
+                        error={charts.error}
                     />
                 </Col>
             </Row>

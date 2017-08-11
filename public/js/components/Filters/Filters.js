@@ -1,15 +1,17 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import moment from 'moment';
 import { DateRangePicker } from 'react-dates';
 import  { Actions } from 'jumpstate';
 
-class Filters extends React.Component {
-    
+const formatDeskName = deskName => deskName.substr(27).replace(/-/g, ' ').replace(/\b\w/g, x => x.toUpperCase());
+const renderDesks = (desks) => desks.sort().map(desk => <option value={desk}>{formatDeskName(desk)}</option>);
+
+export default class Filters extends Component {
     state = { focusedInput: null };
-    
+
     render() {
-        const { filterVals, isUpdating } = this.props;
+        const { filterVals, isUpdating, desks } = this.props;
         return (
             <form className="form">
                 <Grid fluid>
@@ -24,10 +26,7 @@ class Filters extends React.Component {
                                         value={filterVals.desk}
                                         disabled={isUpdating}
                                     >
-                                        <option value="all">All</option>
-                                        <option value="news">News</option>
-                                        <option value="opinion">Opinion</option>
-                                        <option value="sport">Sport</option>
+                                        {renderDesks(desks)}
                                     </select>
                                 </label>
                             </div>
@@ -58,5 +57,3 @@ class Filters extends React.Component {
         );
     }
 }
-
-export default Filters;

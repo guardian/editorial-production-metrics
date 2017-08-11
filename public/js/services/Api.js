@@ -2,8 +2,8 @@ import axios from 'axios';
 import moment from 'moment';
 
 export const httpClient = axios.create({
-    // baseURL: 'https://productionmetrics.local.dev-gutools.co.uk/', // Use this url in dev. TODO: Add proper ENV management
-    baseURL: 'https://productionmetrics.gutools.co.uk/',
+    baseURL: 'https://productionmetrics.local.dev-gutools.co.uk/', // Use this url in dev. TODO: Add proper ENV management
+    // baseURL: 'https://productionmetrics.gutools.co.uk/',
     timeout: 5000,
     headers: {
     }
@@ -26,7 +26,10 @@ const getComposerVsIncopy = (startDate, endDate, desk) =>
         axios.spread((composerResponse, inCopyResponse) => [{ data: composerResponse.data }, { data: inCopyResponse.data }])
     );
 
+const getCommissioningDesks = () => httpClient.get('api/commissioningDesks');
+
 export default {
     getOriginatingSystem,
-    getComposerVsIncopy
+    getComposerVsIncopy,
+    getCommissioningDesks
 };

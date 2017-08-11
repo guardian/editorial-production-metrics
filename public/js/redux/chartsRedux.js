@@ -5,7 +5,6 @@ import { createYTotalsList, createPartialsList, formattedSeries } from 'helpers/
 /* ------------- State Management ------------- */
 
 Effect('filterDesk', (filterObj) => {
-    Actions.resetErrors();
     Actions.updateFilter(filterObj);
     Actions.toggleIsUpdatingCharts(true);
     api.getComposerVsIncopy(filterObj.startDate, filterObj.endDate, filterObj.desk)
@@ -21,35 +20,20 @@ Effect('filterDesk', (filterObj) => {
 
 const chartsRedux = State({
     initial: {
-        composerVsInCopy: [],
-        errors: {
-            hasErrors: false,
-            message: null
-        }
+        composerVsInCopy: []
     },
 
     updateComposerVsIncopy(state, composerVsInCopyData) {
         const totals = createYTotalsList(createPartialsList(composerVsInCopyData));
         const percentSeries = formattedSeries(composerVsInCopyData, totals);
-        return Object.assign({}, state, { composerVsInCopy: percentSeries });
+        return { composerVsInCopy: percentSeries };
     },
 
     getComposerVsIncopyFailed(state, error) {
-        return Object.assign({}, state, {
-            errors: { 
-                hasErrors: true,
-                message: error
-            }
-        });
-    },
-
-    resetErrors(state) {
-        return Object.assign({}, state, {
-            errors: {
-                hasErrors: false,
-                message: null
-            }
-        });
+        return {
+            composerVsInCopy: state.composerVsInCopy,
+            error: error.message
+        };
     }
 });
 
