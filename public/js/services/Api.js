@@ -2,8 +2,8 @@ import axios from 'axios';
 import moment from 'moment';
 
 export const httpClient = axios.create({
-    baseURL: 'https://productionmetrics.local.dev-gutools.co.uk/', // Use this url in dev. TODO: Add proper ENV management
-    // baseURL: 'https://productionmetrics.gutools.co.uk/',
+    // baseURL: 'https://productionmetrics.local.dev-gutools.co.uk/', // Use this url in dev. TODO: Add proper ENV management
+    baseURL: 'https://productionmetrics.gutools.co.uk/',
     timeout: 5000,
     headers: {
     }
@@ -14,7 +14,7 @@ const getOriginatingSystem = (system, startDate, endDate, desk) =>
         params: {
             startDate: moment(startDate).format(),
             endDate: moment(endDate).format(),
-            desk: desk !== 'all' && desk || null
+            desk: desk !== 'tracking/commissioningdesk/all' && desk || null
         }
     });
 

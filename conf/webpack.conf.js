@@ -59,7 +59,7 @@ module.exports = {
             containers: path.resolve(__dirname, '../public/js/containers/'),
             reducers: path.resolve(__dirname, '../public/js/reducers/'),
             services: path.resolve(__dirname, '../public/js/services/'),
-            util: path.resolve(__dirname, '../public/js/util/'),
+            utils: path.resolve(__dirname, '../public/js/utils/'),
             helpers: path.resolve(__dirname, '../public/js/helpers/')
         }
     },

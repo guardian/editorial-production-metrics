@@ -1,5 +1,6 @@
 import { State, Actions, Effect } from 'jumpstate';
 import api from 'services/Api';
+import chartList from 'utils/chartList';
 import { createYTotalsList, createPartialsList, formattedSeries } from 'helpers/chartsHelpers';
 
 /* ------------- State Management ------------- */
@@ -7,32 +8,42 @@ import { createYTotalsList, createPartialsList, formattedSeries } from 'helpers/
 Effect('filterDesk', (filterObj) => {
     Actions.updateFilter(filterObj);
     Actions.toggleIsUpdatingCharts(true);
-    api.getComposerVsIncopy(filterObj.startDate, filterObj.endDate, filterObj.desk)
-        .then(composerVsInCopyData => {
-            Actions.toggleIsUpdatingCharts(false);
-            Actions.updateComposerVsIncopy(composerVsInCopyData);
-        })
-        .catch((error) => {
-            Actions.toggleIsUpdatingCharts(false);
-            Actions.getComposerVsIncopyFailed(error);
-        });
+    chartList.map(chart => {
+        api[`get${chart}`](filterObj.startDate, filterObj.endDate, filterObj.desk)
+            .then(chartData => {
+                Actions.toggleIsUpdatingCharts(false);
+                Actions[`update${chart}`](chartData);
+            })
+            .catch(error => {
+                Actions.toggleIsUpdatingCharts(false);
+                Actions[`get${chart}Failed`](error);
+            });
+    });
 });
 
 const chartsRedux = State({
     initial: {
-        composerVsInCopy: []
+        composerVsInCopy: {
+            data: []
+        }
     },
 
     updateComposerVsIncopy(state, composerVsInCopyData) {
         const totals = createYTotalsList(createPartialsList(composerVsInCopyData));
         const percentSeries = formattedSeries(composerVsInCopyData, totals);
-        return { composerVsInCopy: percentSeries };
+        return { 
+            composerVsInCopy: {
+                data: percentSeries
+            }
+        };
     },
 
     getComposerVsIncopyFailed(state, error) {
         return {
-            composerVsInCopy: state.composerVsInCopy,
-            error: error.message
+            composerVsInCopy: {
+                data: state.composerVsInCopy.data,
+                error: error.message
+            }
         };
     }
 });

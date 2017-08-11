@@ -5,7 +5,7 @@ import { DateRangePicker } from 'react-dates';
 import  { Actions } from 'jumpstate';
 
 const formatDeskName = deskName => deskName.substr(27).replace(/-/g, ' ').replace(/\b\w/g, x => x.toUpperCase());
-const renderDesks = (desks) => desks.sort().map(desk => <option value={desk}>{formatDeskName(desk)}</option>);
+const renderDesks = (desks) => desks.sort().map((desk, key) => <option value={desk} key={`desk-filter-key-${key}`}>{formatDeskName(desk)}</option>);
 
 export default class Filters extends Component {
     state = { focusedInput: null };
