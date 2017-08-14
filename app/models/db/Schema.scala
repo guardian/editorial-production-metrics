@@ -5,9 +5,8 @@ import java.sql.Timestamp
 import com.github.tototoshi.slick.PostgresJodaSupport._
 import com.gu.editorialproductionmetricsmodels.models.OriginatingSystem
 import org.joda.time.DateTime
-import slick.lifted.Tag
 import slick.jdbc.PostgresProfile.api._
-import slick.lifted.TableQuery
+import slick.lifted.{TableQuery, Tag}
 
 object Schema {
 
