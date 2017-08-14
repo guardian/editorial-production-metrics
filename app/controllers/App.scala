@@ -3,12 +3,14 @@ package controllers
 import com.gu.editorialproductionmetricsmodels.models.OriginatingSystem
 import config.Config
 import database.MetricsDB
+import io.circe.generic.auto._
 import io.circe.syntax._
 import models.db.MetricsFilters
 import play.api.Logger
 import play.api.libs.ws.WSClient
 import play.api.mvc._
 import util.Parser._
+
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class App(val wsClient: WSClient, val config: Config, val db: MetricsDB) extends Controller with PanDomainAuthActions {
@@ -22,11 +24,7 @@ class App(val wsClient: WSClient, val config: Config, val db: MetricsDB) extends
     OriginatingSystem.withNameOption(system) match {
       case Some(s) =>
         implicit val filters = MetricsFilters(req.queryString).copy(originatingSystem = Some(s))
-
-        listToJson(db.getStartedInSystem) match {
-          case Right(j) => Ok(j.asJson.spaces4)
-          case Left(_) => InternalServerError("Not able to parse json")
-        }
+        Ok(db.getStartedInSystem.asJson.spaces4)
       case None => BadRequest("The valid values for originating system are: composer and incopy")
     }
 
