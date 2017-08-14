@@ -3,7 +3,7 @@ import { Themes } from 'formidable-charts';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import AreaChartWrap from './AreaChartWrap';
 
-const Charts = ({ composerVsInCopy, isUpdating }) => {
+const Charts = ({ charts, isUpdating }) => {
     return (
         <Grid fluid>
             <Row around="xs">
@@ -12,10 +12,10 @@ const Charts = ({ composerVsInCopy, isUpdating }) => {
                         stacked={true}
                         scale="time"
                         title="Tool of origin: inCopy vs Composer"
-                        series={composerVsInCopy.data}
+                        series={charts.composerVsInCopy.data}
                         yLabel="Published Content %"
                         isUpdating={isUpdating}
-                        error={composerVsInCopy.error}
+                        error={charts.composerVsInCopy.error}
                     />
                 </Col>
             </Row>

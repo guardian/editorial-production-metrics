@@ -21,7 +21,7 @@ class App extends Component {
                     desks={commissioningDesks.desksList}
                 />
                 <Charts
-                    composerVsInCopy={charts.composerVsInCopy}
+                    charts={charts}
                     startDate={filterVals.startDate}
                     endDate={filterVals.endDate}
                     isUpdating={isUpdating}

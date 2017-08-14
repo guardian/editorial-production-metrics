@@ -4,6 +4,7 @@ import moment from 'moment';
 import { DateRangePicker } from 'react-dates';
 import  { Actions } from 'jumpstate';
 
+// Remove the 'tracking/commissioningdesk/' bit from the desk identifier string, replace dashes with spaces and capitalize each word
 const formatDeskName = deskName => deskName.substr(27).replace(/-/g, ' ').replace(/\b\w/g, x => x.toUpperCase());
 const renderDesks = (desks) => desks.sort().map((desk, key) => <option value={desk} key={`desk-filter-key-${key}`}>{formatDeskName(desk)}</option>);
 

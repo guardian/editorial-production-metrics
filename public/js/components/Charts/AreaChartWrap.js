@@ -7,12 +7,12 @@ const customisedTheme = Object.assign({}, Themes.simple, ChartTheme);
 const AreaChartWrap = ({ title, series, xLabel, yLabel, isUpdating, scale, stacked, error }) => {
     function getClassName() {
         if (error) {
-            return 'chart-wrap__error';
+            return 'chart-wrap chart-wrap__error';
         } else {
-            isUpdating ? 'chart-wrap' : 'chart-wrap chart-wrap__updating';
+            return isUpdating ? 'chart-wrap chart-wrap__updating' : 'chart-wrap';
         }
     }
-
+    
     return (
         <div className={getClassName()}>
             <AreaChart

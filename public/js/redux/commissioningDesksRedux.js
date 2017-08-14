@@ -3,16 +3,14 @@ import api from 'services/Api';
 
 /* ------------- State Management ------------- */
 
-Effect('fetchCommissioningDesksRedux', (filterObj) => {
+Effect('fetchCommissioningDesksRedux', () => {
     api.getCommissioningDesks()
         .then(response => {
             const desksList = response.data;
             desksList.push('tracking/commissioningdesk/all');
             Actions.updateCommissioningDesks(desksList);
         })
-        .catch((error) => {
-            Actions.getCommissioningDesksFailed(error);
-        });
+        .catch(Actions.getCommissioningDesksFailed);
 });
 
 const commissioningDesksRedux = State({
@@ -23,7 +21,7 @@ const commissioningDesksRedux = State({
     updateCommissioningDesks(state, desksList) {
         return {
             desksList
-        }
+        };
     },
 
     getCommissioningDesksFailed(state, error) {
