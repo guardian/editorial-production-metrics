@@ -16,9 +16,8 @@ object Parser {
     } yield event
   }
 
-  private def jsonToKinesisEvent(json: Json): Either[ProductionMetricsError, KinesisEvent] = {
+  private def jsonToKinesisEvent(json: Json): Either[ProductionMetricsError, KinesisEvent] =
     json.as[KinesisEvent].fold(processException, m => Right(m))
-  }
 
   def stringToCommissioningDesks(tagsString: String): Either[ProductionMetricsError, CommissioningDesks] = {
     for {
@@ -34,9 +33,8 @@ object Parser {
     result.fold(processException, Right(_))
   }
 
-  private def jsonToCommissioningDesks(json: Json): Either[ProductionMetricsError, CommissioningDesks] = {
+  private def jsonToCommissioningDesks(json: Json): Either[ProductionMetricsError, CommissioningDesks] =
     json.as[CommissioningDesks].fold(processException, m => Right(m))
-  }
 
   def jsonToCapiData(json: Json): Either[ProductionMetricsError, CapiData] =
     json.as[CapiData].fold(processException, Right(_))
