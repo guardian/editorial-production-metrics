@@ -3,7 +3,7 @@ import moment from 'moment';
 
 const updateFilterRedux = State({
     initial: {
-        desk: 'all',
+        desk: 'tracking/commissioningdesk/all',
         startDate: moment().subtract(7,'d'),
         endDate: moment()
     },

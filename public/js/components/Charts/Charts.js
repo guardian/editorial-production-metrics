@@ -12,10 +12,10 @@ const Charts = ({ charts, isUpdating }) => {
                         stacked={true}
                         scale="time"
                         title="Tool of origin: inCopy vs Composer"
-                        series={charts.composerVsInCopy}
+                        series={charts.composerVsInCopy.data}
                         yLabel="Published Content %"
                         isUpdating={isUpdating}
-                        errors={charts.errors}
+                        error={charts.composerVsInCopy.error}
                     />
                 </Col>
             </Row>

@@ -14,7 +14,7 @@ const getOriginatingSystem = (system, startDate, endDate, desk) =>
         params: {
             startDate: moment(startDate).format(),
             endDate: moment(endDate).format(),
-            desk: desk !== 'all' && desk || null
+            desk: desk !== 'tracking/commissioningdesk/all' && desk || null
         }
     });
 
@@ -26,7 +26,10 @@ const getComposerVsIncopy = (startDate, endDate, desk) =>
         axios.spread((composerResponse, inCopyResponse) => [{ data: composerResponse.data }, { data: inCopyResponse.data }])
     );
 
+const getCommissioningDesks = () => httpClient.get('api/commissioningDesks');
+
 export default {
     getOriginatingSystem,
-    getComposerVsIncopy
+    getComposerVsIncopy,
+    getCommissioningDesks
 };

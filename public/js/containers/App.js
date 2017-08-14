@@ -1,22 +1,24 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Actions } from 'jumpstate';
 import Page from 'components/Page';
 import Filters from 'components/Filters/Filters';
 import Charts from 'components/Charts/Charts';
 
-class App extends React.Component {
+class App extends Component {
     componentDidMount() {
+        Actions.fetchCommissioningDesksRedux();
         Actions.filterDesk(this.props.filterVals);
     }
 
     render() {
-        const { filterVals, isUpdating, charts } = this.props;
+        const { filterVals, isUpdating, charts, commissioningDesks } = this.props;
         return (
             <Page>
                 <Filters
                     filterVals={filterVals}
                     isUpdating={isUpdating}
+                    desks={commissioningDesks.desksList}
                 />
                 <Charts
                     charts={charts}
@@ -30,11 +32,12 @@ class App extends React.Component {
 }
 
 function mapStateToProps(state) {
-    const { filterVals, charts, isUpdating } = state;
+    const { filterVals, charts, isUpdating, commissioningDesks } = state;
     return {
         filterVals,
         charts,
-        isUpdating
+        isUpdating,
+        commissioningDesks
     };
 }
 

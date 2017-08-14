@@ -4,9 +4,17 @@ import ChartTheme from '../ChartTheme/theme';
 
 const customisedTheme = Object.assign({}, Themes.simple, ChartTheme);
 
-const AreaChartWrap = ({ title, series, xLabel, yLabel, isUpdating, scale, stacked, errors }) => {
+const AreaChartWrap = ({ title, series, xLabel, yLabel, isUpdating, scale, stacked, error }) => {
+    function getClassName() {
+        if (error) {
+            return 'chart-wrap chart-wrap__error';
+        } else {
+            return isUpdating ? 'chart-wrap chart-wrap__updating' : 'chart-wrap';
+        }
+    }
+    
     return (
-        <div className={errors && !errors.hasErrors ? `chart-wrap ${isUpdating && 'chart-wrap__updating'}` : 'error'}>
+        <div className={getClassName()}>
             <AreaChart
                 stacked={stacked}
                 title={title}
