@@ -39,7 +39,7 @@ if [ -z "${RDSHOST}" ]; then
 fi
 
 
-DATASTORE_HOST=$(marauder -s stage=PROD app=editorial-production-metrics --short)
+DATASTORE_HOST=$(marauder -s stage=CODE app=editorial-production-metrics --short)
 echo $DATASTORE_HOST
 
 ssh -f ubuntu@${DATASTORE_HOST} -L 5901:${RDSHOST}:5432 -N
