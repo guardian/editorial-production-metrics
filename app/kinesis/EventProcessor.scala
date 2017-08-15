@@ -41,7 +41,7 @@ abstract class EventProcessor[T <: KinesisEvent](
     }
   }
 
-  def deserializeEvent(data: Array[Byte]): Either[ProductionMetricsError, KinesisEvent] ={
+  def deserializeEvent(data: Array[Byte]): Either[ProductionMetricsError, KinesisEvent] = {
     val jsonAsString = new String(data)
     stringToKinesisEvent(jsonAsString)
   }

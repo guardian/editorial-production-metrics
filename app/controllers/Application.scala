@@ -1,9 +1,8 @@
 package controllers
 
 import cats.syntax.either._
-import com.gu.editorialproductionmetricsmodels.models.{ForkData, MetricOpt}
-import io.circe.generic.auto._
-import config.Config
+import com.gu.editorialproductionmetricsmodels.models.OriginatingSystem
+import config.Config._
 import database.MetricsDB
 import io.circe.generic.auto._
 import models.APIResponse
@@ -18,9 +17,11 @@ import util.Utils._
 // Implicit
 import models.db.CountResponse._
 
-class App(val wsClient: WSClient, val config: Config, val db: MetricsDB) extends Controller with PanDomainAuthActions {
+import scala.concurrent.ExecutionContext.Implicits.global
 
-  def allowCORSAccess(methods: String, args: Any*) = CORSable(config.workflowUrl) {
+class Application(implicit val wsClient: WSClient, val db: MetricsDB) extends Controller with PanDomainAuthActions {
+
+  def allowCORSAccess(methods: String, args: Any*) = CORSable(workflowUrl) {
     Action { implicit req =>
       val requestedHeaders = req.headers("Access-Control-Request-Headers")
       NoContent.withHeaders("Access-Control-Allow-Methods" -> methods, "Access-Control-Allow-Headers" -> requestedHeaders)
@@ -28,7 +29,7 @@ class App(val wsClient: WSClient, val config: Config, val db: MetricsDB) extends
   }
 
   def index = AuthAction {
-    Logger.info(s"I am the ${config.appName}")
+    Logger.info(s"I am the $appName")
     Ok(views.html.index())
   }
 
@@ -59,7 +60,7 @@ class App(val wsClient: WSClient, val config: Config, val db: MetricsDB) extends
     }
   }
 
-  def upsertMetric() = CORSable(config.workflowUrl) {
+  def upsertMetric() = CORSable(workflowUrl) {
     APIHMACAuthAction { req =>
       APIResponse {
         for {

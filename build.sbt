@@ -40,7 +40,9 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala, RiffRaffArtifact
       "com.gu"                 %% "configuration-magic-play2-4"  % "1.3.0",
       "com.gu"                 %% "pan-domain-auth-play_2-5"     % "0.4.1",
       "com.gu"                 %% "panda-hmac"                   % "1.2.0",
-      "org.postgresql"         % "postgresql"                    % "42.1.1"
+      "org.postgresql"         % "postgresql"                    % "42.1.1",
+      "org.scalatestplus.play" %% "scalatestplus-play"           % "1.5.0" % "test",
+      "org.mockito" % "mockito-core" % "2.8.47"
     ) ++ sharedDependencies ++ databaseDependencies,
     routesGenerator := InjectedRoutesGenerator,
 
@@ -66,6 +68,36 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala, RiffRaffArtifact
       "-Dpidfile.path=/dev/null"
     )
   )
+  .configs(IntegrationTests)
+  .settings(inConfig(IntegrationTests)(Defaults.testSettings) : _*)
+
+lazy val IntegrationTests = config("it").extend(Test)
+
+sourceDirectory in IntegrationTests := baseDirectory.value / "/test-integration"
+
+javaSource in IntegrationTests := baseDirectory.value / "/test-integration"
+
+resourceDirectory in IntegrationTests := baseDirectory.value / "/test-integration/resources"
+
+scalaSource in IntegrationTests := baseDirectory.value / "/test-integration"
+
+testOptions in IntegrationTests += Tests.Setup(loader => {
+  val dbUser = "postgres"
+  val dbPassword = "postgres"
+  val dbName = "metrics"
+  val dbPort = 6432
+
+  ("docker rm -fv metricsdb" #|| "true").!
+  s"docker run --name metricsdb -e POSTGRES_USER=$dbUser -e POSTGRES_PASSWORD=$dbPassword -e POSTGRES_DB=$dbName -p $dbPort:5432 -d postgres:9.4-alpine".!
+
+  println("Waiting for Postgres to startup...")
+  while("docker exec metricsdb pg_isready".! > 0) {
+    Thread.sleep(1000)
+  }
+  Thread.sleep(5000)
+})
+
+addCommandAlias("testAll", "; test ; it:test")
 
 lazy val kinesisLocal = (project in file("kinesisLocal"))
   .settings(

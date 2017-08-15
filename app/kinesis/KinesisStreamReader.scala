@@ -8,7 +8,7 @@ import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorF
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.{InitialPositionInStream, KinesisClientLibConfiguration, Worker}
 import com.amazonaws.services.kinesis.metrics.impl.NullMetricsFactory
 import com.google.common.util.concurrent.ThreadFactoryBuilder
-import config.Config
+import config.Config._
 
 trait KinesisStreamReader {
 
@@ -16,13 +16,12 @@ trait KinesisStreamReader {
   val stage: String
   val kinesisCredentialsProvider: AWSCredentialsProvider
   val dynamoCredentialsProvider: AWSCredentialsProvider
-  val config: Config
 
   /* This application name is used by KCL to store the checkpoint data
    * about how much of the stream we have consumed. The application
    * name should be unique for each stream and be less than 255
    * characters. */
-  lazy val applicationName: String = s"${streamName}_editorial_production_metrics_$stage${config.devIdentifier}"
+  lazy val applicationName: String = s"${streamName}_editorial_production_metrics_$stage$devIdentifier"
 
   /* only applies when there are no checkpoints */
   val initialPosition = InitialPositionInStream.LATEST
@@ -33,7 +32,7 @@ trait KinesisStreamReader {
   private lazy val kinesisConfig =
     new KinesisClientLibConfiguration(applicationName, streamName, kinesisCredentialsProvider, dynamoCredentialsProvider, null, workerId)
       .withInitialPositionInStream(initialPosition)
-      .withRegionName(config.region.getName)
+      .withRegionName(region.getName)
       .withInitialLeaseTableReadCapacity(10)
       .withInitialLeaseTableWriteCapacity(10)
 
