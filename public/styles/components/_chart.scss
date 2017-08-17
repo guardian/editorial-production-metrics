@@ -5,6 +5,10 @@ $loadingLabelHeight: 300px;
   position: relative;
 }
 
+.chart-wrap svg {
+  overflow: visible;
+}
+
 .chart-wrap:before {
   content: '';
   display: none;

@@ -36,9 +36,9 @@ const baseProps = {
 // *
 const baseLabelStyles = {
     fontFamily: sansSerif,
-    fontSize: 12,
+    fontSize: 10,
     letterSpacing,
-    padding: 10,
+    padding: 5,
     fill: primary,
     stroke: 'transparent'
 };

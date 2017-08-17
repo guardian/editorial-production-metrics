@@ -13,7 +13,7 @@ const Charts = ({ charts, isUpdating }) => {
                         scale="time"
                         title="Tool of origin: inCopy vs Composer"
                         series={charts.composerVsInCopy.data}
-                        yLabel="Published Content %"
+                        yLabel="Published Content Daily %"
                         isUpdating={isUpdating}
                         error={charts.composerVsInCopy.error}
                     />
