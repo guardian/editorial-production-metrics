@@ -23,7 +23,9 @@ const getComposerVsIncopy = (startDate, endDate, desk) =>
         getOriginatingSystem('composer', startDate, endDate, desk),
         getOriginatingSystem('incopy', startDate, endDate, desk)
     ]).then(
-        axios.spread((composerResponse, inCopyResponse) => [{ data: composerResponse.data }, { data: inCopyResponse.data }])
+        axios.spread((composerResponse, inCopyResponse) => {
+            return { composerResponse, inCopyResponse };
+        })
     );
 
 const getCommissioningDesks = () => httpClient.get('api/commissioningDesks');
