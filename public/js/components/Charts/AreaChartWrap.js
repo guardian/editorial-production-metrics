@@ -1,10 +1,11 @@
 import React from 'react';
+import { Actions } from 'jumpstate';
 import { AreaChart , Themes } from 'formidable-charts';
 import ChartTheme from '../ChartTheme/theme';
 
 const customisedTheme = Object.assign({}, Themes.simple, ChartTheme);
 
-const AreaChartWrap = ({ title, series, xLabel, yLabel, isUpdating, scale, stacked, error }) => {
+const AreaChartWrap = ({ title, data, xLabel, isUpdating, scale, isStacked, error }) => {
     function getClassName() {
         if (error) {
             return 'chart-wrap chart-wrap__error';
@@ -15,17 +16,21 @@ const AreaChartWrap = ({ title, series, xLabel, yLabel, isUpdating, scale, stack
     
     return (
         <div className={getClassName()}>
+            <input
+                type="checkbox"
+                onChange={event => Actions.toggleStackChart(event.target.checked)}
+            />
             <AreaChart
-                stacked={stacked}
+                stacked={isStacked}
                 title={title}
                 theme={customisedTheme}
-                series={series}
+                series={isStacked ? data.percent : data.absolute}
                 xAxis={{
                     label: xLabel,
                     scale
                 }}
                 yAxis={{
-                    label: yLabel,
+                    label: isStacked ? 'Published Content Daily %' : 'Published Content Daily Numbers',
                     scale: 'linear'
                 }}
             />

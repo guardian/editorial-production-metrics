@@ -25,7 +25,11 @@ Effect('filterDesk', (filterObj) => {
 const chartsRedux = State({
     initial: {
         composerVsInCopy: {
-            data: []
+            data: {
+                absolute: [],
+                percent: []
+            },
+            isStacked: false
         }
     },
 
@@ -36,13 +40,14 @@ const chartsRedux = State({
         const inCopyData = inCopyResponse.data.length < range ?  fillMissingDates(startDate, endDate, inCopyResponse.data).sort(compareDates) : inCopyResponse.data;
         const composerVsInCopyData = [{ data: composerData }, { data: inCopyData }];
         const seriesWithLabels = composerVsInCopyData.map(series => {
-            return { data: series.data.map((dataPoint, index) => {
-                return {
-                    x: dataPoint['x'],
-                    y: dataPoint['y'],
-                    label: `Created in Composer: ${composerVsInCopyData[0]['data'][index]['y']}\nCreated in InCopy: ${composerVsInCopyData[1]['data'][index]['y']}`
-                };
-            })
+            return { 
+                data: series.data.map((dataPoint, index) => {
+                    return {
+                        x: dataPoint['x'],
+                        y: dataPoint['y'],
+                        label: `Created in Composer: ${composerVsInCopyData[0]['data'][index]['y']}\nCreated in InCopy: ${composerVsInCopyData[1]['data'][index]['y']}`
+                    };
+                })
             };
         });
         const totals = createYTotalsList(createPartialsList(seriesWithLabels));
@@ -50,15 +55,30 @@ const chartsRedux = State({
 
         return { 
             composerVsInCopy: {
-                data: percentSeries
+                data: { 
+                    absolute: seriesWithLabels,
+                    percent: percentSeries
+                },
+                isStacked: state.composerVsInCopy.isStacked
+            }
+        };
+    },
+
+    toggleStackChart(state, isStacked) {
+        return { 
+            ...state,
+            composerVsInCopy: {
+                ...state.composerVsInCopy,
+                isStacked 
             }
         };
     },
 
     getComposerVsIncopyFailed(state, error) {
-        return {
+        return { 
+            ...state,
             composerVsInCopy: {
-                data: state.composerVsInCopy.data,
+                ...state.composerVsInCopy,
                 error: error.message
             }
         };

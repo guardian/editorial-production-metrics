@@ -26,7 +26,7 @@ const commissioningDesksRedux = State({
 
     getCommissioningDesksFailed(state, error) {
         return {
-            desksList: state.desksList,
+            ...state,
             error: error.message
         };
     }
