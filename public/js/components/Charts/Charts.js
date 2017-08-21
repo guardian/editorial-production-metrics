@@ -10,7 +10,6 @@ const Charts = ({ charts, isUpdating }) => {
                 <Col xs={12} md={8}>
                     <AreaChartWrap
                         scale="time"
-                        title="Tool of origin: inCopy vs Composer"
                         data={charts.composerVsInCopy.data}
                         isStacked={charts.composerVsInCopy.isStacked}
                         isUpdating={isUpdating}

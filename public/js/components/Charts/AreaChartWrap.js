@@ -5,7 +5,7 @@ import ChartTheme from '../ChartTheme/theme';
 
 const customisedTheme = Object.assign({}, Themes.simple, ChartTheme);
 
-const AreaChartWrap = ({ title, data, xLabel, isUpdating, scale, isStacked, error }) => {
+const AreaChartWrap = ({ data, xLabel, isUpdating, scale, isStacked, error }) => {
     function getClassName() {
         if (error) {
             return 'chart-wrap chart-wrap__error';
@@ -16,13 +16,10 @@ const AreaChartWrap = ({ title, data, xLabel, isUpdating, scale, isStacked, erro
     
     return (
         <div className={getClassName()}>
-            <input
-                type="checkbox"
-                onChange={event => Actions.toggleStackChart(event.target.checked)}
-            />
+            <h3>Tool of Origin: <span style={{color: '#33a22b'}}>InCopy</span> vs <span style={{color: '#ffbc01'}}>Composer</span></h3>
             <AreaChart
                 stacked={isStacked}
-                title={title}
+                height={250}
                 theme={customisedTheme}
                 series={isStacked ? data.percent : data.absolute}
                 xAxis={{
@@ -34,6 +31,13 @@ const AreaChartWrap = ({ title, data, xLabel, isUpdating, scale, isStacked, erro
                     scale: 'linear'
                 }}
             />
+            <div className='chart-toggles'>
+                <input
+                    type="checkbox"
+                    onChange={event => Actions.toggleStackChart(event.target.checked)}
+                />
+                Show percent ratio
+            </div>
         </div>
     );
 };

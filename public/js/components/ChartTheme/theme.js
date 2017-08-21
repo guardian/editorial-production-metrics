@@ -127,8 +127,7 @@ export default {
         chart: {
             style: {
                 parent: {
-                    background: '#393939',
-                    borderTop: '1px solid #ffbc01'
+                    background: '#393939'
                 }
             },
             ...baseProps
