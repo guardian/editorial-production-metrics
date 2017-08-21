@@ -1,34 +1,35 @@
 package util
 
 import cats.syntax.either._
-import com.gu.editorialproductionmetricsmodels.models.{CapiData, KinesisEvent}
+import com.gu.editorialproductionmetricsmodels.models.{CapiData, KinesisEvent, MetricOpt}
+import com.gu.editorialproductionmetricsmodels.models.MetricOpt._
 import io.circe.generic.auto._
 import io.circe.{Json, parser}
+import models.db.Metric
 import models.{CommissioningDesks, ProductionMetricsError}
 import util.Utils._
 
 object Parser {
 
-  def stringToKinesisEvent(atomString: String): Either[ProductionMetricsError, KinesisEvent] = {
-    for {
-      json <- stringToJson(atomString)
-      event <- jsonToKinesisEvent(json)
-    } yield event
-  }
+  def stringToKinesisEvent(atomString: String): Either[ProductionMetricsError, KinesisEvent] = for {
+    json <- stringToJson(atomString)
+    event <- jsonToKinesisEvent(json)
+  } yield event
 
   private def jsonToKinesisEvent(json: Json): Either[ProductionMetricsError, KinesisEvent] =
     json.as[KinesisEvent].fold(processException, m => Right(m))
 
-  def stringToCommissioningDesks(tagsString: String): Either[ProductionMetricsError, CommissioningDesks] = {
-    for {
-      json <- stringToJson(tagsString)
-      tags <- jsonToCommissioningDesks(json)
-    } yield tags
-  }
+  def jsonToMetric(json: Json): Either[ProductionMetricsError, Metric] =
+    json.as[Metric].fold(processException, m => Right(m))
 
-  private def stringToJson(json: String): Either[ProductionMetricsError, Json] = {
+  def stringToCommissioningDesks(tagsString: String): Either[ProductionMetricsError, CommissioningDesks] = for {
+    json <- stringToJson(tagsString)
+    tags <- jsonToCommissioningDesks(json)
+  } yield tags
+
+  def stringToJson(jsonString: String): Either[ProductionMetricsError, Json] = {
     val result = for {
-      parsedJson <- parser.parse(json)
+      parsedJson <- parser.parse(jsonString)
     } yield parsedJson
     result.fold(processException, Right(_))
   }

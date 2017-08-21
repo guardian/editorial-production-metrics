@@ -4,9 +4,11 @@ import java.sql.Timestamp
 
 import com.gu.editorialproductionmetricsmodels.models.OriginatingSystem
 import io.circe._
-import io.circe.generic.semiauto._
 import io.circe.syntax._
+import io.circe.generic.semiauto.{deriveDecoder, deriveEncoder}
+import models.ProductionMetricsError
 import org.joda.time.DateTime
+import util.Parser.jsonToMetric
 
 case class Metric(
     id: String,
@@ -31,7 +33,21 @@ object Metric {
   implicit val timeEncoder = new Encoder[DateTime] {
     def apply(d: DateTime) = d.toString(datePattern).asJson
   }
+  implicit val dateDecoder = new Decoder[DateTime] {
+    def apply(c: HCursor): Decoder.Result[DateTime] = {
+      val dateTime = for {
+        value <- c.focus
+        string <- value.asString
+      } yield new DateTime(string)
+      dateTime.fold[Decoder.Result[DateTime]](Left(DecodingFailure("could not decode date", c.history)))(dt => Right(dt))
+    }
+  }
   implicit val metricEncoder: Encoder[Metric] = deriveEncoder
+  implicit val metricDecoder: Decoder[Metric] = deriveDecoder
+
+  // This only updates the fields that metric and metricOptJson have in common
+  def updateMetric(metric: Metric, metricOptJson: Json): Either[ProductionMetricsError, Metric] =
+    jsonToMetric(metric.asJson.deepMerge(metricOptJson))
 }
 
 case class InCopyMetric(

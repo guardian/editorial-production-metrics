@@ -25,10 +25,9 @@ object Utils {
       Some(formatter.parseDateTime(dateTime))
     }
     catch {
-      case e: Throwable => {
+      case e: Throwable =>
         Logger.error(s"String $dateTime could not be converted to datetime. $e")
         None
-      }
     }
   }
 }

@@ -21,6 +21,10 @@ class MetricsDB(val db: Database) {
 
   def getPublishingMetrics: Seq[Metric] = await(db.run(metricsTable.result))
   def insertPublishingMetric(metric: Metric): Int = await(db.run(metricsTable += metric))
+  def upsertPublishingMetric(metric: Metric): Int = await(db.run(metricsTable.insertOrUpdate(metric)))
+  def getPublishingMetricsWithComposerId(composerId: Option[String]): Option[Metric] =
+    await(db.run(metricsTable.filter(_.composerId === composerId).result.headOption))
+
 
   def getForks: Seq[Fork] = await(db.run(forksTable.result))
   def insertFork(fork: Fork): Int = await(db.run(forksTable += fork))

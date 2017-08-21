@@ -3,6 +3,10 @@ GET     /                                 controllers.App.index
 GET     /api/originatingSystem/:system    controllers.App.getStartedIn(system: String)
 GET     /api/commissioningDesks           controllers.App.getCommissioningDeskList
 
+# endpoints for posting data from other apps
+#OPTIONS /api/metric/*url                  controllers.App.allowCORSAccess(methods = "PUT, POST, DELETE", url: String)
+POST    /api/metric/save                  controllers.App.saveMetric()
+
 GET     /healthcheck                      controllers.Healthcheck.healthcheck
 
 GET     /oauthCallback                    controllers.Login.oauthCallback

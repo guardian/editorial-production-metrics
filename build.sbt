@@ -19,16 +19,17 @@ val databaseDependencies = Seq(
 lazy val sharedDependencies = Seq(
   "com.amazonaws"          % "aws-java-sdk-core"                 % awsVersion,
   "com.amazonaws"          % "amazon-kinesis-client"             % "1.7.6",
-  "io.circe"               %% "circe-parser"                     % "0.7.0",
-  "io.circe"               %% "circe-generic"                    % "0.7.0",
+  "io.circe"               %% "circe-parser"                     % "0.8.0",
+  "io.circe"               %% "circe-generic"                    % "0.8.0",
   "com.beachape"           %% "enumeratum-circe"                 % "1.5.14",
-  "com.gu"                 %% "editorial-production-metrics-lib" % "0.2"
+  "com.gu"                 %% "editorial-production-metrics-lib" % "0.3"
 )
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala, RiffRaffArtifact, JDebPackaging)
   .settings(Defaults.coreDefaultSettings: _*)
   .settings(
     libraryDependencies ++= Seq(
+      filters,
       "com.gu"                 % "kinesis-logback-appender"      % "1.3.0",
       "com.amazonaws"          % "aws-java-sdk-ec2"              % awsVersion,
       "net.logstash.logback"   % "logstash-logback-encoder"      % "4.2",
