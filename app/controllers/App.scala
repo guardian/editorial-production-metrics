@@ -3,7 +3,6 @@ package controllers
 import com.gu.editorialproductionmetricsmodels.models.OriginatingSystem
 import config.Config
 import database.MetricsDB
-import io.circe.Decoder.Result
 import io.circe.generic.auto._
 import io.circe.syntax._
 import models.db.CountResponse._
@@ -51,7 +50,7 @@ class App(val wsClient: WSClient, val config: Config, val db: MetricsDB) extends
       })
   }
 
-  def saveMetric() = //CORSable(config.workflowUrl) {
+  def saveMetric() = CORSable(config.workflowUrl) {
     Action { req =>
       req.body.asJson.map(_.toString) match {
         case Some(metricOptString) =>
@@ -86,5 +85,5 @@ class App(val wsClient: WSClient, val config: Config, val db: MetricsDB) extends
         case None => BadRequest("The body of the request needs to be Json")
       }
     }
-//  }
+  }
 }
