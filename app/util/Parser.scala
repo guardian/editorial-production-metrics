@@ -22,6 +22,9 @@ object Parser {
   def jsonToMetric(json: Json): Either[ProductionMetricsError, Metric] =
     json.as[Metric].fold(processException, m => Right(m))
 
+  def jsonToMetricOpt(json: Json): Either[ProductionMetricsError, MetricOpt] =
+    json.as[MetricOpt].fold(processException, m => Right(m))
+
   def stringToCommissioningDesks(tagsString: String): Either[ProductionMetricsError, CommissioningDesks] = for {
     json <- stringToJson(tagsString)
     tags <- jsonToCommissioningDesks(json)

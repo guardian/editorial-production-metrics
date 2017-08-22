@@ -2,6 +2,7 @@ package database
 
 import java.sql.Timestamp
 
+import models.{ProductionMetricsError, UnexpectedDbExceptionError}
 import models.db.Schema._
 import models.db._
 import org.joda.time.DateTime
@@ -21,7 +22,10 @@ class MetricsDB(val db: Database) {
 
   def getPublishingMetrics: Seq[Metric] = await(db.run(metricsTable.result))
   def insertPublishingMetric(metric: Metric): Int = await(db.run(metricsTable += metric))
-  def upsertPublishingMetric(metric: Metric): Int = await(db.run(metricsTable.insertOrUpdate(metric)))
+  def upsertPublishingMetric(metric: Metric): Either[ProductionMetricsError, Metric] = {
+    val result = await(db.run(metricsTable.insertOrUpdate(metric)))
+    if (result == 0) Left(UnexpectedDbExceptionError) else Right(metric)
+  }
   def getPublishingMetricsWithComposerId(composerId: Option[String]): Option[Metric] =
     await(db.run(metricsTable.filter(_.composerId === composerId).result.headOption))
 

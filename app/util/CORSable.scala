@@ -8,13 +8,11 @@ import scala.concurrent.Future
 case class CORSable[A](origins: String*)(action: Action[A]) extends Action[A] {
 
   def apply(request: Request[A]): Future[Result] = {
-    println("apply corsable", origins, request, request.headers)
     val headers = request.headers.get("Origin").map { origin =>
       if(origins.contains(origin)) {
         List("Access-Control-Allow-Origin" -> origin, "Access-Control-Allow-Credentials" -> "true")
       } else { Nil }
     }
-    println("headers", headers)
     action(request).map(_.withHeaders(headers.getOrElse(Nil) :_*))
   }
 

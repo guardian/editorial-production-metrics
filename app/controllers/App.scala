@@ -12,6 +12,10 @@ import play.api.libs.ws.WSClient
 import play.api.mvc._
 import util.CORSable
 import util.Parser._
+import cats.syntax.either._
+import io.circe.Json
+import util.Utils._
+import models.{InvalidJsonError, ProductionMetricsError, UnexpectedDbExceptionError, UnexpectedExceptionError}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -19,7 +23,6 @@ class App(val wsClient: WSClient, val config: Config, val db: MetricsDB) extends
 
   def allowCORSAccess(methods: String, args: Any*) = CORSable(config.workflowUrl) {
     Action { implicit req =>
-      println("allow cors", args)
       val requestedHeaders = req.headers("Access-Control-Request-Headers")
       NoContent.withHeaders("Access-Control-Allow-Methods" -> methods, "Access-Control-Allow-Headers" -> requestedHeaders)
     }
@@ -50,39 +53,28 @@ class App(val wsClient: WSClient, val config: Config, val db: MetricsDB) extends
       })
   }
 
+  private def updateOrInsert(metric: Option[Metric], metricOptJson: Json): Either[ProductionMetricsError, Metric] = metric match {
+   case Some(m) =>
+     Metric.updateMetric(m, metricOptJson).fold(
+       err => Left(InvalidJsonError(err.message)),
+       updated => db.upsertPublishingMetric(updated))
+   case None =>
+     jsonToMetricOpt(metricOptJson).fold(
+       err => Left(InvalidJsonError(err.message)),
+       metricOpt => db.upsertPublishingMetric(Metric(metricOpt)))
+  }
+
   def saveMetric() = CORSable(config.workflowUrl) {
     Action { req =>
       req.body.asJson.map(_.toString) match {
         case Some(metricOptString) =>
-//          val result = for {
-//            metricOptJson <- stringToJson(metricOptString)
-//            composerId = metricOptJson.hcursor.downField("composerId").as[String]
-//          } yield metricOptJson
-//
-//          Ok(result.asJson.spaces4)
-
-
-          stringToJson(metricOptString).fold(
-            err => InternalServerError(err.message),
-            metricOptJson => {
-              metricOptJson.hcursor.downField("composerId").as[String].fold(
-                _ => BadRequest("No composerId provided."),
-                composerId =>
-                  db.getPublishingMetricsWithComposerId(Some(composerId)) match {
-                    case Some(metric) =>
-                      Metric.updateMetric(metric, metricOptJson).fold(
-                        err => InternalServerError(err.message),
-                        updated => {
-                          db.upsertPublishingMetric(updated)
-                          println(updated)
-                          Ok(updated.asJson.spaces4)
-                        })
-                    case None => NotFound(s"Resource with composerId $composerId not found in the database.")
-                  }
-              )
-            }
-          )
-        case None => BadRequest("The body of the request needs to be Json")
+          val result = for {
+            metricOptJson <- stringToJson(metricOptString)
+            composerId <- metricOptJson.hcursor.downField("composerId").as[String].fold(processException, cId => Right(cId))
+            metric <- updateOrInsert(db.getPublishingMetricsWithComposerId(Some(composerId)), metricOptJson)
+          } yield metric
+          result.fold(err => InternalServerError(err.message), r => Ok(r.asJson.spaces4))
+        case None => BadRequest("The body of the request needs to be sent as Json")
       }
     }
   }

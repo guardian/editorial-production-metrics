@@ -1,8 +1,9 @@
 package models.db
 
 import java.sql.Timestamp
+import java.util.UUID
 
-import com.gu.editorialproductionmetricsmodels.models.OriginatingSystem
+import com.gu.editorialproductionmetricsmodels.models.{MetricOpt, OriginatingSystem}
 import io.circe._
 import io.circe.syntax._
 import io.circe.generic.semiauto.{deriveDecoder, deriveEncoder}
@@ -22,6 +23,19 @@ case class Metric(
     creationTime: DateTime,
     roundTrip: Option[Boolean])
 object Metric {
+  def apply(metricOpt: MetricOpt): Metric = Metric(
+    id = UUID.randomUUID().toString,
+    originatingSystem = metricOpt.originatingSystem.getOrElse(OriginatingSystem.Composer),
+    composerId = metricOpt.composerId,
+    storyBundleId = metricOpt.storyBundleId,
+    commissioningDesk = metricOpt.commissioningDesk,
+    userDesk = metricOpt.userDesk,
+    inWorkflow = metricOpt.inWorkflow,
+    inNewspaper = metricOpt.inNewspaper,
+    creationTime = metricOpt.creationTime.getOrElse(DateTime.now()),
+    roundTrip = metricOpt.roundTrip
+  )
+
   private val datePattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
 
   def customApply(tuple: (String, String, Option[String],Option[String],Option[String],Option[String],Option[Boolean],Option[Boolean],Timestamp,Option[Boolean])): Metric =
