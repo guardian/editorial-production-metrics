@@ -2,6 +2,7 @@ import { State, Actions, Effect } from 'jumpstate';
 import api from 'services/Api';
 import chartList from 'utils/chartList';
 import { createYTotalsList, createPartialsList, formattedSeries, compareDates, fillMissingDates } from 'helpers/chartsHelpers';
+import moment from 'moment';
 
 /* ------------- State Management ------------- */
 
@@ -45,7 +46,7 @@ const chartsRedux = State({
                     return {
                         x: dataPoint['x'],
                         y: dataPoint['y'],
-                        label: `Created in Composer: ${composerVsInCopyData[0]['data'][index]['y']}\nCreated in InCopy: ${composerVsInCopyData[1]['data'][index]['y']}`
+                        label: `Date: ${moment(dataPoint['x']).format('DD/MM/YYYY')}\nCreated in Composer: ${composerVsInCopyData[0]['data'][index]['y']}\nCreated in InCopy: ${composerVsInCopyData[1]['data'][index]['y']}`
                     };
                 })
             };

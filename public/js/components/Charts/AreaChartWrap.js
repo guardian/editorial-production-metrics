@@ -16,7 +16,7 @@ const AreaChartWrap = ({ data, xLabel, isUpdating, scale, isStacked, error }) =>
     
     return (
         <div className={getClassName()}>
-            <h3>Tool of Origin: <span style={{color: '#33a22b'}}>InCopy</span> vs <span style={{color: '#ffbc01'}}>Composer</span></h3>
+            <h3>Tool of Origin: <span className='chart-title-composer'>InCopy</span> vs <span className='chart-title-incopy'>Composer</span></h3>
             <AreaChart
                 stacked={isStacked}
                 height={250}
@@ -28,7 +28,8 @@ const AreaChartWrap = ({ data, xLabel, isUpdating, scale, isStacked, error }) =>
                 }}
                 yAxis={{
                     label: isStacked ? 'Published Content Daily %' : 'Published Content Daily Numbers',
-                    scale: 'linear'
+                    scale: 'linear',
+                    tickFormat: (d) => isStacked ? `${d}%` : d
                 }}
             />
             <div className='chart-toggles'>

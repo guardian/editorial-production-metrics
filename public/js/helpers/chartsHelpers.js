@@ -22,7 +22,7 @@ const convertToPercentage = (value, total) => total ? value * 100 / total : 0;
 
 // Converts the y value in a data pair to its percentage value (using the y totals value)
 const percentageDataSetPair = (pair, total) => { 
-    return { x: pair['x'], y: convertToPercentage(pair['y'], total), label: pair['label'] };
+    return { x: pair.x, y: convertToPercentage(pair.y, total), label: pair.label };
 };
 
 // Converts the whole dataset y values to percentage, using the y totals collection

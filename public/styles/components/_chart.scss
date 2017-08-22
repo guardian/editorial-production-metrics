@@ -4,7 +4,7 @@ $loadingLabelHeight: 300px;
 .chart-wrap {
   position: relative;
   background: #393938;
-  border-top: 1px solid #ffbc01;
+  border-top: 1px solid $cYellow;
 }
 
 .chart-wrap svg {
@@ -49,4 +49,12 @@ $loadingLabelHeight: 300px;
   input {
     margin-right: 10px;
   }
+}
+
+.chart-title-composer {
+  color: $cYellow;
+}
+
+.chart-title-incopy {
+  color: $cGreen33;
 }

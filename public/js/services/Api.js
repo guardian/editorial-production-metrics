@@ -4,7 +4,7 @@ import moment from 'moment';
 export const httpClient = axios.create({
     // baseURL: 'https://productionmetrics.local.dev-gutools.co.uk/', // Use this url in dev. TODO: Add proper ENV management
     baseURL: 'https://productionmetrics.gutools.co.uk/',
-    timeout: 10000,
+    timeout: 5000,
     headers: {
     }
 });
