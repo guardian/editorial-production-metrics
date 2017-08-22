@@ -3,6 +3,12 @@ $loadingLabelHeight: 300px;
 
 .chart-wrap {
   position: relative;
+  background: #393938;
+  border-top: 1px solid $cYellow;
+}
+
+.chart-wrap svg {
+  overflow: visible;
 }
 
 .chart-wrap:before {
@@ -35,4 +41,20 @@ $loadingLabelHeight: 300px;
 
 .chart-wrap__updating:after {
   content: 'Loading\2026'; // Ellipsis
+}
+
+.chart-toggles {
+  padding-bottom: 20px;
+  margin-left: 20px;
+  input {
+    margin-right: 10px;
+  }
+}
+
+.chart-title-composer {
+  color: $cYellow;
+}
+
+.chart-title-incopy {
+  color: $cGreen33;
 }

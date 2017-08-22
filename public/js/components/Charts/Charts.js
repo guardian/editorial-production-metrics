@@ -9,11 +9,9 @@ const Charts = ({ charts, isUpdating }) => {
             <Row around="xs">
                 <Col xs={12} md={8}>
                     <AreaChartWrap
-                        stacked={true}
                         scale="time"
-                        title="Tool of origin: inCopy vs Composer"
-                        series={charts.composerVsInCopy.data}
-                        yLabel="Published Content %"
+                        data={charts.composerVsInCopy.data}
+                        isStacked={charts.composerVsInCopy.isStacked}
                         isUpdating={isUpdating}
                         error={charts.composerVsInCopy.error}
                     />

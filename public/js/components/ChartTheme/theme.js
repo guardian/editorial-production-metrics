@@ -36,9 +36,9 @@ const baseProps = {
 // *
 const baseLabelStyles = {
     fontFamily: sansSerif,
-    fontSize: 12,
+    fontSize: 10,
     letterSpacing,
-    padding: 10,
+    padding: 5,
     fill: primary,
     stroke: 'transparent'
 };
@@ -127,8 +127,7 @@ export default {
         chart: {
             style: {
                 parent: {
-                    background: '#393939',
-                    borderTop: '1px solid #ffbc01'
+                    background: '#393939'
                 }
             },
             ...baseProps

@@ -1,10 +1,11 @@
 import React from 'react';
+import { Actions } from 'jumpstate';
 import { AreaChart , Themes } from 'formidable-charts';
 import ChartTheme from '../ChartTheme/theme';
 
 const customisedTheme = Object.assign({}, Themes.simple, ChartTheme);
 
-const AreaChartWrap = ({ title, series, xLabel, yLabel, isUpdating, scale, stacked, error }) => {
+const AreaChartWrap = ({ data, xLabel, isUpdating, scale, isStacked, error }) => {
     function getClassName() {
         if (error) {
             return 'chart-wrap chart-wrap__error';
@@ -15,20 +16,29 @@ const AreaChartWrap = ({ title, series, xLabel, yLabel, isUpdating, scale, stack
     
     return (
         <div className={getClassName()}>
+            <h3>Tool of Origin: <span className='chart-title-composer'>InCopy</span> vs <span className='chart-title-incopy'>Composer</span></h3>
             <AreaChart
-                stacked={stacked}
-                title={title}
+                stacked={isStacked}
+                height={250}
                 theme={customisedTheme}
-                series={series}
+                series={isStacked ? data.percent : data.absolute}
                 xAxis={{
                     label: xLabel,
                     scale
                 }}
                 yAxis={{
-                    label: yLabel,
-                    scale: 'linear'
+                    label: isStacked ? 'Published Content Daily %' : 'Published Content Daily Numbers',
+                    scale: 'linear',
+                    tickFormat: (d) => isStacked ? `${d}%` : d
                 }}
             />
+            <div className='chart-toggles'>
+                <input
+                    type="checkbox"
+                    onChange={event => Actions.toggleStackChart(event.target.checked)}
+                />
+                Show percent ratio
+            </div>
         </div>
     );
 };
