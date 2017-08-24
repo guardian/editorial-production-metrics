@@ -1,6 +1,6 @@
 package util
 
-import io.circe.ParsingFailure
+import io.circe.{DecodingFailure, ParsingFailure}
 import models.{InvalidJsonError, NoRequestBodyError, ProductionMetricsError, UnexpectedExceptionError}
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
@@ -10,6 +10,7 @@ object Utils {
   def processException(exception: Exception): Either[ProductionMetricsError, Nothing] = {
     val error = exception match {
       case e: ParsingFailure => InvalidJsonError(e.message)
+      case e: DecodingFailure => InvalidJsonError(e.message)
       case _ => UnexpectedExceptionError
     }
     Logger.error(error.message, exception)

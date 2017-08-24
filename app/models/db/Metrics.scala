@@ -4,12 +4,14 @@ import java.sql.Timestamp
 import java.util.UUID
 
 import com.gu.editorialproductionmetricsmodels.models.{MetricOpt, OriginatingSystem}
+import io.circe.parser._
 import io.circe._
-import io.circe.syntax._
 import io.circe.generic.semiauto.{deriveDecoder, deriveEncoder}
-import models.ProductionMetricsError
+import io.circe.syntax._
+import models.{ProductionMetricsError, UnexpectedExceptionError}
 import org.joda.time.DateTime
 import util.Parser.jsonToMetric
+import cats.syntax.either._
 
 case class Metric(
     id: String,
@@ -60,8 +62,17 @@ object Metric {
   implicit val metricDecoder: Decoder[Metric] = deriveDecoder
 
   // This only updates the fields that metric and metricOptJson have in common
-  def updateMetric(metric: Metric, metricOptJson: Json): Either[ProductionMetricsError, Metric] =
-    jsonToMetric(metric.asJson.deepMerge(metricOptJson))
+  def updateMetric(metric: Metric, metricOptJson: Json): Either[ProductionMetricsError, Metric] = {
+    val printer = Printer.noSpaces.copy(dropNullKeys = true)
+    val jsonOpt: String = printer.pretty(metricOptJson)
+
+    val result = for {
+      j1 <- parse(jsonOpt)
+      j2 = metric.asJson
+    } yield j2.deepMerge(j1)
+
+    result.fold(_ => Left(UnexpectedExceptionError), r => jsonToMetric(r))
+  }
 }
 
 case class InCopyMetric(

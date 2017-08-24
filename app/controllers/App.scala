@@ -1,21 +1,21 @@
 package controllers
 
+import cats.syntax.either._
 import com.gu.editorialproductionmetricsmodels.models.OriginatingSystem
 import config.Config
 import database.MetricsDB
+import io.circe.Json
 import io.circe.generic.auto._
 import io.circe.syntax._
 import models.db.CountResponse._
 import models.db.{Metric, MetricsFilters}
+import models.{InvalidJsonError, ProductionMetricsError}
 import play.api.Logger
 import play.api.libs.ws.WSClient
 import play.api.mvc._
 import util.CORSable
 import util.Parser._
-import cats.syntax.either._
-import io.circe.Json
 import util.Utils._
-import models.{InvalidJsonError, ProductionMetricsError, UnexpectedDbExceptionError, UnexpectedExceptionError}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -56,24 +56,37 @@ class App(val wsClient: WSClient, val config: Config, val db: MetricsDB) extends
   private def updateOrInsert(metric: Option[Metric], metricOptJson: Json): Either[ProductionMetricsError, Metric] = metric match {
    case Some(m) =>
      Metric.updateMetric(m, metricOptJson).fold(
-       err => Left(InvalidJsonError(err.message)),
-       updated => db.upsertPublishingMetric(updated))
+       err => {
+         Logger.error(s"Json merging failed for $m and $metricOptJson")
+         Left(InvalidJsonError(err.message))
+       },
+       updated => {
+         Logger.info(s"Metric found, updating entry with: $updated")
+         db.upsertPublishingMetric(updated)
+       })
    case None =>
      jsonToMetricOpt(metricOptJson).fold(
-       err => Left(InvalidJsonError(err.message)),
-       metricOpt => db.upsertPublishingMetric(Metric(metricOpt)))
+       err => {
+         Logger.error(s"Json parsing failed for $metricOptJson")
+         Left(InvalidJsonError(err.message))
+       },
+       metricOpt => {
+         Logger.info(s"Inserting new entry: $metricOpt")
+         db.upsertPublishingMetric(Metric(metricOpt))
+       })
   }
 
   def saveMetric() = CORSable(config.workflowUrl) {
     Action { req =>
       req.body.asJson.map(_.toString) match {
         case Some(metricOptString) =>
+          Logger.info(s"Received new metric: $metricOptString")
           val result = for {
             metricOptJson <- stringToJson(metricOptString)
             composerId <- metricOptJson.hcursor.downField("composerId").as[String].fold(processException, cId => Right(cId))
             metric <- updateOrInsert(db.getPublishingMetricsWithComposerId(Some(composerId)), metricOptJson)
           } yield metric
-          result.fold(err => InternalServerError(err.message), r => Ok(r.asJson.spaces4))
+          result.fold(err => InternalServerError(s"Something bad happened: ${err.message}"), r => Ok(r.asJson.spaces4))
         case None => BadRequest("The body of the request needs to be sent as Json")
       }
     }
