@@ -34,13 +34,8 @@ class Config(config: Configuration) extends AwsInstanceTags {
   val workflowUrl: String =  getConfigString("workflow.url")
 
   private def getConfigString(key: String, default: Option[String] = None): String =
-    getConfigValue[String](key, default)(config.getString)
+    config.getString(key).getOrElse(default.fold(throw new RuntimeException(s"String key $key not found in configuration"))(identity))
 
   private def getConfigBoolean(key: String, default: Option[Boolean] = None): Boolean =
-    getConfigValue[Boolean](key, default)(getCustomBoolean)
-
-  private def getCustomBoolean(path: String, validValues: Option[Set[Boolean]] = None): Option[Boolean] = config.getBoolean(path)
-
-  private def getConfigValue[A](key: String, default: Option[A])(f: (String, Option[Set[A]]) => Option[A]): A =
-    f(key, None).getOrElse(default.fold(throw new RuntimeException(s"Key $key not found in configuration"))(identity))
+    config.getBoolean(key).getOrElse(default.fold(throw new RuntimeException(s"Boolean key $key not found in configuration"))(identity))
 }
