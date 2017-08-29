@@ -21,6 +21,7 @@ class App(val wsClient: WSClient, val config: Config, val db: MetricsDB) extends
 
   def allowCORSAccess(methods: String, args: Any*) = CORSable(config.workflowUrl) {
     Action { implicit req =>
+      Logger.info(s"Allows cors access for ${config.workflowUrl}")
       val requestedHeaders = req.headers("Access-Control-Request-Headers")
       NoContent.withHeaders("Access-Control-Allow-Methods" -> methods, "Access-Control-Allow-Headers" -> requestedHeaders)
     }
