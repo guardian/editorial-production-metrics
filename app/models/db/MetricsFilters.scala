@@ -3,6 +3,9 @@ package models.db
 import java.sql.Timestamp
 
 import com.gu.editorialproductionmetricsmodels.models.OriginatingSystem
+import io.circe.Encoder
+import io.circe.generic.semiauto.deriveEncoder
+import io.circe.syntax._
 import models.db.Schema.DBMetric
 import org.joda.time.DateTime
 import org.joda.time.format.ISODateTimeFormat
@@ -68,4 +71,12 @@ object MetricsFilters {
   }
 }
 
-case class CountResponse(x: Long, y: Int)
+case class CountResponse(date: DateTime, count: Int)
+object CountResponse {
+  private val datePattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+
+  implicit val timeEncoder = new Encoder[DateTime] {
+    def apply(d: DateTime) = d.toString(datePattern).asJson
+  }
+  implicit val metricEncoder: Encoder[Metric] = deriveEncoder
+}

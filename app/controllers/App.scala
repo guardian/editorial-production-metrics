@@ -6,6 +6,7 @@ import database.MetricsDB
 import io.circe.generic.auto._
 import io.circe.syntax._
 import models.db.MetricsFilters
+import models.db.CountResponse._
 import play.api.Logger
 import play.api.libs.ws.WSClient
 import play.api.mvc._
@@ -27,7 +28,6 @@ class App(val wsClient: WSClient, val config: Config, val db: MetricsDB) extends
         Ok(db.getStartedInSystem.asJson.spaces4)
       case None => BadRequest("The valid values for originating system are: composer and incopy")
     }
-
   }
 
   def getCommissioningDeskList = Action.async {

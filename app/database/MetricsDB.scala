@@ -30,5 +30,5 @@ class MetricsDB(val db: Database) {
   def getStartedInSystem(implicit filters: MetricsFilters): List[CountResponse] =
     await(db.run(metricsTable.filter(MetricsFilters.metricFilters).map(m => (m.id, dateTrunc("day", m.creationTime))).groupBy(_._2).map{
       case (date, metric) => (date, metric.size)
-    }.result)).map(pair => CountResponse(new DateTime(pair._1).getMillis, pair._2)).toList
+    }.result)).map(pair => CountResponse(new DateTime(pair._1), pair._2)).toList
 }
