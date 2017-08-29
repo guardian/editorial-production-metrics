@@ -3,15 +3,16 @@ package models.db
 import java.sql.Timestamp
 import java.util.UUID
 
+import cats.syntax.either._
 import com.gu.editorialproductionmetricsmodels.models.{MetricOpt, OriginatingSystem}
-import io.circe.parser._
 import io.circe._
 import io.circe.generic.semiauto.{deriveDecoder, deriveEncoder}
+import io.circe.parser._
 import io.circe.syntax._
-import models.{ProductionMetricsError, UnexpectedExceptionError}
+import models.{InvalidJsonError, ProductionMetricsError}
 import org.joda.time.DateTime
+import play.api.Logger
 import util.Parser.jsonToMetric
-import cats.syntax.either._
 
 case class Metric(
     id: String,
@@ -71,7 +72,11 @@ object Metric {
       j2 = metric.asJson
     } yield j2.deepMerge(j1)
 
-    result.fold(_ => Left(UnexpectedExceptionError), r => jsonToMetric(r))
+    result.fold(
+      err => {
+        Logger.error(s"Json merging failed for $metric and $metricOptJson")
+        Left(InvalidJsonError(err.message))},
+      r => jsonToMetric(r))
   }
 }
 

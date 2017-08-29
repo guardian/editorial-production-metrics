@@ -2,13 +2,13 @@ package database
 
 import java.sql.Timestamp
 
-import models.{InvalidJsonError, ProductionMetricsError, UnexpectedDbExceptionError}
 import models.db.Schema._
 import models.db._
+import models.{ProductionMetricsError, UnexpectedDbExceptionError}
 import org.joda.time.DateTime
 import slick.jdbc.PostgresProfile.api._
 import util.AsyncHelpers._
-import io.circe.Json
+import _root_.io.circe.Json
 import play.api.Logger
 import util.Parser.jsonToMetricOpt
 
@@ -35,22 +35,16 @@ class MetricsDB(val db: Database) {
   def updateOrInsert(metric: Option[Metric], metricOptJson: Json): Either[ProductionMetricsError, Metric] = metric match {
     case Some(m) =>
       Metric.updateMetric(m, metricOptJson).fold(
-        err => {
-          Logger.error(s"Json merging failed for $m and $metricOptJson")
-          Left(InvalidJsonError(err.message))
-        },
+        err => Left(err),
         updated => {
           Logger.info(s"Metric found, updating entry with: $updated")
           upsertPublishingMetric(updated)
         })
     case None =>
       jsonToMetricOpt(metricOptJson).fold(
-        err => {
-          Logger.error(s"Json parsing failed for $metricOptJson")
-          Left(InvalidJsonError(err.message))
-        },
+        err => Left(err),
         metricOpt => {
-          Logger.info(s"Inserting new entry: $metricOpt")
+          Logger.info(s"Inserting new metric: $metricOpt")
           upsertPublishingMetric(Metric(metricOpt))
         })
   }

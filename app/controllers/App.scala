@@ -54,16 +54,16 @@ class App(val wsClient: WSClient, val config: Config, val db: MetricsDB) extends
 
   def saveMetric() = CORSable(config.workflowUrl) {
     Action { req =>
-      Logger.info(s"Some data to save has been received. ${req.body}")
       req.body.asJson.map(_.toString) match {
         case Some(metricOptString) =>
-          Logger.info(s"Received new metric: $metricOptString")
           val result = for {
             metricOptJson <- stringToJson(metricOptString)
             composerId <- metricOptJson.hcursor.downField("composerId").as[String].fold(processException, cId => Right(cId))
             metric <- db.updateOrInsert(db.getPublishingMetricsWithComposerId(Some(composerId)), metricOptJson)
           } yield metric
-          result.fold(err => InternalServerError(s"Something bad happened: ${err.message}"), r => Ok(r.asJson.spaces4))
+          result.fold(
+            err => InternalServerError(s"Something bad happened while trying to post a metric: ${err.message}"),
+            r => Ok(r.asJson.spaces4))
         case None => BadRequest("The body of the request needs to be sent as Json")
       }
     }

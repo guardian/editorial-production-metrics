@@ -7,6 +7,7 @@ import io.circe.generic.auto._
 import io.circe.{Json, parser}
 import models.db.Metric
 import models.{CommissioningDesks, ProductionMetricsError}
+import play.api.Logger
 import util.Utils._
 
 object Parser {
@@ -23,7 +24,10 @@ object Parser {
     json.as[Metric].fold(processException, m => Right(m))
 
   def jsonToMetricOpt(json: Json): Either[ProductionMetricsError, MetricOpt] =
-    json.as[MetricOpt].fold(processException, m => Right(m))
+    json.as[MetricOpt].fold(err => {
+      Logger.error(s"Json parsing failed for $json with error: ${err.message}")
+      processException(err)
+    }, m => Right(m))
 
   def stringToCommissioningDesks(tagsString: String): Either[ProductionMetricsError, CommissioningDesks] = for {
     json <- stringToJson(tagsString)
