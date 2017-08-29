@@ -8,7 +8,6 @@ import Charts from 'components/Charts/Charts';
 class App extends Component {
     componentDidMount() {
         Actions.fetchCommissioningDesksRedux();
-        Actions.filterDesk(this.props.filterVals);
     }
 
     render() {
