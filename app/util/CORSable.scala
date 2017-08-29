@@ -1,5 +1,6 @@
 package util
 
+import play.api.Logger
 import play.api.mvc.{Action, BodyParser, Request, Result}
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -8,6 +9,7 @@ import scala.concurrent.Future
 case class CORSable[A](origins: String*)(action: Action[A]) extends Action[A] {
 
   def apply(request: Request[A]): Future[Result] = {
+    Logger.info(s"Applying CORS. Allowed origins: $origins. Request headers: ${request.headers}")
     val headers = request.headers.get("Origin").map { origin =>
       if(origins.contains(origin)) {
         List("Access-Control-Allow-Origin" -> origin, "Access-Control-Allow-Credentials" -> "true")

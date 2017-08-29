@@ -53,6 +53,7 @@ class App(val wsClient: WSClient, val config: Config, val db: MetricsDB) extends
 
   def saveMetric() = CORSable(config.workflowUrl) {
     Action { req =>
+      Logger.info(s"Some data to save has been received. ${req.body}")
       req.body.asJson.map(_.toString) match {
         case Some(metricOptString) =>
           Logger.info(s"Received new metric: $metricOptString")
