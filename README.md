@@ -39,7 +39,7 @@ The styling for the graphs can be found in [theme.js](https://github.com/guardia
 
 ## Config
 
-This project uses [Configuration Magic](https://github.com/guardian/configuration-magic) and the configuration is stored in the composer aws account in dynamoDB.
+This project uses [Configuration Magic](https://github.com/guardian/configuration-magic) and the configuration is stored in the composer AWS account in dynamoDB.
 
 ### Adding Config Parameters
 
