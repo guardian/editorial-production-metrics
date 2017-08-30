@@ -44,7 +44,7 @@ export default class Filters extends Component {
                                         disabled={isUpdating}
                                         startDate={filterVals.startDate}
                                         endDate={filterVals.endDate}
-                                        onDatesChange={({ startDate, endDate }) => endDate > startDate ? Actions.filterDesk({ ...filterVals, startDate, endDate }) : false }
+                                        onDatesChange={({ startDate, endDate }) => endDate > startDate ? Actions.filterDesk({ ...filterVals, startDate: startDate.utc().startOf('day'), endDate: endDate.utc().startOf('day') }) : false }
                                         focusedInput={this.state.focusedInput}
                                         onFocusChange={focusedInput => this.setState({ focusedInput })}
                                         isOutsideRange={(day) => day.isAfter(moment())}
