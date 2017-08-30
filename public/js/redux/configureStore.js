@@ -1,6 +1,9 @@
 import { createStore, compose, applyMiddleware } from 'redux';
 import { CreateJumpstateMiddleware } from 'jumpstate';
 import logger from 'redux-logger';
+import createHistory from 'history/createBrowserHistory';
+import { routerMiddleware } from 'react-router-redux';
+import { updateUrlFromStateChangeMiddleware, updateStateFromUrlChangeMiddleware } from 'services/routingMiddleware';
 
 // creates the store
 export default (rootReducer) => {
@@ -18,10 +21,15 @@ export default (rootReducer) => {
 
     middleware.push(logger);
 
+    /* ------------- Router Middleware ------------- */
+    const history = createHistory();
+    const router = routerMiddleware(history);
+    middleware.push(router);
+    middleware.push(updateUrlFromStateChangeMiddleware);
+    middleware.push(updateStateFromUrlChangeMiddleware);
+    
     /* ------------- Assemble Middleware ------------- */
-
     enhancers.push(applyMiddleware(...middleware));
-
     const store = createStore(
         rootReducer,
         compose(...enhancers, window.devToolsExtension ? window.devToolsExtension() : f => f)
