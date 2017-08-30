@@ -28,12 +28,11 @@ export const updateUrlFromStateChangeMiddleware = ({ dispatch, getState }) => (n
 export const updateStateFromUrlChangeMiddleware = ({ _, getState }) => (next) => (action) => {
     next(action);
     const newState = getState();
-
     if (action.type === '@@router/LOCATION_CHANGE') {
         const filterObj = paramStringToObject(newState.routing.location.search);
-        if (!_isEqual(filterObj, newState.queryParams)) {
-            filterObj['startDate'] = moment(filterObj['startDate']);
-            filterObj['endDate'] = moment(filterObj['endDate']);
+        filterObj['startDate'] = moment(filterObj['startDate']).utc().startOf('day');
+        filterObj['endDate'] = moment(filterObj['endDate']).utc().startOf('day');
+        if (!_isEqual(filterObj, newState.filterVals)) {
             Actions.filterDesk(filterObj);
         }
     }

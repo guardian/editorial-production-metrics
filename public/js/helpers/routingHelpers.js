@@ -2,9 +2,7 @@ import _set from 'lodash/set';
 import _get from 'lodash/get';
 
 function isValidValue(value) {
-    if (value === undefined || value === '') return false;
-    if (Array.isArray(value) && value.length === 0) return false;
-    return true;
+    return value !== undefined && value !== '' && Array.isArray(value) ? value.length !== 0 : true;
 }
 
 export function objectToParamString(obj, prefix) {
