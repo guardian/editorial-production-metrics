@@ -77,7 +77,8 @@ object ProductionMetricsStreamReader {
           inWorkflow = None,
           inNewspaper = None,
           creationTime = date,
-          roundTrip = None)
+          roundTrip = None,
+          productionOffice = None) // production office will be added to CapiData in a future PR
       } yield db.insertPublishingMetric(metric)
     }
   }
