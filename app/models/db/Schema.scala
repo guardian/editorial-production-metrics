@@ -28,7 +28,8 @@ object Schema {
     def inNewspaper         = column[Option[Boolean]]("in_newspaper")
     def creationTime        = column[Timestamp]("creation_time")
     def roundTrip           = column[Option[Boolean]]("round_trip")
-    def * = (id, originatingSystem, composerId, storyBundleId, commissioningDesk, userDesk, inWorkflow, inNewspaper, creationTime, roundTrip) <> (Metric.customApply, Metric.customUnapply)
+    def productionOffice    = column[Option[String]]("production_office")
+    def * = (id, originatingSystem, composerId, storyBundleId, commissioningDesk, userDesk, inWorkflow, inNewspaper, creationTime, roundTrip, productionOffice) <> (Metric.customApply, Metric.customUnapply)
   }
 
   class DBInCopyMetric(tag: Tag) extends Table[InCopyMetric](tag, "incopy_metrics") {

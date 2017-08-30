@@ -19,7 +19,8 @@ case class DateRange (from: DateTime, to: DateTime)
 case class MetricsFilters(
   dateRange: Option[DateRange] = None,
   desk: Option[String] = None,
-  originatingSystem: Option[OriginatingSystem] = None
+  originatingSystem: Option[OriginatingSystem] = None,
+  productionOffice: Option[String] = None
 )
 
 object MetricsFilters {
@@ -29,7 +30,8 @@ object MetricsFilters {
     MetricsFilters(
       dateRange = extractDateRange(queryString),
       desk = getOptionFromQS("desk", queryString),
-      originatingSystem = OriginatingSystem.withNameOption(getOptionFromQS("originatingSystem", queryString).getOrElse(""))
+      originatingSystem = OriginatingSystem.withNameOption(getOptionFromQS("originatingSystem", queryString).getOrElse("")),
+      productionOffice = getOptionFromQS("productionOffice", queryString)
     )
 
   private def extractDateRange(qs: Map[String, Seq[String]]): Option[DateRange] = {
@@ -67,7 +69,8 @@ object MetricsFilters {
   def metricFilters(implicit filters: MetricsFilters): DBMetric => Rep[Option[Boolean]] = { metric =>
     filters.desk.fold(TrueOptCol)(d => metric.commissioningDesk.toLowerCase === d.toLowerCase) &&
     filters.originatingSystem.fold(TrueOptCol)(os => metric.originatingSystem.toLowerCase.? === os.entryName.toLowerCase) &&
-    filters.dateRange.fold(TrueOptCol)(dr => metric.creationTime.? >= new Timestamp(dr.from.getMillis) && metric.creationTime.? <= new Timestamp(dr.to.getMillis))
+    filters.dateRange.fold(TrueOptCol)(dr => metric.creationTime.? >= new Timestamp(dr.from.getMillis) && metric.creationTime.? <= new Timestamp(dr.to.getMillis)) &&
+    filters.productionOffice.fold(TrueOptCol)(po => metric.productionOffice.toLowerCase === po.toLowerCase)
   }
 }
 
