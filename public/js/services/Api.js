@@ -12,8 +12,8 @@ export const httpClient = axios.create({
 const getOriginatingSystem = (system, startDate, endDate, desk) =>
     httpClient.get(`api/originatingSystem/${system}`, {
         params: {
-            startDate: moment(startDate).format(),
-            endDate: moment(endDate).format(),
+            startDate: startDate.format(),
+            endDate: endDate.format(),
             desk: desk !== 'tracking/commissioningdesk/all' && desk || null
         }
     });

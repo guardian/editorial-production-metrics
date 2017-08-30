@@ -73,7 +73,7 @@ object MetricsFilters {
 
 case class CountResponse(date: DateTime, count: Int)
 object CountResponse {
-  private val datePattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+  private val datePattern = "yyyy-MM-dd'T'HH:mm:ss'Z'"
 
   implicit val timeEncoder = new Encoder[DateTime] {
     def apply(d: DateTime) = d.toString(datePattern).asJson

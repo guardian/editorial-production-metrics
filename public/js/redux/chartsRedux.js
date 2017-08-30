@@ -36,17 +36,18 @@ const chartsRedux = State({
 
     updateComposerVsIncopy(state, { chartData, startDate, endDate }) {
         const { composerResponse, inCopyResponse } = chartData;
-        const range = endDate.diff(startDate, 'days');
+        const range = endDate.diff(startDate, 'days') + 1;
         const composerData = composerResponse.data.length < range ?  fillMissingDates(startDate, endDate, composerResponse.data).sort(compareDates) : composerResponse.data;
         const inCopyData = inCopyResponse.data.length < range ?  fillMissingDates(startDate, endDate, inCopyResponse.data).sort(compareDates) : inCopyResponse.data;
         const composerVsInCopyData = [{ data: composerData }, { data: inCopyData }];
         const seriesWithLabels = composerVsInCopyData.map(series => {
             return { 
                 data: series.data.map((dataPoint, index) => {
+                    const date = moment(dataPoint['date']).utc();
                     return {
-                        x: dataPoint['x'],
-                        y: dataPoint['y'],
-                        label: `Date: ${moment(dataPoint['x']).format('DD/MM/YYYY')}\nCreated in Composer: ${composerVsInCopyData[0]['data'][index]['y']}\nCreated in InCopy: ${composerVsInCopyData[1]['data'][index]['y']}`
+                        x: date.valueOf(),
+                        y: dataPoint['count'],
+                        label: `Date: ${date.format('ddd, Do MMMM YYYY')}\nCreated in Composer: ${composerVsInCopyData[0]['data'][index]['count']}\nCreated in InCopy: ${composerVsInCopyData[1]['data'][index]['count']}`
                     };
                 })
             };

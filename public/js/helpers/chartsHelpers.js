@@ -34,14 +34,15 @@ const percentageDataSet = (dataSet, yTotalsList) => {
 const formattedSeries = (series, yTotalsList) => series.map((singleSeries) => { return { data: percentageDataSet(singleSeries.data, yTotalsList)};});
 
 // Sort by more recent date
-const compareDates = (a, b) => a.x < b.x ? -1 : 1;
+const compareDates = (a, b) => a['date'] < b['date'] ? -1 : 1;
 
 // Fill in empty datapoints with the corresponding missing date and a value of 0 for the content produced on that day
 const fillMissingDates = (startDate, endDate, data) => {
-    const now = startDate.startOf('day').clone();
+    const now = startDate.utc().startOf('day').clone();
+
     while (now.isBefore(endDate) || now.isSame(endDate)) {
-        const found = data.some(dataPoint => dataPoint['x'] === now.valueOf());
-        !found && data.push({ x: now.valueOf(), y: 0 });
+        const found = data.some(dataPoint => dataPoint['date'] === now.format());
+        !found && data.push({ date: now.format(), count: 0 });
         now.add(1, 'days');
     }
     return data;
