@@ -8,7 +8,7 @@ import models.{ProductionMetricsError, UnexpectedDbExceptionError}
 import org.joda.time.DateTime
 import slick.jdbc.PostgresProfile.api._
 import util.AsyncHelpers._
-import _root_.io.circe.Json
+import io.circe.Json
 import play.api.Logger
 import util.Parser.jsonToMetricOpt
 
