@@ -23,6 +23,7 @@
 
     <logger name="play" level="INFO" />
     <logger name="application" level="INFO" />
+    <logger name="com.amazonaws.services.kinesis.clientlibrary.lib.worker.Worker" level="OFF" />
 
     <root level="INFO">
         <appender-ref ref="FILE" />
