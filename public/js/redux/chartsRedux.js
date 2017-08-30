@@ -30,7 +30,7 @@ const chartsRedux = State({
                 absolute: [],
                 percent: []
             },
-            isStacked: false
+            isStacked: true
         }
     },
 

@@ -35,6 +35,7 @@ const AreaChartWrap = ({ data, xLabel, isUpdating, scale, isStacked, error }) =>
             <div className='chart-toggles'>
                 <input
                     type="checkbox"
+                    defaultChecked={isStacked}
                     onChange={event => Actions.toggleStackChart(event.target.checked)}
                 />
                 Show percent ratio
