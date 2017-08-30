@@ -58,7 +58,7 @@ To post data from other apps to metrics, you need to follow these steps:
 ```scala
 "com.gu" %% "editorial-production-metrics-lib" % "x.x"
 ```
-2. Send a post request to the metric's `/api/metric/save` endpoint. For example (for an app that is using Circe):
+2. Send a post request to the metric's `/api/metric/save` endpoint. For example (for an app that is using Circe server side):
 ```scala
 val metricOpt = MetricOpt(
     composerId = Some("some-id"),
@@ -79,7 +79,7 @@ val json = Json.parse(toJsonString(metricOpt))
 WS.url(s"$metricsApiRoot/metric/save").withHeaders("content-type" -> "application/json").post(json)
 ```
 
-NOTE: Metrics is using CORS, so don't forget to add your new app to the list of trusted origins.
+NOTE: Metrics is using CORS in the client side and HMAC in the server side. So for server side calls, in addition to the example, you'll have to set the right headers. For this you can use the [hmac-headers](https://github.com/guardian/hmac-headers) library.
 
 ### Testing the kinesis stream
 
