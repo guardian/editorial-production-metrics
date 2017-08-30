@@ -21,7 +21,6 @@ class App(val wsClient: WSClient, val config: Config, val db: MetricsDB) extends
 
   def allowCORSAccess(methods: String, args: Any*) = CORSable(config.workflowUrl) {
     Action { implicit req =>
-      Logger.info(s"Allows cors access for ${config.workflowUrl}")
       val requestedHeaders = req.headers("Access-Control-Request-Headers")
       NoContent.withHeaders("Access-Control-Allow-Methods" -> methods, "Access-Control-Allow-Headers" -> requestedHeaders)
     }
@@ -32,7 +31,7 @@ class App(val wsClient: WSClient, val config: Config, val db: MetricsDB) extends
     Ok(views.html.index())
   }
 
-  def getStartedIn(system: String) = AuthAction { req =>
+  def getStartedIn(system: String) = APIAuthAction { req =>
     OriginatingSystem.withNameOption(system) match {
       case Some(s) =>
         implicit val filters = MetricsFilters(req.queryString).copy(originatingSystem = Some(s))
@@ -41,7 +40,7 @@ class App(val wsClient: WSClient, val config: Config, val db: MetricsDB) extends
     }
   }
 
-  def getCommissioningDeskList = Action.async {
+  def getCommissioningDeskList = APIAuthAction.async {
     val queryParams = List(("type", "Tracking"),("limit", "100"))
     wsClient.url(config.tagManagerUrl).withQueryString(queryParams:_*).get.map(
       response => stringToCommissioningDesks(response.body) match {
@@ -53,7 +52,7 @@ class App(val wsClient: WSClient, val config: Config, val db: MetricsDB) extends
   }
 
   def saveMetric() = CORSable(config.workflowUrl) {
-    Action { req =>
+    APIHMACAuthAction { req =>
       req.body.asJson.map(_.toString) match {
         case Some(metricOptString) =>
           val result = for {

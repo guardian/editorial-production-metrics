@@ -33,6 +33,8 @@ class Config(config: Configuration) extends AwsInstanceTags {
 
   val workflowUrl: String =  getConfigString("workflow.url")
 
+  val hmacSecret: String = getConfigString("hmacSecret")
+
   private def getConfigString(key: String, default: Option[String] = None): String =
     config.getString(key).getOrElse(default.fold(throw new RuntimeException(s"String key $key not found in configuration"))(identity))
 

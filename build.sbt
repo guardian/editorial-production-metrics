@@ -5,6 +5,8 @@ version := "1.0"
 
 scalaVersion := "2.11.8"
 
+resolvers ++= Seq("Guardian Bintray" at "https://dl.bintray.com/guardian/editorial-tools")
+
 lazy val awsVersion = "1.11.77"
 
 val databaseDependencies = Seq(
@@ -35,7 +37,8 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala, RiffRaffArtifact
       "com.gu"                 %% "configuration-magic-core"     %  "1.3.0",
       "com.gu"                 %% "configuration-magic-play2-4"  % "1.3.0",
       "com.gu"                 %% "pan-domain-auth-play_2-5"     % "0.4.1",
-      "org.postgresql"         % "postgresql"                    % "42.1.1"
+      "org.postgresql"         % "postgresql"                    % "42.1.1",
+      "com.gu"                 %% "panda-hmac"                   % "1.2.0"
     ) ++ sharedDependencies ++ databaseDependencies,
     routesGenerator := InjectedRoutesGenerator,
 
