@@ -11,6 +11,7 @@ import database.MetricsDB
 import io.circe.Json
 import lib.kinesis.EventProcessor.EventWithSize
 import lib.kinesis.ProductionMetricsStreamReader.ProductionMetricsEventProcessor
+import models.ProductionMetricsError
 import models.db.Metric
 import play.api.Logger
 import util.Parser
@@ -54,11 +55,11 @@ object ProductionMetricsStreamReader {
       val eventType = event.eventType
       eventType match {
         case CapiContent => processCapiEvent(event.eventJson)
-        case _ => Logger.error(s"Invalid event type on kinesis stream could not be processed ${event}")
+        case _ => Logger.error(s"Invalid event type on kinesis stream could not be processed $event")
       }
     }
 
-    private def processCapiEvent(json: Json) =
+    private def processCapiEvent(json: Json): Unit =
       Parser.jsonToCapiData(json) match {
         case Right(data) => putCapiDataInDB(data)
         case Left(error) => Logger.error(error.message)
@@ -79,7 +80,7 @@ object ProductionMetricsStreamReader {
           creationTime = date,
           roundTrip = None,
           productionOffice = None) // production office will be added to CapiData in a future PR
-      } yield db.insertPublishingMetric(metric)
+      } yield db.upsertPublishingMetric(metric)
     }
   }
 }
