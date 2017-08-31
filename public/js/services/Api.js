@@ -9,19 +9,20 @@ export const httpClient = axios.create({
     }
 });
 
-const getOriginatingSystem = (system, startDate, endDate, desk) =>
+const getOriginatingSystem = (system, startDate, endDate, desk, productionOffice) =>
     httpClient.get(`api/originatingSystem/${system}`, {
         params: {
             startDate: startDate.format(),
             endDate: endDate.format(),
-            desk: desk !== 'tracking/commissioningdesk/all' && desk || null
+            desk: desk !== 'tracking/commissioningdesk/all' && desk || null,
+            productionOffice: productionOffice !== 'all' && productionOffice || null
         }
     });
 
-const getComposerVsIncopy = (startDate, endDate, desk) =>
+const getComposerVsIncopy = (startDate, endDate, desk, productionOffice) =>
     axios.all([
-        getOriginatingSystem('composer', startDate, endDate, desk),
-        getOriginatingSystem('incopy', startDate, endDate, desk)
+        getOriginatingSystem('composer', startDate, endDate, desk, productionOffice),
+        getOriginatingSystem('incopy', startDate, endDate, desk, productionOffice)
     ]).then(
         axios.spread((composerResponse, inCopyResponse) => {
             return { composerResponse, inCopyResponse };
