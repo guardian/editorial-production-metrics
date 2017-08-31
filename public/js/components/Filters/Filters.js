@@ -35,6 +35,24 @@ export default class Filters extends Component {
                         <Col xs={9} md={4}>
                             <div className="form__row">
                                 <label>
+                                    Filter by Office:
+                                    <select
+                                        className="form__field form__field--select"
+                                        onChange={event => Actions.filterDesk({ ...filterVals, productionOffice: event.target.value })}
+                                        value={filterVals.productionOffice}
+                                        disabled={isUpdating}
+                                    >   
+                                        <option value='all'>All</option>
+                                        <option value='uk'>UK</option>
+                                        <option value='us'>US</option>
+                                        <option value='aus'>Australia</option>
+                                    </select>
+                                </label>
+                            </div>
+                        </Col>
+                        <Col xs={9} md={4}>
+                            <div className="form__row">
+                                <label>
                                     Time Range:
                                     <DateRangePicker
                                         hideKeyboardShortcutsPanel

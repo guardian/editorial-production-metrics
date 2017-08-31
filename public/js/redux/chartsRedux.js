@@ -9,9 +9,9 @@ import moment from 'moment';
 Effect('filterDesk', (filterObj) => {
     Actions.updateFilter(filterObj);
     Actions.toggleIsUpdatingCharts(true);
-    const { startDate, endDate, desk } = filterObj;
+    const { startDate, endDate, desk, productionOffice } = filterObj;
     chartList.map(chart => {
-        api[`get${chart}`](startDate, endDate, desk)
+        api[`get${chart}`](startDate, endDate, desk, productionOffice)
             .then(chartData => {
                 Actions.toggleIsUpdatingCharts(false);
                 Actions[`update${chart}`]({ chartData, startDate, endDate });
