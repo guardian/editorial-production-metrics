@@ -38,7 +38,8 @@ object Metric {
     inWorkflow = metricOpt.inWorkflow,
     inNewspaper = metricOpt.inNewspaper,
     creationTime = metricOpt.creationTime.getOrElse(DateTime.now()),
-    roundTrip = metricOpt.roundTrip
+    roundTrip = metricOpt.roundTrip,
+    productionOffice = None
   )
 
   private val datePattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
