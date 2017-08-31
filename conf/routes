@@ -5,7 +5,7 @@ GET     /api/commissioningDesks           controllers.App.getCommissioningDeskLi
 
 # endpoints for posting data from other apps
 OPTIONS /api/metric/*url                  controllers.App.allowCORSAccess(methods = "PUT, POST, DELETE", url: String)
-POST    /api/metric/save                  controllers.App.saveMetric()
+POST    /api/metric/digital               controllers.App.upsertMetric()
 
 GET     /healthcheck                      controllers.Healthcheck.healthcheck
 

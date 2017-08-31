@@ -9,10 +9,11 @@ import io.circe._
 import io.circe.generic.semiauto.{deriveDecoder, deriveEncoder}
 import io.circe.parser._
 import io.circe.syntax._
-import models.{InvalidJsonError, ProductionMetricsError}
+import models.ProductionMetricsError
 import org.joda.time.DateTime
 import play.api.Logger
 import util.Parser.jsonToMetric
+import util.Utils.processException
 
 case class Metric(
     id: String,
@@ -64,6 +65,8 @@ object Metric {
 
   // This only updates the fields that metric and metricOptJson have in common
   def updateMetric(metric: Metric, metricOptJson: Json): Either[ProductionMetricsError, Metric] = {
+    // We use a printer to remove the null values. Nulls are treated as values in Circe. Not removing them results
+    // in replacing the existing values with null.
     val printer = Printer.noSpaces.copy(dropNullKeys = true)
     val jsonOpt: String = printer.pretty(metricOptJson)
 
@@ -74,8 +77,9 @@ object Metric {
 
     result.fold(
       err => {
-        Logger.error(s"Json merging failed for $metric and $metricOptJson")
-        Left(InvalidJsonError(err.message))},
+        Logger.error(s"Json merging failed for $metric and $metricOptJson: ${err.message}")
+        processException(err)
+      },
       r => jsonToMetric(r))
   }
 }

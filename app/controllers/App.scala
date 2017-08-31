@@ -51,7 +51,7 @@ class App(val wsClient: WSClient, val config: Config, val db: MetricsDB) extends
       })
   }
 
-  def saveMetric() = CORSable(config.workflowUrl) {
+  def upsertMetric() = CORSable(config.workflowUrl) {
     APIHMACAuthAction { req =>
       req.body.asJson.map(_.toString) match {
         case Some(metricOptString) =>
@@ -61,7 +61,10 @@ class App(val wsClient: WSClient, val config: Config, val db: MetricsDB) extends
             metric <- db.updateOrInsert(db.getPublishingMetricsWithComposerId(Some(composerId)), metricOptJson)
           } yield metric
           result.fold(
-            err => InternalServerError(s"Something bad happened while trying to post a metric: ${err.message}"),
+            err => {
+              Logger.error(s"An error occured while posting the metric: ${err.message}")
+              InternalServerError(s"An error occured while posting the metric: ${err.message}")
+            },
             r => Ok(r.asJson.spaces4))
         case None => BadRequest("The body of the request needs to be sent as Json")
       }
