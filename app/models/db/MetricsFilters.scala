@@ -10,7 +10,7 @@ import models.db.Schema.DBMetric
 import org.joda.time.DateTime
 import org.joda.time.format.ISODateTimeFormat
 import slick.jdbc.PostgresProfile.api._
-import slick.lifted.{LiteralColumn, Rep}
+import slick.lifted.Rep
 
 import scala.util.control.NonFatal
 
@@ -20,7 +20,8 @@ case class MetricsFilters(
   dateRange: Option[DateRange] = None,
   desk: Option[String] = None,
   originatingSystem: Option[OriginatingSystem] = None,
-  productionOffice: Option[String] = None
+  productionOffice: Option[String] = None,
+  inWorkflow: Option[Boolean] = None
 )
 
 object MetricsFilters {
@@ -70,7 +71,8 @@ object MetricsFilters {
     filters.desk.fold(TrueOptCol)(d => metric.commissioningDesk.toLowerCase === d.toLowerCase) &&
     filters.originatingSystem.fold(TrueOptCol)(os => metric.originatingSystem.toLowerCase.? === os.entryName.toLowerCase) &&
     filters.dateRange.fold(TrueOptCol)(dr => metric.creationTime.? >= new Timestamp(dr.from.getMillis) && metric.creationTime.? <= new Timestamp(dr.to.getMillis)) &&
-    filters.productionOffice.fold(TrueOptCol)(po => metric.productionOffice.toLowerCase === po.toLowerCase)
+    filters.productionOffice.fold(TrueOptCol)(po => metric.productionOffice.toLowerCase === po.toLowerCase) &&
+    filters.inWorkflow.fold(TrueOptCol)(inWf => metric.inWorkflow === inWf)
   }
 }
 
