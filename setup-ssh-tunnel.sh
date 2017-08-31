@@ -42,4 +42,4 @@ fi
 DATASTORE_HOST=$(marauder -s stage=CODE app=editorial-production-metrics --short)
 echo $DATASTORE_HOST
 
-ssh -f ubuntu@${DATASTORE_HOST} -L 5901:${RDSHOST}:5432 -N
+ssh -f ubuntu@${DATASTORE_HOST} -L 5902:${RDSHOST}:5432 -N

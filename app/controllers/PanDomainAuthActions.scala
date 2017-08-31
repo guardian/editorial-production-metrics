@@ -1,11 +1,11 @@
 package controllers
 
 import com.amazonaws.auth.AWSCredentialsProvider
-import com.gu.pandomainauth.action.AuthActions
+import com.gu.pandahmac.HMACAuthActions
 import com.gu.pandomainauth.model.AuthenticatedUser
 import config.Config
 
-trait PanDomainAuthActions extends AuthActions {
+trait PanDomainAuthActions extends HMACAuthActions {
 
   def config: Config
 
@@ -19,5 +19,7 @@ trait PanDomainAuthActions extends AuthActions {
   override lazy val system: String = config.pandaSystem
 
   override def awsCredentialsProvider: AWSCredentialsProvider = config.awsCredentialsProvider
+
+  override def secret: String = config.hmacSecret
 
 }

@@ -1,12 +1,19 @@
 package models.db
 
 import java.sql.Timestamp
+import java.util.UUID
 
-import com.gu.editorialproductionmetricsmodels.models.OriginatingSystem
+import cats.syntax.either._
+import com.gu.editorialproductionmetricsmodels.models.{MetricOpt, OriginatingSystem}
 import io.circe._
-import io.circe.generic.semiauto._
+import io.circe.generic.semiauto.{deriveDecoder, deriveEncoder}
+import io.circe.parser._
 import io.circe.syntax._
+import models.ProductionMetricsError
 import org.joda.time.DateTime
+import play.api.Logger
+import util.Parser.jsonToMetric
+import util.Utils.processException
 
 case class Metric(
     id: String,
@@ -21,6 +28,19 @@ case class Metric(
     roundTrip: Option[Boolean],
     productionOffice: Option[String])
 object Metric {
+  def apply(metricOpt: MetricOpt): Metric = Metric(
+    id = UUID.randomUUID().toString,
+    originatingSystem = metricOpt.originatingSystem.getOrElse(OriginatingSystem.Composer),
+    composerId = metricOpt.composerId,
+    storyBundleId = metricOpt.storyBundleId,
+    commissioningDesk = metricOpt.commissioningDesk,
+    userDesk = metricOpt.userDesk,
+    inWorkflow = metricOpt.inWorkflow,
+    inNewspaper = metricOpt.inNewspaper,
+    creationTime = metricOpt.creationTime.getOrElse(DateTime.now()),
+    roundTrip = metricOpt.roundTrip
+  )
+
   private val datePattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
 
   def customApply(tuple: (String, String, Option[String],Option[String],Option[String],Option[String],Option[Boolean],Option[Boolean],Timestamp,Option[Boolean], Option[String])): Metric =
@@ -32,7 +52,37 @@ object Metric {
   implicit val timeEncoder = new Encoder[DateTime] {
     def apply(d: DateTime) = d.toString(datePattern).asJson
   }
+  implicit val dateDecoder = new Decoder[DateTime] {
+    def apply(c: HCursor): Decoder.Result[DateTime] = {
+      val dateTime = for {
+        value <- c.focus
+        string <- value.asString
+      } yield new DateTime(string)
+      dateTime.fold[Decoder.Result[DateTime]](Left(DecodingFailure("could not decode date", c.history)))(dt => Right(dt))
+    }
+  }
   implicit val metricEncoder: Encoder[Metric] = deriveEncoder
+  implicit val metricDecoder: Decoder[Metric] = deriveDecoder
+
+  // This only updates the fields that metric and metricOptJson have in common
+  def updateMetric(metric: Metric, metricOptJson: Json): Either[ProductionMetricsError, Metric] = {
+    // We use a printer to remove the null values. Nulls are treated as values in Circe. Not removing them results
+    // in replacing the existing values with null.
+    val printer = Printer.noSpaces.copy(dropNullKeys = true)
+    val jsonOpt: String = printer.pretty(metricOptJson)
+
+    val result = for {
+      j1 <- parse(jsonOpt)
+      j2 = metric.asJson
+    } yield j2.deepMerge(j1)
+
+    result.fold(
+      err => {
+        Logger.error(s"Json merging failed for $metric and $metricOptJson: ${err.message}")
+        processException(err)
+      },
+      r => jsonToMetric(r))
+  }
 }
 
 case class InCopyMetric(

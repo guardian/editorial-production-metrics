@@ -5,6 +5,8 @@ version := "1.0"
 
 scalaVersion := "2.11.8"
 
+resolvers ++= Seq("Guardian Bintray" at "https://dl.bintray.com/guardian/editorial-tools")
+
 lazy val awsVersion = "1.11.77"
 
 val databaseDependencies = Seq(
@@ -19,10 +21,10 @@ val databaseDependencies = Seq(
 lazy val sharedDependencies = Seq(
   "com.amazonaws"          % "aws-java-sdk-core"                 % awsVersion,
   "com.amazonaws"          % "amazon-kinesis-client"             % "1.7.6",
-  "io.circe"               %% "circe-parser"                     % "0.7.0",
-  "io.circe"               %% "circe-generic"                    % "0.7.0",
+  "io.circe"               %% "circe-parser"                     % "0.8.0",
+  "io.circe"               %% "circe-generic"                    % "0.8.0",
   "com.beachape"           %% "enumeratum-circe"                 % "1.5.14",
-  "com.gu"                 %% "editorial-production-metrics-lib" % "0.2"
+  "com.gu"                 %% "editorial-production-metrics-lib" % "0.3"
 )
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala, RiffRaffArtifact, JDebPackaging)
@@ -35,6 +37,7 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala, RiffRaffArtifact
       "com.gu"                 %% "configuration-magic-core"     %  "1.3.0",
       "com.gu"                 %% "configuration-magic-play2-4"  % "1.3.0",
       "com.gu"                 %% "pan-domain-auth-play_2-5"     % "0.4.1",
+      "com.gu"                 %% "panda-hmac"                   % "1.2.0",
       "org.postgresql"         % "postgresql"                    % "42.1.1"
     ) ++ sharedDependencies ++ databaseDependencies,
     routesGenerator := InjectedRoutesGenerator,

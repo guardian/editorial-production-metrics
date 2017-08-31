@@ -51,6 +51,36 @@ There are 2 places these need to be added.
 
 Metrics are collected via the kinesis stream. This stream is populated by the [production-metrics-lambdas](https://github.com/guardian/production-metrics-lambdas). Shared data models are in the [editorial-production-metrics-lib](https://github.com/guardian/editorial-production-metrics-lib)
 
+### Posting metrics from other apps
+
+To post data from other apps to metrics, you need to follow these steps:
+1. Import the [Editorial Production Metrics Library](https://github.com/guardian/editorial-production-metrics-lib). This will give you access to the `MetricOpt` case class.
+```scala
+"com.gu" %% "editorial-production-metrics-lib" % "x.x"
+```
+2. Send a post request to the metric's `/api/metric/save` endpoint. For example (for an app that is using Circe server side):
+```scala
+val metricOpt = MetricOpt(
+    composerId = Some("some-id"),
+    originatingSystem = Some(OriginatingSystem.Composer),
+    commissioningDesk = Some("commissioning-desk"),
+    creationTime = Some("2017-08-29T10:50:39.568Z"),
+    inWorkflow = Some(true))
+    
+parse(metricOpt).fold(
+  err => Left(err), 
+  metric => WS.url(s"$metricsApiRoot/metric/save").withHeaders("content-type" -> "application/json").post(metric)
+)
+```
+For apps that are not using Circe you can use the `toJsonString` method provided in the metrics lib to convert your `MetricOpt` object to a `String`. Then use your preferred Json parser. 
+Here's an example for play json:
+```scala
+val json = Json.parse(toJsonString(metricOpt))
+WS.url(s"$metricsApiRoot/metric/save").withHeaders("content-type" -> "application/json").post(json)
+```
+
+NOTE: Metrics is using CORS in the client side and HMAC in the server side. So for server side calls, in addition to the example, you'll have to set the right headers. For this you can use the [hmac-headers](https://github.com/guardian/hmac-headers) library.
+
 ### Testing the kinesis stream
 
 The [kinesisLocal](/kinesisLocal) project posts to the kinesis DEV stream.
