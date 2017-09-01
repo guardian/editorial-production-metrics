@@ -1,6 +1,6 @@
 import com.gu.editorialproductionmetricsmodels.models.EventType.CapiContent
 import com.gu.editorialproductionmetricsmodels.models.OriginatingSystem.InCopy
-import com.gu.editorialproductionmetricsmodels.models.{CapiData, KinesisEvent}
+import com.gu.editorialproductionmetricsmodels.models.{CapiData, KinesisEvent, ProductionOffice}
 import io.circe.syntax._
 import io.circe.generic.auto._
 
@@ -12,7 +12,8 @@ object Main {
       newspaperBookTag = None,
       creationDate = "2017-07-20T13:00:06.000Z",
       commissioningDesk = "news",
-      originatingSystem = InCopy)
+      originatingSystem = InCopy,
+      productionOffice = Some(ProductionOffice.Uk))
     val event = KinesisEvent(CapiContent, testCapiData.asJson)
     KinesisWriter.write(event)
   }

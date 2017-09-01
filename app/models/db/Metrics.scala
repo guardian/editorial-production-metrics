@@ -4,7 +4,7 @@ import java.sql.Timestamp
 import java.util.UUID
 
 import cats.syntax.either._
-import com.gu.editorialproductionmetricsmodels.models.{MetricOpt, OriginatingSystem}
+import com.gu.editorialproductionmetricsmodels.models.{MetricOpt, OriginatingSystem, ProductionOffice}
 import io.circe._
 import io.circe.generic.semiauto.{deriveDecoder, deriveEncoder}
 import io.circe.parser._
@@ -26,7 +26,7 @@ case class Metric(
     inNewspaper: Option[Boolean],
     creationTime: DateTime,
     roundTrip: Option[Boolean],
-    productionOffice: Option[String])
+    productionOffice: Option[ProductionOffice])
 object Metric {
   def apply(metricOpt: MetricOpt): Metric = Metric(
     id = UUID.randomUUID().toString,
@@ -39,15 +39,15 @@ object Metric {
     inNewspaper = metricOpt.inNewspaper,
     creationTime = metricOpt.creationTime.getOrElse(DateTime.now()),
     roundTrip = metricOpt.roundTrip,
-    productionOffice = None
+    productionOffice = metricOpt.productionOffice
   )
 
   private val datePattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
 
-  def customApply(tuple: (String, String, Option[String],Option[String],Option[String],Option[String],Option[Boolean],Option[Boolean],Timestamp,Option[Boolean], Option[String])): Metric =
+  def customApply(tuple: (String, String, Option[String],Option[String],Option[String],Option[String],Option[Boolean],Option[Boolean],Timestamp,Option[Boolean], Option[ProductionOffice])): Metric =
     Metric(tuple._1, OriginatingSystem.withName(tuple._2), tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, new DateTime(tuple._9), tuple._10, tuple._11)
 
-  def customUnapply(metric: Metric): Option[(String, String, Option[String],Option[String],Option[String],Option[String],Option[Boolean],Option[Boolean],Timestamp,Option[Boolean],Option[String])] =
+  def customUnapply(metric: Metric): Option[(String, String, Option[String],Option[String],Option[String],Option[String],Option[Boolean],Option[Boolean],Timestamp,Option[Boolean],Option[ProductionOffice])] =
     Some((metric.id, metric.originatingSystem.entryName, metric.composerId, metric.storyBundleId, metric.commissioningDesk, metric.userDesk, metric.inWorkflow, metric.inNewspaper, new Timestamp(metric.creationTime.getMillis), metric.roundTrip, metric.productionOffice))
 
   implicit val timeEncoder = new Encoder[DateTime] {
