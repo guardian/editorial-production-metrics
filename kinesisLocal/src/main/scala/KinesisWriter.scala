@@ -29,7 +29,7 @@ object KinesisWriter {
     try {
       client.putRecord(request)
     } catch {
-      case e => println(s"Could not post to kinesis stream ${e.getMessage} ${e.getStackTrace}")
+      case e: Throwable => println(s"Could not post to kinesis stream ${e.getMessage} ${e.getStackTrace}")
     }
   }
 }
