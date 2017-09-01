@@ -9,10 +9,11 @@ import com.gu.editorialproductionmetricsmodels.models.{CapiData, KinesisEvent}
 import config.Config
 import database.MetricsDB
 import io.circe.Json
+import io.circe.syntax._
 import lib.kinesis.EventProcessor.EventWithSize
 import lib.kinesis.ProductionMetricsStreamReader.ProductionMetricsEventProcessor
-import models.ProductionMetricsError
 import models.db.Metric
+import models.{ProductionMetricsError, UnexpectedExceptionError}
 import play.api.Logger
 import util.Parser
 import util.Utils.convertStringToDateTime
@@ -61,15 +62,16 @@ object ProductionMetricsStreamReader {
 
     private def processCapiEvent(json: Json): Unit =
       Parser.jsonToCapiData(json) match {
-        case Right(data) => putCapiDataInDB(data)
+        case Right(data) => putCapiDataInDB(data).fold(err => Logger.error(s"Error while trying to save CAPI data in db $err"), _ => ())
         case Left(error) => Logger.error(error.message)
       }
 
 
-    def putCapiDataInDB(data: CapiData) = {
-      for {
+    def putCapiDataInDB(data: CapiData): Either[ProductionMetricsError, Metric] = {
+      (for {
         date <- convertStringToDateTime(data.creationDate)
-        metric = Metric(id = UUID.randomUUID().toString,
+        existingMetric = db.getPublishingMetricsWithComposerId(Some(data.composerId))
+        metric = Metric(id = existingMetric.map(_.id).getOrElse(UUID.randomUUID().toString),
           originatingSystem = data.originatingSystem,
           composerId = Some(data.composerId),
           storyBundleId = data.storyBundleId,
@@ -80,7 +82,7 @@ object ProductionMetricsStreamReader {
           creationTime = date,
           roundTrip = None,
           productionOffice = None) // production office will be added to CapiData in a future PR
-      } yield db.upsertPublishingMetric(metric)
+      } yield db.updateOrInsert(existingMetric, metric.asJson)).getOrElse(Left(UnexpectedExceptionError))
     }
   }
 }
