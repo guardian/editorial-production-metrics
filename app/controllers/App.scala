@@ -6,7 +6,6 @@ import config.Config
 import database.MetricsDB
 import io.circe.generic.auto._
 import io.circe.syntax._
-import models.db.CountResponse._
 import models.db.MetricsFilters
 import play.api.Logger
 import play.api.libs.ws.WSClient
@@ -14,6 +13,9 @@ import play.api.mvc._
 import util.CORSable
 import util.Parser._
 import util.Utils._
+
+// Implicit
+import models.db.CountResponse._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -35,9 +37,14 @@ class App(val wsClient: WSClient, val config: Config, val db: MetricsDB) extends
     OriginatingSystem.withNameOption(system) match {
       case Some(s) =>
         implicit val filters = MetricsFilters(req.queryString).copy(originatingSystem = Some(s))
-        Ok(db.getStartedInSystem.asJson.spaces4)
+        Ok(db.getGroupedByDayMetrics.asJson.spaces4)
       case None => BadRequest("The valid values for originating system are: composer and incopy")
     }
+  }
+
+  def getWorkflowData(inWorkflow: Boolean) = APIAuthAction { req =>
+    implicit val filters = MetricsFilters(req.queryString).copy(inWorkflow = Some(inWorkflow))
+    Ok(db.getGroupedByDayMetrics.asJson.spaces4)
   }
 
   def getCommissioningDeskList = APIAuthAction.async {
