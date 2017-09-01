@@ -81,7 +81,7 @@ object ProductionMetricsStreamReader {
           inNewspaper = None,
           creationTime = date,
           roundTrip = None,
-          productionOffice = None) // production office will be added to CapiData in a future PR
+          productionOffice = data.productionOffice)
       } yield db.updateOrInsert(existingMetric, metric.asJson)).getOrElse(Left(UnexpectedExceptionError))
     }
   }

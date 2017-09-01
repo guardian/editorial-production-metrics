@@ -2,7 +2,7 @@ package models.db
 
 import java.sql.Timestamp
 
-import com.gu.editorialproductionmetricsmodels.models.OriginatingSystem
+import com.gu.editorialproductionmetricsmodels.models.{OriginatingSystem, ProductionOffice}
 import io.circe.Encoder
 import io.circe.generic.semiauto.deriveEncoder
 import io.circe.syntax._
@@ -20,7 +20,7 @@ case class MetricsFilters(
   dateRange: Option[DateRange] = None,
   desk: Option[String] = None,
   originatingSystem: Option[OriginatingSystem] = None,
-  productionOffice: Option[String] = None,
+  productionOffice: Option[ProductionOffice] = None,
   inWorkflow: Option[Boolean] = None
 )
 
@@ -32,7 +32,7 @@ object MetricsFilters {
       dateRange = extractDateRange(queryString),
       desk = getOptionFromQS("desk", queryString),
       originatingSystem = OriginatingSystem.withNameOption(getOptionFromQS("originatingSystem", queryString).getOrElse("")),
-      productionOffice = getOptionFromQS("productionOffice", queryString)
+      productionOffice = ProductionOffice.withNameOption(getOptionFromQS("productionOffice", queryString).getOrElse(""))
     )
 
   private def extractDateRange(qs: Map[String, Seq[String]]): Option[DateRange] = {
@@ -68,10 +68,11 @@ object MetricsFilters {
   }
 
   def metricFilters(implicit filters: MetricsFilters): DBMetric => Rep[Option[Boolean]] = { metric =>
+    import MetricHelpers._
     filters.desk.fold(TrueOptCol)(d => metric.commissioningDesk.toLowerCase === d.toLowerCase) &&
-    filters.originatingSystem.fold(TrueOptCol)(os => metric.originatingSystem.toLowerCase.? === os.entryName.toLowerCase) &&
+    filters.originatingSystem.fold(TrueOptCol)(os => metric.originatingSystem.? === os) &&
     filters.dateRange.fold(TrueOptCol)(dr => metric.creationTime.? >= new Timestamp(dr.from.getMillis) && metric.creationTime.? <= new Timestamp(dr.to.getMillis)) &&
-    filters.productionOffice.fold(TrueOptCol)(po => metric.productionOffice.toLowerCase === po.toLowerCase) &&
+    filters.productionOffice.fold(TrueOptCol)(po => metric.productionOffice === po) &&
     filters.inWorkflow.fold(TrueOptCol)(inWf => metric.inWorkflow === inWf)
   }
 }
