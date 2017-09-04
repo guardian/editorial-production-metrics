@@ -6,7 +6,7 @@ const updateFilterRedux = State({
         desk: 'tracking/commissioningdesk/all',
         productionOffice: 'all',
         startDate: moment().utc().startOf('day').subtract(7,'d'),
-        endDate: moment().utc().startOf('day')
+        endDate: moment().utc().endOf('day')
     },
 
     updateFilter(state, filterObj) {
