@@ -3,7 +3,7 @@ package models.db
 import java.sql.Timestamp
 
 import com.github.tototoshi.slick.PostgresJodaSupport._
-import com.gu.editorialproductionmetricsmodels.models.OriginatingSystem
+import com.gu.editorialproductionmetricsmodels.models.{OriginatingSystem, ProductionOffice}
 import org.joda.time.DateTime
 import slick.jdbc.PostgresProfile.api._
 import slick.lifted.{TableQuery, Tag}
@@ -15,11 +15,12 @@ object Schema {
   val composerMetricsTable: TableQuery[DBComposerMetric] = TableQuery[DBComposerMetric]
   val forksTable: TableQuery[DBFork] = TableQuery[DBFork]
 
-  class DBMetric(tag: Tag) extends Table[Metric](tag, "metrics") {
-    private implicit val originatingSystemEncDec = MappedColumnType.base[OriginatingSystem, String](os => os.entryName, name => OriginatingSystem.withName(name))
 
+
+  class DBMetric(tag: Tag) extends Table[Metric](tag, "metrics") {
+    import MetricHelpers._
     def id                  = column[String]("id", O.PrimaryKey)
-    def originatingSystem   = column[String]("originating_system")
+    def originatingSystem   = column[OriginatingSystem]("originating_system")
     def composerId          = column[Option[String]]("composer_id")
     def storyBundleId       = column[Option[String]]("story_bundle_id")
     def commissioningDesk   = column[Option[String]]("commissioning_desk")
@@ -28,7 +29,7 @@ object Schema {
     def inNewspaper         = column[Option[Boolean]]("in_newspaper")
     def creationTime        = column[Timestamp]("creation_time")
     def roundTrip           = column[Option[Boolean]]("round_trip")
-    def productionOffice    = column[Option[String]]("production_office")
+    def productionOffice    = column[Option[ProductionOffice]]("production_office")
     def * = (id, originatingSystem, composerId, storyBundleId, commissioningDesk, userDesk, inWorkflow, inNewspaper, creationTime, roundTrip, productionOffice) <> (Metric.customApply, Metric.customUnapply)
   }
 
@@ -55,4 +56,9 @@ object Schema {
     def revisionNumber      = column[Int]("revision_number")
     def * = (id, composerId, time, wordCount, revisionNumber) <> (Fork.tupled, Fork.unapply)
   }
+}
+
+object MetricHelpers {
+  implicit val originatingSystemEncDec = MappedColumnType.base[OriginatingSystem, String](os => os.entryName, name => OriginatingSystem.withName(name))
+  implicit val productionOfficeEncDec = MappedColumnType.base[ProductionOffice, String](po => po.entryName, name => ProductionOffice.withName(name))
 }
