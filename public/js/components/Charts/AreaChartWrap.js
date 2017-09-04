@@ -16,7 +16,7 @@ const AreaChartWrap = ({ data, xLabel, isUpdating, scale, isStacked, error }) =>
 
     return (
         <div className={getClassName()}>
-            <h3>Tool of Origin: <span className='chart-title-composer'>InCopy</span> vs <span className='chart-title-incopy'>Composer</span></h3>
+            <h3>Tool of Origin: <span className='chart-title-incopy'>InCopy</span> vs <span className='chart-title-composer'>Composer</span></h3>
             <AreaChart
                 stacked={isStacked}
                 height={250}
