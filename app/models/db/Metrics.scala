@@ -18,15 +18,15 @@ import util.Utils.processException
 case class Metric(
     id: String,
     originatingSystem: OriginatingSystem,
-    composerId: Option[String],
-    storyBundleId: Option[String],
-    commissioningDesk: Option[String],
-    userDesk: Option[String],
-    inWorkflow: Option[Boolean],
-    inNewspaper: Option[Boolean],
+    composerId: Option[String] = None,
+    storyBundleId: Option[String] = None,
+    commissioningDesk: Option[String] = None,
+    userDesk: Option[String] = None,
+    inWorkflow: Boolean = false,
+    inNewspaper: Option[Boolean] = Some(false),
     creationTime: DateTime,
-    roundTrip: Option[Boolean],
-    productionOffice: Option[ProductionOffice])
+    roundTrip: Option[Boolean] = Some(false),
+    productionOffice: Option[ProductionOffice] = None)
 object Metric {
   def apply(metricOpt: MetricOpt): Metric = Metric(
     id = UUID.randomUUID().toString,
@@ -35,7 +35,7 @@ object Metric {
     storyBundleId = metricOpt.storyBundleId,
     commissioningDesk = metricOpt.commissioningDesk,
     userDesk = metricOpt.userDesk,
-    inWorkflow = metricOpt.inWorkflow,
+    inWorkflow = metricOpt.inWorkflow.getOrElse(false),
     inNewspaper = metricOpt.inNewspaper,
     creationTime = metricOpt.creationTime.getOrElse(DateTime.now()),
     roundTrip = metricOpt.roundTrip,
@@ -44,10 +44,10 @@ object Metric {
 
   private val datePattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
 
-  def customApply(tuple: (String, OriginatingSystem, Option[String],Option[String],Option[String],Option[String],Option[Boolean],Option[Boolean],Timestamp,Option[Boolean], Option[ProductionOffice])): Metric =
+  def customApply(tuple: (String, OriginatingSystem, Option[String],Option[String],Option[String],Option[String],Boolean,Option[Boolean],Timestamp,Option[Boolean], Option[ProductionOffice])): Metric =
     Metric(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, new DateTime(tuple._9), tuple._10, tuple._11)
 
-  def customUnapply(metric: Metric): Option[(String, OriginatingSystem, Option[String],Option[String],Option[String],Option[String],Option[Boolean],Option[Boolean],Timestamp,Option[Boolean],Option[ProductionOffice])] =
+  def customUnapply(metric: Metric): Option[(String, OriginatingSystem, Option[String],Option[String],Option[String],Option[String],Boolean,Option[Boolean],Timestamp,Option[Boolean],Option[ProductionOffice])] =
     Some((metric.id, metric.originatingSystem, metric.composerId, metric.storyBundleId, metric.commissioningDesk, metric.userDesk, metric.inWorkflow, metric.inNewspaper, new Timestamp(metric.creationTime.getMillis), metric.roundTrip, metric.productionOffice))
 
   implicit val timeEncoder = new Encoder[DateTime] {

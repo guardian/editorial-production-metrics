@@ -25,7 +25,7 @@ object Schema {
     def storyBundleId       = column[Option[String]]("story_bundle_id")
     def commissioningDesk   = column[Option[String]]("commissioning_desk")
     def userDesk            = column[Option[String]]("user_desk")
-    def inWorkflow          = column[Option[Boolean]]("in_workflow")
+    def inWorkflow          = column[Boolean]("in_workflow")
     def inNewspaper         = column[Option[Boolean]]("in_newspaper")
     def creationTime        = column[Timestamp]("creation_time")
     def roundTrip           = column[Option[Boolean]]("round_trip")
