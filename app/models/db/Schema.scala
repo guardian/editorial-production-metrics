@@ -15,8 +15,6 @@ object Schema {
   val composerMetricsTable: TableQuery[DBComposerMetric] = TableQuery[DBComposerMetric]
   val forksTable: TableQuery[DBFork] = TableQuery[DBFork]
 
-
-
   class DBMetric(tag: Tag) extends Table[Metric](tag, "metrics") {
     import MetricHelpers._
     def id                  = column[String]("id", O.PrimaryKey)
@@ -25,10 +23,10 @@ object Schema {
     def storyBundleId       = column[Option[String]]("story_bundle_id")
     def commissioningDesk   = column[Option[String]]("commissioning_desk")
     def userDesk            = column[Option[String]]("user_desk")
-    def inWorkflow          = column[Option[Boolean]]("in_workflow")
-    def inNewspaper         = column[Option[Boolean]]("in_newspaper")
+    def inWorkflow          = column[Boolean]("in_workflow")
+    def inNewspaper         = column[Boolean]("in_newspaper")
     def creationTime        = column[Timestamp]("creation_time")
-    def roundTrip           = column[Option[Boolean]]("round_trip")
+    def roundTrip           = column[Boolean]("round_trip")
     def productionOffice    = column[Option[ProductionOffice]]("production_office")
     def * = (id, originatingSystem, composerId, storyBundleId, commissioningDesk, userDesk, inWorkflow, inNewspaper, creationTime, roundTrip, productionOffice) <> (Metric.customApply, Metric.customUnapply)
   }

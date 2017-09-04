@@ -71,16 +71,13 @@ object ProductionMetricsStreamReader {
       (for {
         date <- convertStringToDateTime(data.creationDate)
         existingMetric = db.getPublishingMetricsWithComposerId(Some(data.composerId))
-        metric = Metric(id = existingMetric.map(_.id).getOrElse(UUID.randomUUID().toString),
+        metric = Metric(
+          id = existingMetric.map(_.id).getOrElse(UUID.randomUUID().toString),
           originatingSystem = data.originatingSystem,
           composerId = Some(data.composerId),
           storyBundleId = data.storyBundleId,
           commissioningDesk = Some(data.commissioningDesk),
-          userDesk = None,
-          inWorkflow = Some(false),
-          inNewspaper = None,
           creationTime = date,
-          roundTrip = None,
           productionOffice = data.productionOffice)
       } yield db.updateOrInsert(existingMetric, metric.asJson)).getOrElse(Left(UnexpectedExceptionError))
   }

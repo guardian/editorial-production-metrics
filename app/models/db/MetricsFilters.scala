@@ -73,7 +73,7 @@ object MetricsFilters {
     filters.originatingSystem.fold(TrueOptCol)(os => metric.originatingSystem.? === os) &&
     filters.dateRange.fold(TrueOptCol)(dr => metric.creationTime.? >= new Timestamp(dr.from.getMillis) && metric.creationTime.? <= new Timestamp(dr.to.getMillis)) &&
     filters.productionOffice.fold(TrueOptCol)(po => metric.productionOffice === po) &&
-    filters.inWorkflow.fold(TrueOptCol)(inWf => metric.inWorkflow === inWf)
+    filters.inWorkflow.fold(TrueOptCol)(inWf => metric.inWorkflow.? === inWf)
   }
 }
 
