@@ -67,18 +67,19 @@ object ProductionMetricsStreamReader {
       }
 
 
-    private def putCapiDataInDB(data: CapiData): Either[ProductionMetricsError, Metric] =
+    private def putCapiDataInDB(capiData: CapiData): Either[ProductionMetricsError, Metric] =
       (for {
-        date <- convertStringToDateTime(data.creationDate)
-        existingMetric = db.getPublishingMetricsWithComposerId(Some(data.composerId))
+        date <- convertStringToDateTime(capiData.creationDate)
+        existingMetric = db.getPublishingMetricsWithComposerId(Some(capiData.composerId))
         metric = Metric(
           id = existingMetric.map(_.id).getOrElse(UUID.randomUUID().toString),
-          originatingSystem = data.originatingSystem,
-          composerId = Some(data.composerId),
-          storyBundleId = data.storyBundleId,
-          commissioningDesk = Some(data.commissioningDesk),
+          originatingSystem = capiData.originatingSystem,
+          composerId = Some(capiData.composerId),
+          storyBundleId = capiData.storyBundleId,
+          commissioningDesk = Some(capiData.commissioningDesk),
           creationTime = date,
-          productionOffice = data.productionOffice)
+          inNewspaper = capiData.newspaperBookTag.isDefined,
+          productionOffice = capiData.productionOffice)
       } yield db.updateOrInsert(existingMetric, metric.asJson)).getOrElse(Left(UnexpectedExceptionError))
   }
 }
