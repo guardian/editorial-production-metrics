@@ -17,18 +17,31 @@ object Schema {
 
   class DBMetric(tag: Tag) extends Table[Metric](tag, "metrics") {
     import MetricHelpers._
-    def id                  = column[String]("id", O.PrimaryKey)
-    def originatingSystem   = column[OriginatingSystem]("originating_system")
-    def composerId          = column[Option[String]]("composer_id")
-    def storyBundleId       = column[Option[String]]("story_bundle_id")
-    def commissioningDesk   = column[Option[String]]("commissioning_desk")
-    def userDesk            = column[Option[String]]("user_desk")
-    def inWorkflow          = column[Boolean]("in_workflow")
-    def inNewspaper         = column[Boolean]("in_newspaper")
-    def creationTime        = column[Timestamp]("creation_time")
-    def roundTrip           = column[Boolean]("round_trip")
-    def productionOffice    = column[Option[ProductionOffice]]("production_office")
-    def * = (id, originatingSystem, composerId, storyBundleId, commissioningDesk, userDesk, inWorkflow, inNewspaper, creationTime, roundTrip, productionOffice) <> (Metric.customApply, Metric.customUnapply)
+    def id                    = column[String]("id", O.PrimaryKey)
+    def originatingSystem     = column[OriginatingSystem]("originating_system")
+    def composerId            = column[Option[String]]("composer_id")
+    def storyBundleId         = column[Option[String]]("story_bundle_id")
+    def commissioningDesk     = column[Option[String]]("commissioning_desk")
+    def userDesk              = column[Option[String]]("user_desk")
+    def inWorkflow            = column[Boolean]("in_workflow")
+    def inNewspaper           = column[Boolean]("in_newspaper")
+    def creationTime          = column[Timestamp]("creation_time")
+    def firstPublicationTime  = column[Option[Timestamp]]("publication_time")
+    def roundTrip             = column[Boolean]("round_trip")
+    def productionOffice      = column[Option[ProductionOffice]]("production_office")
+    def * = (
+      id,
+      originatingSystem,
+      composerId,
+      storyBundleId,
+      commissioningDesk,
+      userDesk,
+      inWorkflow,
+      inNewspaper,
+      creationTime,
+      firstPublicationTime,
+      roundTrip,
+      productionOffice) <> (Metric.customApply, Metric.customUnapply)
   }
 
   class DBInCopyMetric(tag: Tag) extends Table[InCopyMetric](tag, "incopy_metrics") {
