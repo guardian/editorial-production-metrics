@@ -25,6 +25,7 @@ case class Metric(
     inWorkflow: Boolean = false,
     inNewspaper: Boolean = false,
     creationTime: DateTime,
+    firstPublicationTime: Option[DateTime],
     roundTrip: Boolean = false,
     productionOffice: Option[ProductionOffice] = None)
 object Metric {
@@ -38,17 +39,42 @@ object Metric {
     inWorkflow = metricOpt.inWorkflow.getOrElse(false),
     inNewspaper = metricOpt.inNewspaper.getOrElse(false),
     creationTime = metricOpt.creationTime.getOrElse(DateTime.now()),
+    firstPublicationTime = metricOpt.firstPublicationTime,
     roundTrip = metricOpt.roundTrip.getOrElse(false),
     productionOffice = metricOpt.productionOffice
   )
 
   private val datePattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
 
-  def customApply(tuple: (String, OriginatingSystem, Option[String],Option[String],Option[String],Option[String],Boolean,Boolean,Timestamp,Boolean, Option[ProductionOffice])): Metric =
-    Metric(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, new DateTime(tuple._9), tuple._10, tuple._11)
+  def customApply(tuple: (String, OriginatingSystem, Option[String],Option[String],Option[String],Option[String],Boolean,Boolean,Timestamp,Option[Timestamp],Boolean, Option[ProductionOffice])): Metric =
+    Metric(
+      id = tuple._1,
+      originatingSystem = tuple._2,
+      composerId = tuple._3,
+      storyBundleId = tuple._4,
+      commissioningDesk = tuple._5,
+      userDesk = tuple._6,
+      inWorkflow = tuple._7,
+      inNewspaper = tuple._8,
+      creationTime = new DateTime(tuple._9),
+      firstPublicationTime = Some(new DateTime(tuple._10)),
+      roundTrip = tuple._11,
+      productionOffice = tuple._12)
 
-  def customUnapply(metric: Metric): Option[(String, OriginatingSystem, Option[String],Option[String],Option[String],Option[String],Boolean,Boolean,Timestamp,Boolean,Option[ProductionOffice])] =
-    Some((metric.id, metric.originatingSystem, metric.composerId, metric.storyBundleId, metric.commissioningDesk, metric.userDesk, metric.inWorkflow, metric.inNewspaper, new Timestamp(metric.creationTime.getMillis), metric.roundTrip, metric.productionOffice))
+  def customUnapply(metric: Metric): Option[(String, OriginatingSystem, Option[String],Option[String],Option[String],Option[String],Boolean,Boolean,Timestamp,Option[Timestamp],Boolean,Option[ProductionOffice])] =
+    Some((
+      metric.id,
+      metric.originatingSystem,
+      metric.composerId,
+      metric.storyBundleId,
+      metric.commissioningDesk,
+      metric.userDesk,
+      metric.inWorkflow,
+      metric.inNewspaper,
+      new Timestamp(metric.creationTime.getMillis),
+      metric.firstPublicationTime.map(date => Some(new Timestamp(date.getMillis))).getOrElse(None),
+      metric.roundTrip,
+      metric.productionOffice))
 
   implicit val timeEncoder = new Encoder[DateTime] {
     def apply(d: DateTime) = d.toString(datePattern).asJson
