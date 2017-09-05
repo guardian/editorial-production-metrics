@@ -7,6 +7,7 @@ GET     /api/inWorkflow/:inWorkflow       controllers.App.getWorkflowData(inWork
 # endpoints for posting data from other apps
 OPTIONS /api/metric/*url                  controllers.App.allowCORSAccess(methods = "PUT, POST, DELETE", url: String)
 POST    /api/metric/digital               controllers.App.upsertMetric()
+POST    /api/metric/fork                  controllers.App.insertFork()
 
 GET     /healthcheck                      controllers.Healthcheck.healthcheck
 
