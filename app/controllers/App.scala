@@ -1,12 +1,14 @@
 package controllers
 
+import java.util.UUID
+
 import cats.syntax.either._
 import com.gu.editorialproductionmetricsmodels.models.OriginatingSystem
 import config.Config
 import database.MetricsDB
 import io.circe.generic.auto._
 import io.circe.syntax._
-import models.db.MetricsFilters
+import models.db.{Fork, MetricsFilters}
 import play.api.Logger
 import play.api.libs.ws.WSClient
 import play.api.mvc._
@@ -69,12 +71,30 @@ class App(val wsClient: WSClient, val config: Config, val db: MetricsDB) extends
           } yield metric
           result.fold(
             err => {
-              Logger.error(s"An error occured while posting the metric: ${err.message}")
-              InternalServerError(s"An error occured while posting the metric: ${err.message}")
+              Logger.error(s"An error occurred while posting the metric: ${err.message}")
+              InternalServerError(s"An error occurred while posting the metric: ${err.message}")
             },
             r => Ok(r.asJson.spaces4))
         case None => BadRequest("The body of the request needs to be sent as Json")
       }
+    }
+  }
+
+  def insertFork() = APIHMACAuthAction { req =>
+    req.body.asJson.map(_.toString) match {
+      case Some(forkString) =>
+        val result = for {
+          forkJson <- stringToJson(forkString)
+          forkData <- jsonToForkData(forkJson)
+          fork = Fork(id = UUID.randomUUID.toString, forkData.composerId, forkData.time, forkData.wordCount, forkData.revisionNumber)
+        } yield db.insertFork(fork)
+        result.fold(
+          err => {
+            Logger.error(s"An error occurred while posting the fork: ${err.message}")
+            InternalServerError(s"An error occurred while posting the fork: ${err.message}")
+          },
+          _ => Ok("Saved fork data"))
+      case None => BadRequest("The body of the request needs to be sent as Json")
     }
   }
 }

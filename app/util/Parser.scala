@@ -1,7 +1,7 @@
 package util
 
 import cats.syntax.either._
-import com.gu.editorialproductionmetricsmodels.models.{CapiData, KinesisEvent, MetricOpt}
+import com.gu.editorialproductionmetricsmodels.models.{CapiData, ForkData, KinesisEvent, MetricOpt}
 import com.gu.editorialproductionmetricsmodels.models.MetricOpt._
 import io.circe.generic.auto._
 import io.circe.{Json, parser}
@@ -46,4 +46,8 @@ object Parser {
 
   def jsonToCapiData(json: Json): Either[ProductionMetricsError, CapiData] =
     json.as[CapiData].fold(processException, Right(_))
+
+  def jsonToForkData(json: Json): Either[ProductionMetricsError, ForkData] = {
+    json.as[ForkData].fold(processException, Right(_))
+  }
 }
