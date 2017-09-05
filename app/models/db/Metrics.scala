@@ -57,7 +57,7 @@ object Metric {
       inWorkflow = tuple._7,
       inNewspaper = tuple._8,
       creationTime = new DateTime(tuple._9),
-      firstPublicationTime = Some(new DateTime(tuple._10)),
+      firstPublicationTime = tuple._10.map(date => new DateTime(date)),
       roundTrip = tuple._11,
       productionOffice = tuple._12)
 
