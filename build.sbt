@@ -15,7 +15,9 @@ val databaseDependencies = Seq(
   jdbc,
   "com.typesafe.slick"   %% "slick"             % "3.2.1",
   "com.typesafe.slick"   %% "slick-hikaricp"    % "3.2.1",
-  "com.github.tototoshi" %% "slick-joda-mapper" % "2.3.0"
+  "com.github.tototoshi" %% "slick-joda-mapper" % "2.3.0",
+  "joda-time" % "joda-time" % "2.7",
+  "org.joda" % "joda-convert" % "1.7"
 )
 
 lazy val sharedDependencies = Seq(

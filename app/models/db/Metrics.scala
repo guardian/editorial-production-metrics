@@ -1,6 +1,5 @@
 package models.db
 
-import java.sql.Timestamp
 import java.util.UUID
 
 import cats.syntax.either._
@@ -46,7 +45,7 @@ object Metric {
 
   private val datePattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
 
-  def customApply(tuple: (String, OriginatingSystem, Option[String],Option[String],Option[String],Option[String],Boolean,Boolean,Timestamp,Option[Timestamp],Boolean, Option[ProductionOffice])): Metric =
+  def customApply(tuple: (String, OriginatingSystem, Option[String],Option[String],Option[String],Option[String],Boolean,Boolean,DateTime,Option[DateTime],Boolean, Option[ProductionOffice])): Metric =
     Metric(
       id = tuple._1,
       originatingSystem = tuple._2,
@@ -56,12 +55,12 @@ object Metric {
       userDesk = tuple._6,
       inWorkflow = tuple._7,
       inNewspaper = tuple._8,
-      creationTime = new DateTime(tuple._9),
-      firstPublicationTime = tuple._10.map(date => new DateTime(date)),
+      creationTime = tuple._9,
+      firstPublicationTime = tuple._10,
       roundTrip = tuple._11,
       productionOffice = tuple._12)
 
-  def customUnapply(metric: Metric): Option[(String, OriginatingSystem, Option[String],Option[String],Option[String],Option[String],Boolean,Boolean,Timestamp,Option[Timestamp],Boolean,Option[ProductionOffice])] =
+  def customUnapply(metric: Metric): Option[(String, OriginatingSystem, Option[String],Option[String],Option[String],Option[String],Boolean,Boolean,DateTime,Option[DateTime],Boolean,Option[ProductionOffice])] =
     Some((
       metric.id,
       metric.originatingSystem,
@@ -71,8 +70,8 @@ object Metric {
       metric.userDesk,
       metric.inWorkflow,
       metric.inNewspaper,
-      new Timestamp(metric.creationTime.getMillis),
-      metric.firstPublicationTime.map(date => Some(new Timestamp(date.getMillis))).getOrElse(None),
+      metric.creationTime,
+      metric.firstPublicationTime,
       metric.roundTrip,
       metric.productionOffice))
 

@@ -1,7 +1,6 @@
 package models.db
 
-import java.sql.Timestamp
-
+import com.github.tototoshi.slick.PostgresJodaSupport._
 import com.gu.editorialproductionmetricsmodels.models.{OriginatingSystem, ProductionOffice}
 import io.circe.Encoder
 import io.circe.generic.semiauto.deriveEncoder
@@ -71,7 +70,7 @@ object MetricsFilters {
     import MetricHelpers._
     filters.desk.fold(TrueOptCol)(d => metric.commissioningDesk.toLowerCase === d.toLowerCase) &&
     filters.originatingSystem.fold(TrueOptCol)(os => metric.originatingSystem.? === os) &&
-    filters.dateRange.fold(TrueOptCol)(dr => metric.creationTime.? >= new Timestamp(dr.from.getMillis) && metric.creationTime.? <= new Timestamp(dr.to.getMillis)) &&
+    filters.dateRange.fold(TrueOptCol)(dr => metric.creationTime.? >= dr.from && metric.creationTime.? <= dr.to) &&
     filters.productionOffice.fold(TrueOptCol)(po => metric.productionOffice === po) &&
     filters.inWorkflow.fold(TrueOptCol)(inWf => metric.inWorkflow.? === inWf)
   }
