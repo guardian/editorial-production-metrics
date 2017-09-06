@@ -42,10 +42,10 @@ export default class Filters extends Component {
                                         value={filterVals.productionOffice}
                                         disabled={isUpdating}
                                     >   
-                                        <option value='all'>All</option>
-                                        <option value='uk'>UK</option>
-                                        <option value='us'>US</option>
-                                        <option value='aus'>Australia</option>
+                                        <option value="all">All</option>
+                                        <option value="uk">UK</option>
+                                        <option value="us">US</option>
+                                        <option value="aus">Australia</option>
                                     </select>
                                 </label>
                             </div>
