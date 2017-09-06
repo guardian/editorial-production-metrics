@@ -37,8 +37,8 @@ const chartsRedux = State({
     updateComposerVsIncopy(state, { chartData, startDate, endDate }) {
         const { composerResponse, inCopyResponse } = chartData;
         const range = endDate.diff(startDate, 'days');
-        const composerData = composerResponse.data.length <= range ?  fillMissingDates(startDate, endDate, composerResponse.data).sort(compareDates) : composerResponse.data;
-        const inCopyData = inCopyResponse.data.length <= range ?  fillMissingDates(startDate, endDate, inCopyResponse.data).sort(compareDates) : inCopyResponse.data;
+        const composerData = composerResponse.data.length <= range ?  fillMissingDates(startDate, endDate, composerResponse.data).sort(compareDates) : composerResponse.data.sort(compareDates);
+        const inCopyData = inCopyResponse.data.length <= range ?  fillMissingDates(startDate, endDate, inCopyResponse.data).sort(compareDates) : inCopyResponse.data.sort(compareDates);
         const composerVsInCopyData = [{ data: composerData }, { data: inCopyData }];
         const seriesWithLabels = composerVsInCopyData.map(series => {
             return { 
