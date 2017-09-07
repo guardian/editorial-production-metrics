@@ -38,7 +38,8 @@ const compareDates = (a, b) => a['date'] < b['date'] ? -1 : 1;
 
 // Fill in empty datapoints with the corresponding missing date and a value of 0 for the content produced on that day
 const fillMissingDates = (startDate, endDate, data) => {
-    const now = startDate.utc().startOf('day').clone();
+    // THIS .add(1, 'hour') bit is a TEMPORARY fix, as the response from the api has changed from 00:00:00 to 01:00:00. This will be reverted once the response has been corrected.
+    const now = startDate.utc().startOf('day').add(1, 'hour').clone();
 
     while (now.isBefore(endDate) || now.isSame(endDate)) {
         const found = data.some(dataPoint => dataPoint['date'] === now.format());
