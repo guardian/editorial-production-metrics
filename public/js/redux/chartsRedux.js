@@ -36,10 +36,8 @@ Effect('filterDesk', (filterObj) => {
                                         responseFailActions(chart, error);
                                     });
                             },
-                            error => {
-                                responseFailActions(chart, error);
-                                throw error;
-                            });
+                            error => responseFailActions(chart, error)
+                        );
                 } else {
                     responseFailActions(chart, error);
                 }
