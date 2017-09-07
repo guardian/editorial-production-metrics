@@ -1,3 +1,5 @@
+import java.util.TimeZone
+
 import play.api.{Application, ApplicationLoader, LoggerConfigurator}
 import play.api.ApplicationLoader.Context
 import com.gu.cm.ConfigurationLoader
@@ -8,6 +10,8 @@ class AppLoader extends ApplicationLoader {
     LoggerConfigurator(context.environment.classLoader).foreach {
       _.configure(context.environment)
     }
+
+    TimeZone.setDefault(TimeZone.getTimeZone("UTC"))
 
     val contextWithConfiguration = ConfigurationLoader.playContext("editorial-production-metrics", context)
     new AppComponents(contextWithConfiguration).application

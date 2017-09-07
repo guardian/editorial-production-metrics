@@ -1,7 +1,5 @@
 package models.db
 
-import java.sql.Timestamp
-
 import com.github.tototoshi.slick.PostgresJodaSupport._
 import com.gu.editorialproductionmetricsmodels.models.{OriginatingSystem, ProductionOffice}
 import org.joda.time.DateTime
@@ -25,8 +23,8 @@ object Schema {
     def userDesk              = column[Option[String]]("user_desk")
     def inWorkflow            = column[Boolean]("in_workflow")
     def inNewspaper           = column[Boolean]("in_newspaper")
-    def creationTime          = column[Timestamp]("creation_time")
-    def firstPublicationTime  = column[Option[Timestamp]]("publication_time")
+    def creationTime          = column[DateTime]("creation_time")
+    def firstPublicationTime  = column[Option[DateTime]]("publication_time")
     def roundTrip             = column[Boolean]("round_trip")
     def productionOffice      = column[Option[ProductionOffice]]("production_office")
     def * = (

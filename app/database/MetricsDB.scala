@@ -1,7 +1,6 @@
 package database
 
-import java.sql.Timestamp
-
+import com.github.tototoshi.slick.PostgresJodaSupport._
 import models.db.Schema._
 import models.db._
 import models.{ProductionMetricsError, UnexpectedDbExceptionError}
@@ -14,8 +13,8 @@ import util.Parser.jsonToMetricOpt
 
 class MetricsDB(val db: Database) {
 
-  private val dateTrunc: (Rep[String], Rep[Timestamp]) => Rep[Timestamp] =
-    SimpleFunction.binary[String, Timestamp, Timestamp]("date_trunc")
+  private val dateTrunc: (Rep[String], Rep[DateTime]) => Rep[DateTime] =
+    SimpleFunction.binary[String, DateTime, DateTime]("date_trunc")
 
   def getComposerMetrics: Seq[ComposerMetric] = await(db.run(composerMetricsTable.result))
   def insertComposerMetric(metric: ComposerMetric): Int = await(db.run(composerMetricsTable += metric))
