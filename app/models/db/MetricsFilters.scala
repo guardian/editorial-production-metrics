@@ -6,7 +6,7 @@ import io.circe.Encoder
 import io.circe.generic.semiauto.deriveEncoder
 import io.circe.syntax._
 import models.db.Schema.DBMetric
-import org.joda.time.DateTime
+import org.joda.time.{DateTime, DateTimeZone}
 import org.joda.time.format.ISODateTimeFormat
 import slick.jdbc.PostgresProfile.api._
 import slick.lifted.Rep
@@ -81,7 +81,7 @@ object CountResponse {
   private val datePattern = "yyyy-MM-dd'T'HH:mm:ss'Z'"
 
   implicit val timeEncoder = new Encoder[DateTime] {
-    def apply(d: DateTime) = d.toString(datePattern).asJson
+    def apply(d: DateTime) = d.withZone(DateTimeZone.UTC).toString(datePattern).asJson
   }
   implicit val metricEncoder: Encoder[Metric] = deriveEncoder
 }
