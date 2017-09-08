@@ -31,10 +31,7 @@ Effect('filterDesk', (filterObj) => {
                         .then(
                             () => {
                                 api[`get${chart}`](startDate, endDate, desk, productionOffice)
-                                    .then(chartData => updateAttemptActions(chartData, chart, startDate, endDate))
-                                    .catch(error => {
-                                        responseFailActions(chart, error);
-                                    });
+                                    .then(chartData => updateAttemptActions(chartData, chart, startDate, endDate));
                             },
                             error => responseFailActions(chart, error)
                         );

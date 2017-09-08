@@ -26,11 +26,6 @@ module.exports = {
                 loaders: ['babel-loader']
             },
             {
-                test: /\.js$/,
-                include: [path.resolve(__dirname, '../node_modules/panda-session')],
-                loaders: ['babel-loader']
-            },
-            {
                 test: /\.scss$/,
                 loader: ExtractTextPlugin.extract({
                     fallbackLoader: 'style-loader',
