@@ -4,7 +4,6 @@ import com.amazonaws.auth.profile.ProfileCredentialsProvider
 import com.amazonaws.auth.{AWSCredentialsProviderChain, InstanceProfileCredentialsProvider}
 import com.amazonaws.regions.Region
 import com.gu.cm.{Mode, Configuration => ConfigurationMagic}
-import com.typesafe.config.Config
 import services.AwsInstanceTags
 
 object Config extends AwsInstanceTags {
@@ -19,14 +18,14 @@ object Config extends AwsInstanceTags {
     new InstanceProfileCredentialsProvider(false)
   )
 
-  val configMagicMode: Mode = stage match {
+  private val configMagicMode: Mode = stage match {
     case "DEV" => Mode.Dev
-    case "CODE" => Mode.Test
+    case "CODE" => Mode.Prod
     case "PROD" => Mode.Prod
     case _ => sys.error("invalid stage")
   }
 
-  val config: Config = ConfigurationMagic(appName, configMagicMode).load.resolve()
+  val config = ConfigurationMagic(appName, configMagicMode).load.resolve()
 
   val elkKinesisStream: String = config.getString("elk.kinesis.stream")
   val elkLoggingEnabled: Boolean = getPropertyWithDefault("elk.logging.enabled", config.getBoolean, default = true)
@@ -46,7 +45,7 @@ object Config extends AwsInstanceTags {
 
   val hmacSecret: String = config.getString("hmacSecret")
 
-  def getPropertyWithDefault[T](path: String, getVal: String => T, default: T): T = {
+  private def getPropertyWithDefault[T](path: String, getVal: String => T, default: T): T = {
     if (config.hasPath(path)) getVal(path)
     else default
   }

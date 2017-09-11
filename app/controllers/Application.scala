@@ -1,7 +1,7 @@
 package controllers
 
 import cats.syntax.either._
-import com.gu.editorialproductionmetricsmodels.models.OriginatingSystem
+import com.gu.editorialproductionmetricsmodels.models.{ForkData, MetricOpt}
 import config.Config._
 import database.MetricsDB
 import io.circe.generic.auto._
@@ -16,8 +16,6 @@ import util.Utils._
 
 // Implicit
 import models.db.CountResponse._
-
-import scala.concurrent.ExecutionContext.Implicits.global
 
 class Application(implicit val wsClient: WSClient, val db: MetricsDB) extends Controller with PanDomainAuthActions {
 
@@ -36,7 +34,7 @@ class Application(implicit val wsClient: WSClient, val db: MetricsDB) extends Co
   def getCommissioningDeskList = APIAuthAction {
     APIResponse {
       for {
-        tagManagerResponse <- getTrackingTags(wsClient, config.tagManagerUrl)
+        tagManagerResponse <- getTrackingTags(wsClient, tagManagerUrl)
         commissioningDesks <- stringToCommissioningDesks(tagManagerResponse.body)
       } yield commissioningDesks.data.map(_.data.path)
     }

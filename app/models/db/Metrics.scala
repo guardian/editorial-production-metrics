@@ -9,7 +9,7 @@ import io.circe.generic.semiauto.{deriveDecoder, deriveEncoder}
 import io.circe.parser._
 import io.circe.syntax._
 import models.ProductionMetricsError
-import org.joda.time.{DateTime, DateTimeZone}
+import org.joda.time.DateTime
 import play.api.Logger
 import util.Parser.jsonToMetric
 import util.Utils.processException

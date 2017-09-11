@@ -39,7 +39,6 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala, RiffRaffArtifact
       "net.logstash.logback"   % "logstash-logback-encoder"      % "4.2",
       "com.gu"                 %% "configuration-magic-core"     % "1.3.0",
       "com.gu"                 %% "configuration-magic-play2-4"  % "1.3.0",
-      "com.gu"                 %% "pan-domain-auth-play_2-5"     % "0.4.1",
       "com.gu"                 %% "panda-hmac"                   % "1.2.0",
       "org.postgresql"         % "postgresql"                    % "42.1.1",
       "org.scalatest"          %% "scalatest"                    % "3.0.1" % "test",
@@ -85,14 +84,15 @@ scalaSource in IntegrationTests := baseDirectory.value / "/test-integration"
 testOptions in IntegrationTests += Tests.Setup(loader => {
   val dbUser = "postgres"
   val dbPassword = "postgres"
-  val dbName = "metrics"
-  val dbPort = 6432
+  val dbName = "metricsdb"
+  val dbPort = 5903
 
-  ("docker rm -fv metricsdb" #|| "true").!
-  s"docker run --name metricsdb -e POSTGRES_USER=$dbUser -e POSTGRES_PASSWORD=$dbPassword -e POSTGRES_DB=$dbName -p $dbPort:5432 -d postgres:9.4-alpine".!
+  ("docker rm -fv metricsdb-postgres" #|| "true").!
+  println(s"Launching docker postgres image on port $dbPort")
+  s"docker run --name metricsdb-postgres -e POSTGRES_USER=$dbUser -e POSTGRES_PASSWORD=$dbPassword -e POSTGRES_DB=$dbName -p $dbPort:5432 -d postgres:9.4-alpine".!
 
   println("Waiting for Postgres to startup...")
-  while("docker exec metricsdb pg_isready".! > 0) {
+  while("docker exec metricsdb-postgres pg_isready".! > 0) {
     Thread.sleep(1000)
   }
   Thread.sleep(5000)
