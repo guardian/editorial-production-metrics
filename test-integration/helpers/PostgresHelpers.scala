@@ -1,14 +1,12 @@
 package helpers
 
-import com.typesafe.config.ConfigFactory
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, Suite}
 import slick.jdbc.PostgresProfile.api._
 import util.AsyncHelpers.await
-
 import scala.util.Random
+import config.Config._
 
 trait PostgresHelpers extends Suite with BeforeAndAfterAll with BeforeAndAfterEach {
-  private[this] val config = ConfigFactory.load()
 
   private[this] val driver = "slick.driver.PostgresDriver"
 

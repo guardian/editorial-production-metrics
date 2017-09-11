@@ -11,7 +11,7 @@ import slick.jdbc.PostgresProfile.api._
 import util.AsyncHelpers._
 import util.PostgresOpsImport._
 
-class MetricsDB(val db: Database) {
+class MetricsDB(implicit val db: Database) {
 
   def upsertPublishingMetric(metric: Metric): Either[ProductionMetricsError, Metric] = {
     val result: Either[ProductionMetricsError, Int] = await(db.run(metricsTable.insertOrUpdate(metric)))

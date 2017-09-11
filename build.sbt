@@ -16,8 +16,9 @@ val databaseDependencies = Seq(
   "com.typesafe.slick"   %% "slick"             % "3.2.1",
   "com.typesafe.slick"   %% "slick-hikaricp"    % "3.2.1",
   "com.github.tototoshi" %% "slick-joda-mapper" % "2.3.0",
-  "joda-time" % "joda-time" % "2.7",
-  "org.joda" % "joda-convert" % "1.7"
+  "org.postgresql"       % "postgresql"         % "9.4-1206-jdbc41",
+  "joda-time"            % "joda-time"          % "2.7",
+  "org.joda"             % "joda-convert"       % "1.7"
 )
 
 lazy val sharedDependencies = Seq(
@@ -36,13 +37,13 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala, RiffRaffArtifact
       "com.gu"                 % "kinesis-logback-appender"      % "1.3.0",
       "com.amazonaws"          % "aws-java-sdk-ec2"              % awsVersion,
       "net.logstash.logback"   % "logstash-logback-encoder"      % "4.2",
-      "com.gu"                 %% "configuration-magic-core"     %  "1.3.0",
+      "com.gu"                 %% "configuration-magic-core"     % "1.3.0",
       "com.gu"                 %% "configuration-magic-play2-4"  % "1.3.0",
       "com.gu"                 %% "pan-domain-auth-play_2-5"     % "0.4.1",
       "com.gu"                 %% "panda-hmac"                   % "1.2.0",
       "org.postgresql"         % "postgresql"                    % "42.1.1",
-      "org.scalatestplus.play" %% "scalatestplus-play"           % "1.5.0" % "test",
-      "org.mockito" % "mockito-core" % "2.8.47"
+      "org.scalatest"          %% "scalatest"                    % "3.0.1" % "test",
+      "org.mockito"            % "mockito-core"                  % "1.9.5" % "test"
     ) ++ sharedDependencies ++ databaseDependencies,
     routesGenerator := InjectedRoutesGenerator,
 

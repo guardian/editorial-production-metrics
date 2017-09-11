@@ -8,9 +8,7 @@ import play.api.db.evolutions.EvolutionsComponents
 import play.api.db.{DBComponents, HikariCPComponents}
 import play.api.libs.ws.ahc.AhcWSComponents
 import router.Routes
-import slick.basic.DatabaseConfig
-import slick.jdbc.PostgresProfile
-import slick.jdbc.PostgresProfile.api._
+import database.DatabaseConfiguration.db
 
 import scala.concurrent.Future
 
@@ -22,9 +20,8 @@ class AppComponents(context: Context)
   //Lazy val needs to be accessed so that database evolutions are applied
   applicationEvolutions
   //Context is created here so we can add a stop hook to kill the db connection when the app terminates
-  private lazy val dbConfig: DatabaseConfig[PostgresProfile] = DatabaseConfig.forConfig("slick.dbs.default", configuration.underlying)
-  private lazy val db: Database = dbConfig.db
-  lazy val metricsDb = new MetricsDB(db)
+
+  lazy val metricsDb = new MetricsDB()
 
   lazy val kinesisStreamConsumer = new ProductionMetricsStreamReader(publishingMetricsKinesisStream, stage, metricsDb)
   kinesisStreamConsumer.start
