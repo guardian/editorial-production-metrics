@@ -50,6 +50,12 @@ const chartsRedux = State({
                 percent: []
             },
             isStacked: true
+        },
+        inWorkflowVsNotInWorkflow: {
+            data: {
+              percent: [],
+            },
+            isStacked: true
         }
     },
 
@@ -61,7 +67,7 @@ const chartsRedux = State({
         const composerVsInCopyData = [{ data: composerData }, { data: inCopyData }];
 
         const seriesWithLabels = composerVsInCopyData.map(series => {
-            return { 
+            return {
                 data: series.data.map((dataPoint, index) => {
                     const date = moment(dataPoint['date']).utc();
                     return {
@@ -75,9 +81,9 @@ const chartsRedux = State({
         const totals = createYTotalsList(createPartialsList(seriesWithLabels));
         const percentSeries = formattedSeries(seriesWithLabels, totals);
 
-        return { 
+        return {
             composerVsInCopy: {
-                data: { 
+                data: {
                     absolute: seriesWithLabels,
                     percent: percentSeries
                 },
@@ -87,20 +93,62 @@ const chartsRedux = State({
     },
 
     toggleStackChart(state, isStacked) {
-        return { 
+        return {
             ...state,
             composerVsInCopy: {
                 ...state.composerVsInCopy,
-                isStacked 
+                isStacked
             }
         };
     },
 
     getComposerVsIncopyFailed(state, error) {
-        return { 
+        return {
             ...state,
             composerVsInCopy: {
                 ...state.composerVsInCopy,
+                error: error.message
+            }
+        };
+    },
+
+    updateInWorkflowVsNotInWorkflow(state, { chartData, startDate, endDate }) {
+       const { inWorkflowResponse, notInWorkflowResponse } = chartData;
+       const range = endDate.diff(startDate, 'days');
+       const inWorkflowData = inWorkflowResponse.data.length <= range ?  fillMissingDates(startDate, endDate, inWorkflowResponse.data).sort(compareDates) : inWorkflowResponse.data.sort(compareDates);
+       const notInWorkflowData = notInWorkflowResponse.data.length <= range ?  fillMissingDates(startDate, endDate, notInWorkflowResponse.data).sort(compareDates) : notInWorkflowResponse.data.sort(compareDates);
+       const workflowVsNotInWorkflowData = [{ data: inWorkflowData }, { data: notInWorkflowData }];
+
+       const seriesWithLabels = workflowVsNotInWorkflowData.map(series => {
+           return {
+               data: series.data.map((dataPoint, index) => {
+                   const date = moment(dataPoint['date']).utc();
+                   return {
+                       x: date.valueOf(),
+                       y: dataPoint['count'],
+                       label: `Date: ${date.format('ddd, Do MMMM YYYY')}\nIn Workflow: ${workflowVsNotInWorkflowData[0]['data'][index]['count']}\nNever in Workflow: ${workflowVsNotInWorkflowData[1]['data'][index]['count']}`
+                   };
+               })
+           };
+       });
+       const totals = createYTotalsList(createPartialsList(seriesWithLabels));
+       const percentSeries = formattedSeries(seriesWithLabels, totals);
+
+       return {
+             inWorkflowVsNotInWorkflow: {
+               data: {
+                   percent: percentSeries
+               },
+               isStacked: state.inWorkflowVsNotInWorkflow.isStacked
+           }
+       };
+    },
+
+    getInWorkflowVsNotInWorkflowFailed(state, error) {
+        return {
+            ...state,
+            inWorkflowVsNotInWorkflow: {
+                ...state.inWorkflowVsNotInWorkflow,
                 error: error.message
             }
         };

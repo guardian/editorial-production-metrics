@@ -1,2 +1,2 @@
-const chartList = ['ComposerVsIncopy'];
+const chartList = ['ComposerVsIncopy', 'InWorkflowVsNotInWorkflow'];
 export default chartList;

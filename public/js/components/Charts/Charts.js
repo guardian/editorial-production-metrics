@@ -16,6 +16,15 @@ const Charts = ({ charts, isUpdating }) => {
                         error={charts.composerVsInCopy.error}
                     />
                 </Col>
+                <Col xs={12} md={8}>
+                    <AreaChartWrap
+                        scale="time"
+                        data={charts.inWorkflowVsNotInWorkflow.data}
+                        isStacked={charts.inWorkflowVsNotInWorkflow.isStacked}
+                        isUpdating={isUpdating}
+                        error={charts.inWorkflowVsNotInWorkflow.error}
+                    />
+                </Col>
             </Row>
         </Grid>
     );
