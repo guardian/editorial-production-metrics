@@ -71,8 +71,9 @@ const downloadCSV = (data, chartType) => {
     csv.unshift(header.join(','));
     csv = csv.join('\r\n');
     const blob = new Blob([csv], {type: 'text/csv;charset=utf-8'});
-
-    saveAs(blob, `${chartType}.csv`);
-}
+    const seriesData = absoluteData[0].data;
+    const dateRangeString = `${moment(seriesData[0].x).format('DD/MM/YYYY')}_${moment(seriesData[seriesData.length - 1].x).format('DD/MM/YYYY')}`;
+    saveAs(blob, `${chartType}_${dateRangeString}.csv`);
+};
 
 export { createPartialsList, formattedSeries, createYTotalsList, compareDates, fillMissingDates, downloadCSV };
