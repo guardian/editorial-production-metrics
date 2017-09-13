@@ -37,7 +37,7 @@ const Charts = ({ charts, isUpdating }) => {
                 </Col>
                 <Col xs={12} md={8}>
                     <AreaChartWrap
-                        chartType={'inWorkflowVsNotInWorkflow'}
+                        chartType={'InWorkflowVsNotInWorkflow'}
                         titleHeader={renderWorflowStateTitle()}
                         scale='time'
                         data={charts.inWorkflowVsNotInWorkflow.data}

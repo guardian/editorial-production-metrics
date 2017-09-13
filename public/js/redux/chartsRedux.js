@@ -53,6 +53,7 @@ const chartsRedux = State({
         },
         inWorkflowVsNotInWorkflow: {
             data: {
+                absolute: [],
                 percent: []
             },
             isStacked: true
@@ -139,6 +140,7 @@ const chartsRedux = State({
             ...state,
             inWorkflowVsNotInWorkflow: {
                 data: {
+                    absolute: seriesWithLabels,
                     percent: percentSeries
                 },
                 isStacked: state.inWorkflowVsNotInWorkflow.isStacked

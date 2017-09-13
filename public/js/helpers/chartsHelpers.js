@@ -54,7 +54,7 @@ const fillMissingDates = (startDate, endDate, data) => {
 // Components helpers
 
 
-const humanizeKeys = (obj, system) => ({ date: moment(obj.x).format('ddd, Do MMMM YYYY'), [`created_in_${system}`]: obj['y'] });
+const humanizeKeys = (obj, system) => ({ date: moment(obj.x).format('ddd, Do MMMM YYYY'), [`${system}`]: obj['y'] });
 
 const humanizeSeries = (series, system) => series.map(obj => humanizeKeys(obj, system));
 
@@ -65,8 +65,8 @@ const replacer = (key, value) => value === null ? '' : value;
 const downloadCSV = (data, chartType) => {
     //TODO make this chart specific when more chart types have been added
     const absoluteData = data.absolute;
-    const firstColumnHeader = chartType === 'ComposerVsIncopy' ? 'composer' : 'In Workflow';
-    const secondColumnHeader = chartType === 'ComposerVsIncopy' ? 'inCopy' : 'Not In Workflow';
+    const firstColumnHeader = chartType === 'ComposerVsIncopy' ? 'created_in_composer' : 'seen_in_workflow';
+    const secondColumnHeader = chartType === 'ComposerVsIncopy' ? 'created_in_incopy' : 'not_seen_in_workflow';
     const merged = unifiedSeries(humanizeSeries(absoluteData[0].data, firstColumnHeader), humanizeSeries(absoluteData[1].data, secondColumnHeader));
     const header = Object.keys(merged[0]);
     let csv = merged.map(row => header.map(fieldName => JSON.stringify(row[fieldName], replacer)).join(','));
