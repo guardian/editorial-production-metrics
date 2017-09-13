@@ -45,10 +45,11 @@ $loadingLabelHeight: 300px;
 
 .chart-toggles {
   padding-bottom: 20px;
-  margin-left: 20px;
-  input {
+  input, button {
+    margin-left: 20px;
     margin-right: 10px;
   }
+  
 }
 
 .chart-title-composer {

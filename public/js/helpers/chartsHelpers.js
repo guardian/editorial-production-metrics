@@ -1,3 +1,6 @@
+import moment from 'moment';
+import _merge from 'lodash/merge';
+import { saveAs } from 'file-saver';
 // Creates a list of all y values from the x,y value pairs in a series' dataset
 const createPartialsList = (series) => {
     let partialsList = new Array(series.length);
@@ -48,4 +51,29 @@ const fillMissingDates = (startDate, endDate, data) => {
     return data;
 };
 
-export { createPartialsList, formattedSeries, createYTotalsList, compareDates, fillMissingDates };
+// Components helpers
+
+
+const humanizeKeys = (obj, system) => ({ date: moment(obj.x).format('ddd, Do MMMM YYYY'), [`created_in_${system}`]: obj['y'] });
+
+const humanizeSeries = (series, system) => series.map(obj => humanizeKeys(obj, system));
+
+const unifiedSeries = (composerObject, inCopyObject) => _merge(composerObject ,inCopyObject);
+
+const replacer = (key, value) => value === null ? '' : value;
+
+const downloadCSV = (data, chartType) => {
+    //TODO make this chart specific when more chart types have been added
+    const absoluteData = data.absolute;
+    const merged = unifiedSeries(humanizeSeries(absoluteData[0].data, 'composer'), humanizeSeries(absoluteData[1].data, 'inCopy'));
+    const header = Object.keys(merged[0]);
+    let csv = merged.map(row => header.map(fieldName => JSON.stringify(row[fieldName], replacer)).join(','));
+    csv.unshift(header.join(','));
+    csv = csv.join('\r\n');
+    const blob = new Blob([csv], {type: 'text/csv;charset=utf-8'});
+    const seriesData = absoluteData[0].data;
+    const dateRangeString = `${moment(seriesData[0].x).format('DD/MM/YYYY')}_${moment(seriesData[seriesData.length - 1].x).format('DD/MM/YYYY')}`;
+    saveAs(blob, `${chartType}_${dateRangeString}.csv`);
+};
+
+export { createPartialsList, formattedSeries, createYTotalsList, compareDates, fillMissingDates, downloadCSV };

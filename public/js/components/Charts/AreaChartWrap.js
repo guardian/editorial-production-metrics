@@ -1,6 +1,7 @@
 import React from 'react';
 import { Actions } from 'jumpstate';
 import { AreaChart , Themes } from 'formidable-charts';
+import { downloadCSV } from 'helpers/chartsHelpers'
 import ChartTheme from '../ChartTheme/theme';
 
 const customisedTheme = Object.assign({}, Themes.simple, ChartTheme);
@@ -39,6 +40,7 @@ const AreaChartWrap = ({ data, xLabel, isUpdating, scale, isStacked, error }) =>
                     onChange={event => Actions.toggleStackChart(event.target.checked)}
                 />
                 Show percent ratio
+                <button onClick={() => downloadCSV(data, 'ComposerVsInCopy')}>Download CSV</button>
             </div>
         </div>
     );
