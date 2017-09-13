@@ -65,7 +65,9 @@ const replacer = (key, value) => value === null ? '' : value;
 const downloadCSV = (data, chartType) => {
     //TODO make this chart specific when more chart types have been added
     const absoluteData = data.absolute;
-    const merged = unifiedSeries(humanizeSeries(absoluteData[0].data, 'composer'), humanizeSeries(absoluteData[1].data, 'inCopy'));
+    const firstColumnHeader = chartType === 'ComposerVsIncopy' ? 'composer' : 'In Workflow';
+    const secondColumnHeader = chartType === 'ComposerVsIncopy' ? 'inCopy' : 'Not In Workflow';
+    const merged = unifiedSeries(humanizeSeries(absoluteData[0].data, firstColumnHeader), humanizeSeries(absoluteData[1].data, secondColumnHeader));
     const header = Object.keys(merged[0]);
     let csv = merged.map(row => header.map(fieldName => JSON.stringify(row[fieldName], replacer)).join(','));
     csv.unshift(header.join(','));

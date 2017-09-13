@@ -6,7 +6,7 @@ import ChartTheme from '../ChartTheme/theme';
 
 const customisedTheme = Object.assign({}, Themes.simple, ChartTheme);
 
-const AreaChartWrap = ({ data, xLabel, isUpdating, scale, isStacked, error }) => {
+const AreaChartWrap = ({ data, xLabel, yLabel, yLabelStacked, isUpdating, scale, isStacked, error, hasToggle, height, titleHeader, chartType }) => {
     function getClassName() {
         if (error) {
             return 'chart-wrap chart-wrap__error';
@@ -15,12 +15,25 @@ const AreaChartWrap = ({ data, xLabel, isUpdating, scale, isStacked, error }) =>
         }
     }
 
+    const renderToggle = () => {
+        return(
+            <span>
+                <input
+                    type="checkbox"
+                    defaultChecked={isStacked}
+                    onChange={event => Actions.toggleStackChart(event.target.checked)}
+                />
+                Show percent ratio
+            </span>
+        );
+    };
+
     return (
         <div className={getClassName()}>
-            <h3>Tool of Origin: <span className='chart-title-incopy'>InCopy</span> vs <span className='chart-title-composer'>Composer</span></h3>
+            {titleHeader}
             <AreaChart
                 stacked={isStacked}
-                height={250}
+                height={height}
                 theme={customisedTheme}
                 series={isStacked ? data.percent : data.absolute}
                 xAxis={{
@@ -28,19 +41,14 @@ const AreaChartWrap = ({ data, xLabel, isUpdating, scale, isStacked, error }) =>
                     scale
                 }}
                 yAxis={{
-                    label: isStacked ? 'Published Content Daily %' : 'Published Content Daily Numbers',
+                    label: isStacked ? yLabel : yLabelStacked,
                     scale: 'linear',
                     tickFormat: (d) => isStacked ? `${d}%` : d
                 }}
             />
             <div className='chart-toggles'>
-                <input
-                    type="checkbox"
-                    defaultChecked={isStacked}
-                    onChange={event => Actions.toggleStackChart(event.target.checked)}
-                />
-                Show percent ratio
-                <button onClick={() => downloadCSV(data, 'ComposerVsInCopy')}>Download CSV</button>
+                {hasToggle && renderToggle()}
+                <button onClick={() => downloadCSV(data, chartType)}>Download CSV</button>
             </div>
         </div>
     );
