@@ -7,13 +7,13 @@ const Charts = ({ charts, isUpdating }) => {
 
     const renderToolOfOriginTitle = () => {
         return(
-            <h3>Tool of Origin: <span className='chart-title-green'>InCopy</span> vs <span className='chart-title-yellow'>Composer</span></h3>
+            <h3>Tool of Origin: <span className='chart-title--second-series'>InCopy</span> vs <span className='chart-title--first-series'>Composer</span></h3>
         );
     };
 
     const renderWorflowStateTitle = () => {
         return(
-            <h3>Workflow State: <span className='chart-title-green'>Never Seen in Workflow</span> vs <span className='chart-title-yellow'>Seen in Workflow</span></h3>
+            <h3>Workflow State: <span className='chart-title--second-series'>Never Seen in Workflow</span> vs <span className='chart-title--first-series'>Seen in Workflow</span></h3>
         );
     };
 
