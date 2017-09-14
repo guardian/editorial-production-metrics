@@ -26,12 +26,30 @@ const getComposerVsIncopy = (startDate, endDate, desk, productionOffice) =>
         })
     );
 
+const getWorkflowCount = (isInWorkflow, startDate, endDate, desk, productionOffice) =>
+    httpClient.get(`api/inWorkflow/${isInWorkflow}`, {
+        params: {
+            startDate: startDate.format(),
+            endDate: endDate.format(),
+            desk: desk !== 'tracking/commissioningdesk/all' && desk || null,
+            productionOffice: productionOffice !== 'all' && productionOffice || null
+        }
+    });
+
+const getInWorkflowVsNotInWorkflow = (startDate, endDate, desk, productionOffice) =>
+    axios.all([
+        getWorkflowCount('true', startDate, endDate, desk, productionOffice),
+        getWorkflowCount('false', startDate, endDate, desk, productionOffice)
+    ]).then(
+        axios.spread((inWorkflowResponse, notInWorkflowResponse) => {
+            return { inWorkflowResponse, notInWorkflowResponse };
+        })
+    );
+
 const getCommissioningDesks = () => httpClient.get('api/commissioningDesks');
 
 export default {
-    getOriginatingSystem,
     getComposerVsIncopy,
+    getInWorkflowVsNotInWorkflow,
     getCommissioningDesks
 };
-
-
