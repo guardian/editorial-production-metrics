@@ -26,7 +26,7 @@ lazy val sharedDependencies = Seq(
   "io.circe"               %% "circe-parser"                     % "0.8.0",
   "io.circe"               %% "circe-generic"                    % "0.8.0",
   "com.beachape"           %% "enumeratum-circe"                 % "1.5.14",
-  "com.gu"                 %% "editorial-production-metrics-lib" % "0.9"
+  "com.gu"                 %% "editorial-production-metrics-lib" % "0.10"
 )
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala, RiffRaffArtifact, JDebPackaging)
