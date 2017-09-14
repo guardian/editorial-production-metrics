@@ -5,7 +5,7 @@ import java.util.UUID
 import com.amazonaws.auth.AWSCredentialsProviderChain
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorFactory
 import com.gu.editorialproductionmetricsmodels.models.EventType.CapiContent
-import com.gu.editorialproductionmetricsmodels.models.{CapiData, KinesisEvent}
+import com.gu.editorialproductionmetricsmodels.models.{CapiData, KinesisEvent, MetricOpt}
 import config.Config
 import database.MetricsDB
 import io.circe.Json
@@ -72,15 +72,15 @@ object ProductionMetricsStreamReader {
         creationDate <- convertStringToDateTime(capiData.creationDate)
         firstPublicationDate <- convertStringToDateTime(capiData.firstPublicationDate)
         existingMetric = db.getPublishingMetricsWithComposerId(Some(capiData.composerId))
-        metric = Metric(
-          id = existingMetric.map(_.id).getOrElse(UUID.randomUUID().toString),
-          originatingSystem = capiData.originatingSystem,
+        metric = MetricOpt(
+          id = existingMetric.map(_.id).orElse(Some(UUID.randomUUID().toString)),
+          originatingSystem = Some(capiData.originatingSystem),
           composerId = Some(capiData.composerId),
           storyBundleId = capiData.storyBundleId,
           commissioningDesk = Some(capiData.commissioningDesk),
-          creationTime = creationDate,
+          creationTime = Some(creationDate),
           firstPublicationTime = Some(firstPublicationDate),
-          inNewspaper = capiData.newspaperBookTag.isDefined,
+          inNewspaper = Some(capiData.newspaperBookTag.isDefined),
           productionOffice = capiData.productionOffice)
       } yield db.updateOrInsert(existingMetric, metric.asJson)).getOrElse(Left(UnexpectedExceptionError))
   }
