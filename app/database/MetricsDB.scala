@@ -10,6 +10,7 @@ import util.AsyncHelpers._
 import io.circe.Json
 import play.api.Logger
 import util.Parser.jsonToMetricOpt
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class MetricsDB(val db: Database) {
 
@@ -53,8 +54,11 @@ class MetricsDB(val db: Database) {
 
   // This needs to return the data grouped by day. For this we've defined dateTrunc to tell Slick
   // to "import" the date_trunc function from postgresql
-  def getGroupedByDayMetrics(implicit filters: MetricsFilters): List[CountResponse] =
-    await(db.run(metricsTable.filter(MetricsFilters.metricFilters).map(m => (m.id, dateTrunc("day", m.creationTime))).groupBy(_._2).map{
+  def getGroupedByDayMetrics(implicit filters: MetricsFilters): Either[ProductionMetricsError, List[CountResponse]] = await {
+    db.run(metricsTable.filter(MetricsFilters.metricFilters).map(m => (m.id, dateTrunc("day", m.creationTime))).groupBy(_._2).map {
       case (date, metric) => (date, metric.size)
-    }.result)).map(pair => CountResponse(new DateTime(pair._1), pair._2)).toList
+    }.result).map { result: Seq[(DateTime, Int)] =>
+      Right(result.map(pair => CountResponse(new DateTime(pair._1), pair._2)).toList)
+    }.recover { case _ => Left(UnexpectedDbExceptionError) }
+  }
 }
