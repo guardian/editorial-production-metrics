@@ -2,7 +2,7 @@ package util
 
 import com.gu.editorialproductionmetricsmodels.models.OriginatingSystem
 import io.circe.{DecodingFailure, ParsingFailure}
-import models.{InvalidJsonError, NoRequestBodyError, ProductionMetricsError, UnexpectedExceptionError}
+import models._
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import play.api.Logger
@@ -34,5 +34,5 @@ object Utils {
   }
 
   def extractOriginatingSystem(originatingSystem: String): Either[ProductionMetricsError, OriginatingSystem] =
-    OriginatingSystem.withNameOption(originatingSystem).fold(???)(Right(_))
+    OriginatingSystem.withNameOption(originatingSystem).fold(Left(UnvalidOriginatingSystem):Either[ProductionMetricsError, OriginatingSystem])(Right(_))
 }

@@ -1,9 +1,6 @@
 package controllers
 
-import java.util.UUID
-
 import cats.syntax.either._
-import com.gu.editorialproductionmetricsmodels.models.OriginatingSystem
 import config.Config
 import database.MetricsDB
 import io.circe.generic.auto._
@@ -76,21 +73,12 @@ class App(val wsClient: WSClient, val config: Config, val db: MetricsDB) extends
     }
   }
 
-  def insertFork() = APIHMACAuthAction { req =>
-    req.body.asJson.map(_.toString) match {
-      case Some(forkString) =>
-        val result = for {
-          forkJson <- stringToJson(forkString)
-          forkData <- jsonToForkData(forkJson)
-          fork = Fork(id = UUID.randomUUID.toString, forkData.composerId, forkData.time, forkData.wordCount, forkData.revisionNumber)
-        } yield db.insertFork(fork)
-        result.fold(
-          err => {
-            Logger.error(s"An error occurred while posting the fork: ${err.message}")
-            InternalServerError(s"An error occurred while posting the fork: ${err.message}")
-          },
-          _ => Ok("Saved fork data"))
-      case None => BadRequest("The body of the request needs to be sent as Json")
+  def insertFork() = Action { req =>
+    APIResponse {
+      for {
+        forkData <- extractForkData(req.body.asJson.map(_.toString))
+        result <- db.insertFork(Fork(forkData))
+      } yield result
     }
   }
 }

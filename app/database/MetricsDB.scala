@@ -6,11 +6,9 @@ import models.db.Schema._
 import models.db._
 import models.{ProductionMetricsError, UnexpectedDbExceptionError}
 import org.joda.time.DateTime
+import play.api.Logger
 import slick.jdbc.PostgresProfile.api._
 import util.AsyncHelpers._
-import io.circe.Json
-import play.api.Logger
-import util.Parser.jsonToMetricOpt
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -48,7 +46,9 @@ class MetricsDB(val db: Database) {
   }
 
   def getForks: Seq[Fork] = await(db.run(forksTable.result))
-  def insertFork(fork: Fork): Int = await(db.run(forksTable += fork))
+  def insertFork(fork: Fork): Either[ProductionMetricsError, Int] = await {
+    db.run(forksTable += fork).map { result: Int => Right(result) }.recover { case _ => Left(UnexpectedDbExceptionError)}
+  }
 
   // This needs to return the data grouped by day. For this we've defined dateTrunc to tell Slick
   // to "import" the date_trunc function from postgresql

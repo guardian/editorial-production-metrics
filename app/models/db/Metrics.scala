@@ -3,7 +3,7 @@ package models.db
 import java.util.UUID
 
 import cats.syntax.either._
-import com.gu.editorialproductionmetricsmodels.models.{MetricOpt, OriginatingSystem, ProductionOffice}
+import com.gu.editorialproductionmetricsmodels.models.{ForkData, MetricOpt, OriginatingSystem, ProductionOffice}
 import io.circe._
 import io.circe.generic.semiauto.{deriveDecoder, deriveEncoder}
 import io.circe.parser._
@@ -60,21 +60,6 @@ object Metric {
       roundTrip = tuple._11,
       productionOffice = tuple._12)
 
-  def customUnapply(metric: Metric): Option[(String, OriginatingSystem, Option[String],Option[String],Option[String],Option[String],Boolean,Boolean,DateTime,Option[DateTime],Boolean,Option[ProductionOffice])] =
-    Some((
-      metric.id,
-      metric.originatingSystem,
-      metric.composerId,
-      metric.storyBundleId,
-      metric.commissioningDesk,
-      metric.userDesk,
-      metric.inWorkflow,
-      metric.inNewspaper,
-      metric.creationTime,
-      metric.firstPublicationTime,
-      metric.roundTrip,
-      metric.productionOffice))
-
   implicit val timeEncoder = new Encoder[DateTime] {
     def apply(d: DateTime) = d.toString(datePattern).asJson
   }
@@ -128,3 +113,16 @@ case class Fork(
     time: DateTime,
     wordCount: Int,
     revisionNumber: Int)
+
+object Fork {
+  def apply(forkData: ForkData): Fork =
+    new Fork(id = UUID.randomUUID.toString, forkData.composerId, forkData.time, forkData.wordCount, forkData.revisionNumber)
+
+  def customApply(tuple: (String, String, DateTime, Int, Int)): Fork =
+    Fork(
+      id = tuple._1,
+      composerId = tuple._2,
+      time = tuple._3,
+      wordCount = tuple._4,
+      revisionNumber = tuple._5)
+}
