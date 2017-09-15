@@ -46,7 +46,7 @@
     "panda-session": "^0.1.6",
     "react": "^15.6.1",
     "react-addons-shallow-compare": "^15.6.0",
-    "react-dates": "^12.2.3",
+    "react-dates": "^12.6.0",
     "react-dom": "^15.6.1",
     "react-flexbox-grid": "^1.1.3",
     "react-redux": "^5.0.4",

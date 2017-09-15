@@ -84,7 +84,7 @@ $toolbarHeight: 50px;
 $standard-padding: 10px;
 
 /*
-Datepicker colours
+Datepicker style
 The following variables overwrite default values for the component's style.
 The complete list of overwritable variables here: https://github.com/airbnb/react-dates/blob/master/css/variables.scss
 */
@@ -97,5 +97,10 @@ $react-dates-color-primary-shade-4: $dangerColor;
 $react-dates-color-secondary: $slightDangerColor;
 $react-dates-color-text-focus: $slightDangerColor;
 $react-dates-color-focus: $cYellow;
+$react-dates-input-font-size: 14px;
+$react-dates-input-line-height: 13px;
+$react-dates-input-padding: 5px;
+$react-dates-input-displaytext-padding-vertical: 9px;
+
 @import '~react-dates/css/variables.scss';
 @import '~react-dates/css/styles.scss';

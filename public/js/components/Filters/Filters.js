@@ -17,10 +17,10 @@ export default class Filters extends Component {
             <form className="form">
                 <Grid fluid>
                     <Row>
-                        <Col xs={9} md={4}>
+                        <Col xs={12} md={4}>
                             <div className="form__row">
                                 <label>
-                                    Filter by Desk:
+                                    <div>Filter by Desk:</div>
                                     <select
                                         className="form__field form__field--select"
                                         onChange={event => Actions.filterDesk({ ...filterVals, desk: event.target.value })}
@@ -32,10 +32,10 @@ export default class Filters extends Component {
                                 </label>
                             </div>
                         </Col>
-                        <Col xs={9} md={4}>
+                        <Col xs={12} md={4}>
                             <div className="form__row">
                                 <label>
-                                    Filter by Office:
+                                    <div>Filter by Office:</div>
                                     <select
                                         className="form__field form__field--select"
                                         onChange={event => Actions.filterDesk({ ...filterVals, productionOffice: event.target.value })}
@@ -50,11 +50,12 @@ export default class Filters extends Component {
                                 </label>
                             </div>
                         </Col>
-                        <Col xs={9} md={4}>
+                        <Col xs={12} md={4}>
                             <div className="form__row">
                                 <label>
-                                    Time Range:
+                                    <div>Time Range:</div>
                                     <DateRangePicker
+                                        className='date-picker-container'
                                         hideKeyboardShortcutsPanel
                                         initialVisibleMonth={() => moment().subtract(1, 'months')}
                                         orientation={window.innerWidth > 640 ? 'horizontal' : 'vertical'}

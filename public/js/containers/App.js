@@ -14,6 +14,9 @@ class App extends Component {
         const { filterVals, isUpdating, charts, commissioningDesks } = this.props;
         return (
             <Page>
+                <div className='top-section'>
+                    <h1>Guardian Tools Metrics</h1>
+                </div>
                 <Filters
                     filterVals={filterVals}
                     isUpdating={isUpdating}
