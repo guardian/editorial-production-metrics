@@ -47,7 +47,7 @@ class MetricsDB(val db: Database) {
 
   def getForks: Seq[Fork] = await(db.run(forksTable.result))
   def insertFork(fork: Fork): Either[ProductionMetricsError, Int] = await {
-    db.run(forksTable += fork).map { result: Int => Right(result) }.recover { case _ => Left(UnexpectedDbExceptionError)}
+    db.run(forksTable += fork).map(Right(_)).recover { case _ => Left(UnexpectedDbExceptionError)}
   }
 
   // This needs to return the data grouped by day. For this we've defined dateTrunc to tell Slick

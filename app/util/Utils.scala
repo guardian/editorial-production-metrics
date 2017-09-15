@@ -6,6 +6,10 @@ import models._
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import play.api.Logger
+import play.api.libs.ws.{WSClient, WSResponse}
+import util.AsyncHelpers.await
+
+import scala.concurrent.ExecutionContext.Implicits.global
 
 object Utils {
   def processException(exception: Exception): Either[ProductionMetricsError, Nothing] = {
@@ -35,4 +39,8 @@ object Utils {
 
   def extractOriginatingSystem(originatingSystem: String): Either[ProductionMetricsError, OriginatingSystem] =
     OriginatingSystem.withNameOption(originatingSystem).fold(Left(UnvalidOriginatingSystem):Either[ProductionMetricsError, OriginatingSystem])(Right(_))
+
+  def getTrackingTags(wsClient: WSClient, tagManagerUrl: String): Either[ProductionMetricsError, WSResponse] = await {
+    wsClient.url(tagManagerUrl).withQueryString(List(("type", "Tracking"),("limit", "100")):_*).get.map(Right(_)).recover{case _ => Left(UnexpectedExceptionError)}
+  }
 }
