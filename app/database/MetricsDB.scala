@@ -1,6 +1,7 @@
 package database
 
 import com.github.tototoshi.slick.PostgresJodaSupport._
+import com.gu.editorialproductionmetricsmodels.models.MetricOpt
 import models.db.Schema._
 import models.db._
 import models.{ProductionMetricsError, UnexpectedDbExceptionError}
@@ -10,6 +11,7 @@ import util.AsyncHelpers._
 import io.circe.Json
 import play.api.Logger
 import util.Parser.jsonToMetricOpt
+
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class MetricsDB(val db: Database) {
@@ -32,21 +34,17 @@ class MetricsDB(val db: Database) {
   def getPublishingMetricsWithComposerId(composerId: Option[String]): Option[Metric] =
     await(db.run(metricsTable.filter(_.composerId === composerId).result.headOption))
 
-  def updateOrInsert(metric: Option[Metric], metricOptJson: Json): Either[ProductionMetricsError, Metric] = metric match {
+  def updateOrInsert(metric: Option[Metric], metricOpt: MetricOpt): Either[ProductionMetricsError, Metric] = metric match {
     case Some(m) =>
-      Metric.updateMetric(m, metricOptJson).fold(
+      Metric.updateMetric(m, metricOpt).fold(
         err => Left(err),
         updated => {
           Logger.info(s"Metric found, updating entry with: $updated")
           upsertPublishingMetric(updated)
         })
     case None =>
-      jsonToMetricOpt(metricOptJson).fold(
-        err => Left(err),
-        metricOpt => {
-          Logger.info(s"Inserting new metric: $metricOpt")
-          upsertPublishingMetric(Metric(metricOpt))
-        })
+      Logger.info(s"Inserting new metric: $metricOpt")
+      upsertPublishingMetric(Metric(metricOpt))
   }
 
   def getForks: Seq[Fork] = await(db.run(forksTable.result))

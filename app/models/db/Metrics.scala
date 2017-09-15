@@ -91,11 +91,11 @@ object Metric {
   implicit val metricDecoder: Decoder[Metric] = deriveDecoder
 
   // This only updates the fields that metric and metricOptJson have in common
-  def updateMetric(metric: Metric, metricOptJson: Json): Either[ProductionMetricsError, Metric] = {
+  def updateMetric(metric: Metric, metricOpt: MetricOpt): Either[ProductionMetricsError, Metric] = {
     // We use a printer to remove the null values. Nulls are treated as values in Circe. Not removing them results
     // in replacing the existing values with null.
     val printer = Printer.noSpaces.copy(dropNullKeys = true)
-    val jsonOpt: String = printer.pretty(metricOptJson)
+    val jsonOpt: String = printer.pretty(metricOpt.asJson)
 
     val result = for {
       j1 <- parse(jsonOpt)
@@ -104,7 +104,7 @@ object Metric {
 
     result.fold(
       err => {
-        Logger.error(s"Json merging failed for $metric and $metricOptJson: ${err.message}")
+        Logger.error(s"Json merging failed for $metric and $metricOpt: ${err.message}")
         processException(err)
       },
       r => jsonToMetric(r))

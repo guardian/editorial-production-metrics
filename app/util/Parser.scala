@@ -6,7 +6,7 @@ import com.gu.editorialproductionmetricsmodels.models.MetricOpt._
 import io.circe.generic.auto._
 import io.circe.{Json, parser}
 import models.db.Metric
-import models.{CommissioningDesks, ProductionMetricsError}
+import models.{CommissioningDesks, InvalidJsonError, ProductionMetricsError}
 import play.api.Logger
 import util.Utils._
 
@@ -49,5 +49,14 @@ object Parser {
 
   def jsonToForkData(json: Json): Either[ProductionMetricsError, ForkData] = {
     json.as[ForkData].fold(processException, Right(_))
+  }
+
+  def extractMetricOpt(body: Option[String]): Either[ProductionMetricsError, MetricOpt] = body match {
+    case Some(str) =>
+      for {
+        json <- stringToJson(str)
+        metricOpt <- json.as[MetricOpt].fold(processException, m => Right(m))
+      } yield metricOpt
+    case None => Left(InvalidJsonError("The body of the request needs to be sent as Json"))
   }
 }
