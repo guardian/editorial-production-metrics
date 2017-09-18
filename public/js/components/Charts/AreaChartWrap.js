@@ -41,8 +41,8 @@ const AreaChartWrap = ({ data, xLabel, yLabel, yLabelStacked, isUpdating, scale,
                     scale
                 }}
                 yAxis={{
-                    label: isStacked ? yLabel : yLabelStacked,
                     scale: 'linear',
+                    label: isStacked ? yLabelStacked : yLabel,
                     tickFormat: (d) => isStacked ? `${d}%` : d
                 }}
             />
