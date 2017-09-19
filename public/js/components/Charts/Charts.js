@@ -7,20 +7,24 @@ const Charts = ({ charts, isUpdating }) => {
 
     const renderToolOfOriginTitle = () => {
         return(
-            <h3>Tool of Origin: <span className='chart-title--second-series'>InCopy</span> vs <span className='chart-title--first-series'>Composer</span></h3>
+            <div className='chart-title'>
+                <h3>Tool of Origin: <span className='chart-title--second-series'>InCopy</span> vs <span className='chart-title--first-series'>Composer</span></h3>
+            </div>
         );
     };
 
     const renderWorflowStateTitle = () => {
         return(
-            <h3>Workflow State: <span className='chart-title--second-series'>Never Seen in Workflow</span> vs <span className='chart-title--first-series'>Seen in Workflow</span></h3>
+            <div className='chart-title'>
+                <h3>Workflow State: <span className='chart-title--second-series'>Never Seen in Workflow</span> vs <span className='chart-title--first-series'>Seen in Workflow</span></h3>
+            </div>              
         );
     };
 
     return (
         <Grid fluid>
             <Row around='xs'>
-                <Col xs={12} md={8}>
+                <Col xs={12} md={6}>
                     <AreaChartWrap
                         chartType={'ComposerVsIncopy'}
                         titleHeader={renderToolOfOriginTitle()}
@@ -35,7 +39,7 @@ const Charts = ({ charts, isUpdating }) => {
                         yLabelStacked='Published Content Daily %'
                     />
                 </Col>
-                <Col xs={12} md={8}>
+                <Col xs={12} md={6}>
                     <AreaChartWrap
                         chartType={'InWorkflowVsNotInWorkflow'}
                         titleHeader={renderWorflowStateTitle()}
