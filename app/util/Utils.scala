@@ -38,7 +38,7 @@ object Utils {
   }
 
   def extractOriginatingSystem(originatingSystem: String): Either[ProductionMetricsError, OriginatingSystem] =
-    OriginatingSystem.withNameOption(originatingSystem).fold(Left(UnvalidOriginatingSystem):Either[ProductionMetricsError, OriginatingSystem])(Right(_))
+    OriginatingSystem.withNameOption(originatingSystem).fold(Left(InvalidOriginatingSystem):Either[ProductionMetricsError, OriginatingSystem])(Right(_))
 
   def getTrackingTags(wsClient: WSClient, tagManagerUrl: String): Either[ProductionMetricsError, WSResponse] = await {
     wsClient.url(tagManagerUrl).withQueryString(List(("type", "Tracking"),("limit", "100")):_*).get.map(Right(_)).recover{case _ => Left(UnexpectedExceptionError)}

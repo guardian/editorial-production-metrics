@@ -1,6 +1,8 @@
 package controllers
 
 import cats.syntax.either._
+import com.gu.editorialproductionmetricsmodels.models.{ForkData, MetricOpt}
+import io.circe.generic.auto._
 import config.Config
 import database.MetricsDB
 import io.circe.generic.auto._
@@ -61,7 +63,8 @@ class App(val wsClient: WSClient, val config: Config, val db: MetricsDB) extends
     APIHMACAuthAction { req =>
       APIResponse {
         for {
-          metricOpt <- extractMetricOpt(req.body.asJson.map(_.toString))
+          bodyString <- extractRequestBody(req.body.asJson.map(_.toString))
+          metricOpt <- extractFromString[MetricOpt](bodyString)
           metric <- db.updateOrInsert(db.getPublishingMetricsWithComposerId(metricOpt.composerId), metricOpt)
         } yield metric
       }
@@ -71,7 +74,8 @@ class App(val wsClient: WSClient, val config: Config, val db: MetricsDB) extends
   def insertFork() = Action { req =>
     APIResponse {
       for {
-        forkData <- extractForkData(req.body.asJson.map(_.toString))
+        bodyString <- extractRequestBody(req.body.asJson.map(_.toString))
+        forkData <- extractFromString[ForkData](bodyString)
         result <- db.insertFork(Fork(forkData))
       } yield result
     }

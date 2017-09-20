@@ -1,11 +1,13 @@
 package util
 
 import cats.syntax.either._
-import com.gu.editorialproductionmetricsmodels.models.{CapiData, ForkData, KinesisEvent, MetricOpt}
 import com.gu.editorialproductionmetricsmodels.models.MetricOpt._
+import com.gu.editorialproductionmetricsmodels.models.ForkData._
+import com.gu.editorialproductionmetricsmodels.models.{CapiData, KinesisEvent, MetricOpt}
 import io.circe.generic.auto._
-import io.circe.{Json, parser}
-import models.db.{Fork, Metric}
+import io.circe.{Decoder, Json, parser}
+import models.db.Metric
+import models.db.Metric._
 import models.{CommissioningDesks, InvalidJsonError, ProductionMetricsError}
 import play.api.Logger
 import util.Utils._
@@ -47,21 +49,10 @@ object Parser {
   def jsonToCapiData(json: Json): Either[ProductionMetricsError, CapiData] =
     json.as[CapiData].fold(processException, Right(_))
 
-  def extractMetricOpt(body: Option[String]): Either[ProductionMetricsError, MetricOpt] = body match {
-    case Some(str) =>
-      for {
-        json <- stringToJson(str)
-        metricOpt <- json.as[MetricOpt].fold(processException, m => Right(m))
-      } yield metricOpt
-    case None => Left(InvalidJsonError("The body of the request needs to be sent as Json"))
-  }
+  def extractFromString[A](str: String)(implicit decoder: Decoder[A]): Either[ProductionMetricsError, A] =
+    for {
+      json <- stringToJson(str)
+      result <- json.as[A].fold(processException, m => Right(m))
+    } yield result
 
-  def extractForkData(body: Option[String]): Either[ProductionMetricsError, ForkData] = body match {
-    case Some(str) =>
-      for {
-        json <- stringToJson(str)
-        metricOpt <- json.as[ForkData].fold(processException, m => Right(m))
-      } yield metricOpt
-    case None => Left(InvalidJsonError("The body of the request needs to be sent as Json"))
-  }
 }
