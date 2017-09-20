@@ -82,6 +82,6 @@ object ProductionMetricsStreamReader {
           firstPublicationTime = Some(firstPublicationDate),
           inNewspaper = Some(capiData.newspaperBookTag.isDefined),
           productionOffice = capiData.productionOffice)
-      } yield db.updateOrInsert(existingMetric, metric.asJson)).getOrElse(Left(UnexpectedExceptionError))
+      } yield db.updateOrInsert(existingMetric, metric)).getOrElse(Left(UnexpectedExceptionError))
   }
 }

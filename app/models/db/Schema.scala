@@ -39,7 +39,7 @@ object Schema {
       creationTime,
       firstPublicationTime,
       roundTrip,
-      productionOffice) <> (Metric.customApply, Metric.customUnapply)
+      productionOffice) <> (Metric.customApply, Metric.unapply)
   }
 
   class DBInCopyMetric(tag: Tag) extends Table[InCopyMetric](tag, "incopy_metrics") {
@@ -63,7 +63,7 @@ object Schema {
     def time                = column[DateTime]("time")
     def wordCount           = column[Int]("word_count")
     def revisionNumber      = column[Int]("revision_number")
-    def * = (id, composerId, time, wordCount, revisionNumber) <> (Fork.tupled, Fork.unapply)
+    def * = (id, composerId, time, wordCount, revisionNumber) <> (Fork.customApply, Fork.unapply)
   }
 }
 

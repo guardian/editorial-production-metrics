@@ -3,7 +3,7 @@ package models.db
 import java.util.UUID
 
 import cats.syntax.either._
-import com.gu.editorialproductionmetricsmodels.models.{MetricOpt, OriginatingSystem, ProductionOffice}
+import com.gu.editorialproductionmetricsmodels.models.{ForkData, MetricOpt, OriginatingSystem, ProductionOffice}
 import io.circe._
 import io.circe.generic.semiauto.{deriveDecoder, deriveEncoder}
 import io.circe.parser._
@@ -60,21 +60,6 @@ object Metric {
       roundTrip = tuple._11,
       productionOffice = tuple._12)
 
-  def customUnapply(metric: Metric): Option[(String, OriginatingSystem, Option[String],Option[String],Option[String],Option[String],Boolean,Boolean,DateTime,Option[DateTime],Boolean,Option[ProductionOffice])] =
-    Some((
-      metric.id,
-      metric.originatingSystem,
-      metric.composerId,
-      metric.storyBundleId,
-      metric.commissioningDesk,
-      metric.userDesk,
-      metric.inWorkflow,
-      metric.inNewspaper,
-      metric.creationTime,
-      metric.firstPublicationTime,
-      metric.roundTrip,
-      metric.productionOffice))
-
   implicit val timeEncoder = new Encoder[DateTime] {
     def apply(d: DateTime) = d.toString(datePattern).asJson
   }
@@ -91,11 +76,11 @@ object Metric {
   implicit val metricDecoder: Decoder[Metric] = deriveDecoder
 
   // This only updates the fields that metric and metricOptJson have in common
-  def updateMetric(metric: Metric, metricOptJson: Json): Either[ProductionMetricsError, Metric] = {
+  def updateMetric(metric: Metric, metricOpt: MetricOpt): Either[ProductionMetricsError, Metric] = {
     // We use a printer to remove the null values. Nulls are treated as values in Circe. Not removing them results
     // in replacing the existing values with null.
     val printer = Printer.noSpaces.copy(dropNullKeys = true)
-    val jsonOpt: String = printer.pretty(metricOptJson)
+    val jsonOpt: String = printer.pretty(metricOpt.asJson)
 
     val result = for {
       j1 <- parse(jsonOpt)
@@ -104,7 +89,7 @@ object Metric {
 
     result.fold(
       err => {
-        Logger.error(s"Json merging failed for $metric and $metricOptJson: ${err.message}")
+        Logger.error(s"Json merging failed for $metric and $metricOpt: ${err.message}")
         processException(err)
       },
       r => jsonToMetric(r))
@@ -128,3 +113,16 @@ case class Fork(
     time: DateTime,
     wordCount: Int,
     revisionNumber: Int)
+
+object Fork {
+  def apply(forkData: ForkData): Fork =
+    new Fork(id = UUID.randomUUID.toString, forkData.composerId, forkData.time, forkData.wordCount, forkData.revisionNumber)
+
+  def customApply(tuple: (String, String, DateTime, Int, Int)): Fork =
+    Fork(
+      id = tuple._1,
+      composerId = tuple._2,
+      time = tuple._3,
+      wordCount = tuple._4,
+      revisionNumber = tuple._5)
+}

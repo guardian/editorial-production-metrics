@@ -1,15 +1,16 @@
 package database
 
 import com.github.tototoshi.slick.PostgresJodaSupport._
+import com.gu.editorialproductionmetricsmodels.models.MetricOpt
 import models.db.Schema._
 import models.db._
 import models.{ProductionMetricsError, UnexpectedDbExceptionError}
 import org.joda.time.DateTime
+import play.api.Logger
 import slick.jdbc.PostgresProfile.api._
 import util.AsyncHelpers._
-import io.circe.Json
-import play.api.Logger
-import util.Parser.jsonToMetricOpt
+
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class MetricsDB(val db: Database) {
 
@@ -31,30 +32,31 @@ class MetricsDB(val db: Database) {
   def getPublishingMetricsWithComposerId(composerId: Option[String]): Option[Metric] =
     await(db.run(metricsTable.filter(_.composerId === composerId).result.headOption))
 
-  def updateOrInsert(metric: Option[Metric], metricOptJson: Json): Either[ProductionMetricsError, Metric] = metric match {
+  def updateOrInsert(metric: Option[Metric], metricOpt: MetricOpt): Either[ProductionMetricsError, Metric] = metric match {
     case Some(m) =>
-      Metric.updateMetric(m, metricOptJson).fold(
+      Metric.updateMetric(m, metricOpt).fold(
         err => Left(err),
         updated => {
           Logger.info(s"Metric found, updating entry with: $updated")
           upsertPublishingMetric(updated)
         })
     case None =>
-      jsonToMetricOpt(metricOptJson).fold(
-        err => Left(err),
-        metricOpt => {
-          Logger.info(s"Inserting new metric: $metricOpt")
-          upsertPublishingMetric(Metric(metricOpt))
-        })
+      Logger.info(s"Inserting new metric: $metricOpt")
+      upsertPublishingMetric(Metric(metricOpt))
   }
 
   def getForks: Seq[Fork] = await(db.run(forksTable.result))
-  def insertFork(fork: Fork): Int = await(db.run(forksTable += fork))
+  def insertFork(fork: Fork): Either[ProductionMetricsError, Int] = await {
+    db.run(forksTable += fork).map(Right(_)).recover { case _ => Left(UnexpectedDbExceptionError)}
+  }
 
   // This needs to return the data grouped by day. For this we've defined dateTrunc to tell Slick
   // to "import" the date_trunc function from postgresql
-  def getGroupedByDayMetrics(implicit filters: MetricsFilters): List[CountResponse] =
-    await(db.run(metricsTable.filter(MetricsFilters.metricFilters).map(m => (m.id, dateTrunc("day", m.creationTime))).groupBy(_._2).map{
+  def getGroupedByDayMetrics(implicit filters: MetricsFilters): Either[ProductionMetricsError, List[CountResponse]] = await {
+    db.run(metricsTable.filter(MetricsFilters.metricFilters).map(m => (m.id, dateTrunc("day", m.creationTime))).groupBy(_._2).map {
       case (date, metric) => (date, metric.size)
-    }.result)).map(pair => CountResponse(new DateTime(pair._1), pair._2)).toList
+    }.result).map { result: Seq[(DateTime, Int)] =>
+      Right(result.map(pair => CountResponse(new DateTime(pair._1), pair._2)).toList)
+    }.recover { case _ => Left(UnexpectedDbExceptionError) }
+  }
 }

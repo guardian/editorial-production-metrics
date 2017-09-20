@@ -1,10 +1,15 @@
 package util
 
+import com.gu.editorialproductionmetricsmodels.models.OriginatingSystem
 import io.circe.{DecodingFailure, ParsingFailure}
-import models.{InvalidJsonError, NoRequestBodyError, ProductionMetricsError, UnexpectedExceptionError}
+import models._
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import play.api.Logger
+import play.api.libs.ws.{WSClient, WSResponse}
+import util.AsyncHelpers.await
+
+import scala.concurrent.ExecutionContext.Implicits.global
 
 object Utils {
   def processException(exception: Exception): Either[ProductionMetricsError, Nothing] = {
@@ -30,5 +35,12 @@ object Utils {
         Logger.error(s"String $dateTime could not be converted to datetime. $e")
         None
     }
+  }
+
+  def extractOriginatingSystem(originatingSystem: String): Either[ProductionMetricsError, OriginatingSystem] =
+    OriginatingSystem.withNameOption(originatingSystem).fold(Left(InvalidOriginatingSystem):Either[ProductionMetricsError, OriginatingSystem])(Right(_))
+
+  def getTrackingTags(wsClient: WSClient, tagManagerUrl: String): Either[ProductionMetricsError, WSResponse] = await {
+    wsClient.url(tagManagerUrl).withQueryString(List(("type", "Tracking"),("limit", "100")):_*).get.map(Right(_)).recover{case _ => Left(UnexpectedExceptionError)}
   }
 }

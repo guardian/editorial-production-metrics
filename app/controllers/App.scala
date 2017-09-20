@@ -1,13 +1,12 @@
 package controllers
 
-import java.util.UUID
-
 import cats.syntax.either._
-import com.gu.editorialproductionmetricsmodels.models.OriginatingSystem
+import com.gu.editorialproductionmetricsmodels.models.{ForkData, MetricOpt}
+import io.circe.generic.auto._
 import config.Config
 import database.MetricsDB
 import io.circe.generic.auto._
-import io.circe.syntax._
+import models.APIResponse
 import models.db.{Fork, MetricsFilters}
 import play.api.Logger
 import play.api.libs.ws.WSClient
@@ -18,8 +17,6 @@ import util.Utils._
 
 // Implicit
 import models.db.CountResponse._
-
-import scala.concurrent.ExecutionContext.Implicits.global
 
 class App(val wsClient: WSClient, val config: Config, val db: MetricsDB) extends Controller with PanDomainAuthActions {
 
@@ -35,66 +32,52 @@ class App(val wsClient: WSClient, val config: Config, val db: MetricsDB) extends
     Ok(views.html.index())
   }
 
+  def getCommissioningDeskList = APIAuthAction {
+    APIResponse {
+      for {
+        tagManagerResponse <- getTrackingTags(wsClient, config.tagManagerUrl)
+        commissioningDesks <- stringToCommissioningDesks(tagManagerResponse.body)
+      } yield commissioningDesks.data.map(_.data.path)
+    }
+  }
+
   def getStartedIn(system: String) = APIAuthAction { req =>
-    OriginatingSystem.withNameOption(system) match {
-      case Some(s) =>
-        implicit val filters = MetricsFilters(req.queryString).copy(originatingSystem = Some(s))
-        Ok(db.getGroupedByDayMetrics.asJson.spaces4)
-      case None => BadRequest("The valid values for originating system are: composer and incopy")
+    APIResponse {
+      for {
+        originatingSystem <- extractOriginatingSystem(system)
+        filters = MetricsFilters(req.queryString).copy(originatingSystem = Some(originatingSystem))
+        metric <- db.getGroupedByDayMetrics(filters)
+      } yield metric
     }
   }
 
   def getWorkflowData(inWorkflow: Boolean) = APIAuthAction { req =>
-    implicit val filters = MetricsFilters(req.queryString).copy(inWorkflow = Some(inWorkflow))
-    Ok(db.getGroupedByDayMetrics.asJson.spaces4)
-  }
-
-  def getCommissioningDeskList = APIAuthAction.async {
-    val queryParams = List(("type", "Tracking"),("limit", "100"))
-    wsClient.url(config.tagManagerUrl).withQueryString(queryParams:_*).get.map(
-      response => stringToCommissioningDesks(response.body) match {
-        case Right(desks) =>
-          val deskNames = desks.data.map(desk => desk.data.path)
-          Ok(deskNames.asJson.spaces4)
-        case Left(_) => InternalServerError("Not able to parse json.")
-      })
+    APIResponse {
+      for {
+        metric <- db.getGroupedByDayMetrics(MetricsFilters(req.queryString).copy(inWorkflow = Some(inWorkflow)))
+      } yield metric
+    }
   }
 
   def upsertMetric() = CORSable(config.workflowUrl) {
     APIHMACAuthAction { req =>
-      req.body.asJson.map(_.toString) match {
-        case Some(metricOptString) =>
-          val result = for {
-            metricOptJson <- stringToJson(metricOptString)
-            composerId <- metricOptJson.hcursor.downField("composerId").as[String].fold(processException, cId => Right(cId))
-            metric <- db.updateOrInsert(db.getPublishingMetricsWithComposerId(Some(composerId)), metricOptJson)
-          } yield metric
-          result.fold(
-            err => {
-              Logger.error(s"An error occurred while posting the metric: ${err.message}")
-              InternalServerError(s"An error occurred while posting the metric: ${err.message}")
-            },
-            r => Ok(r.asJson.spaces4))
-        case None => BadRequest("The body of the request needs to be sent as Json")
+      APIResponse {
+        for {
+          bodyString <- extractRequestBody(req.body.asJson.map(_.toString))
+          metricOpt <- extractFromString[MetricOpt](bodyString)
+          metric <- db.updateOrInsert(db.getPublishingMetricsWithComposerId(metricOpt.composerId), metricOpt)
+        } yield metric
       }
     }
   }
 
-  def insertFork() = APIHMACAuthAction { req =>
-    req.body.asJson.map(_.toString) match {
-      case Some(forkString) =>
-        val result = for {
-          forkJson <- stringToJson(forkString)
-          forkData <- jsonToForkData(forkJson)
-          fork = Fork(id = UUID.randomUUID.toString, forkData.composerId, forkData.time, forkData.wordCount, forkData.revisionNumber)
-        } yield db.insertFork(fork)
-        result.fold(
-          err => {
-            Logger.error(s"An error occurred while posting the fork: ${err.message}")
-            InternalServerError(s"An error occurred while posting the fork: ${err.message}")
-          },
-          _ => Ok("Saved fork data"))
-      case None => BadRequest("The body of the request needs to be sent as Json")
+  def insertFork() = Action { req =>
+    APIResponse {
+      for {
+        bodyString <- extractRequestBody(req.body.asJson.map(_.toString))
+        forkData <- extractFromString[ForkData](bodyString)
+        result <- db.insertFork(Fork(forkData))
+      } yield result
     }
   }
 }
