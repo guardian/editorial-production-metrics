@@ -80,4 +80,12 @@ class App(val wsClient: WSClient, val config: Config, val db: MetricsDB) extends
       } yield result
     }
   }
+
+  def getForks(inWorkflow: Boolean) = APIAuthAction { req =>
+    APIResponse {
+      for {
+        metric <- db.getGroupedByDayMetrics(MetricsFilters(req.queryString).copy(inWorkflow = Some(inWorkflow)))
+      } yield metric
+    }
+  }
 }

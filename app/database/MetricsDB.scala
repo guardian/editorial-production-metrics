@@ -45,7 +45,9 @@ class MetricsDB(val db: Database) {
       upsertPublishingMetric(Metric(metricOpt))
   }
 
-  def getForks: Seq[Fork] = await(db.run(forksTable.result))
+  def getForks: Either[ProductionMetricsError, List[ForkResponse]] = await {
+    db.run(forksTable.map(_.time).result).map { dateTimes => dateTimes.map(dt => ForkResponse(dt.withTimeAtStartOfDay(), dt)) }
+  }
   def insertFork(fork: Fork): Either[ProductionMetricsError, Int] = await {
     db.run(forksTable += fork).map(Right(_)).recover { case _ => Left(UnexpectedDbExceptionError)}
   }
