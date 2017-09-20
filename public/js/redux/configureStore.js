@@ -1,8 +1,8 @@
 import { createStore, compose, applyMiddleware } from 'redux';
-import { CreateJumpstateMiddleware } from 'jumpstate';
 import logger from 'redux-logger';
 import createHistory from 'history/createBrowserHistory';
 import { routerMiddleware } from 'react-router-redux';
+import thunkMiddleware from 'redux-thunk';
 import { updateUrlFromStateChangeMiddleware, updateStateFromUrlChangeMiddleware } from 'services/routingMiddleware';
 
 // creates the store
@@ -11,9 +11,9 @@ export default (rootReducer) => {
     const middleware = [];
     const enhancers = [];
 
-    /* ------------- Jumpstate Middleware ------------- */
+    /* ------------- fate Middleware ------------- */
 
-    middleware.push(CreateJumpstateMiddleware());
+    middleware.push(thunkMiddleware);
 
     /* ------------- Logger Middleware ------------- */
 

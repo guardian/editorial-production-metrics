@@ -1,17 +1,18 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Actions } from 'jumpstate';
+import { bindActionCreators } from 'redux';
+import actions from 'actions';
 import Page from 'components/Page';
 import Filters from 'components/Filters/Filters';
 import Charts from 'components/Charts/Charts';
 
 class App extends Component {
     componentDidMount() {
-        Actions.fetchCommissioningDesksRedux();
+        this.props.actions.fetchCommissioningDesks();
     }
 
     render() {
-        const { filterVals, isUpdating, charts, commissioningDesks } = this.props;
+        const { filterVals, isUpdating, charts, commissioningDesks, actions } = this.props;
         return (
             <Page>
                 <div className='top-section'>
@@ -21,11 +22,11 @@ class App extends Component {
                     filterVals={filterVals}
                     isUpdating={isUpdating}
                     desks={commissioningDesks.desksList}
+                    actions={actions}
                 />
                 <Charts
                     charts={charts}
-                    startDate={filterVals.startDate}
-                    endDate={filterVals.endDate}
+                    actions={actions}
                     isUpdating={isUpdating}
                 />
             </Page>
@@ -33,7 +34,11 @@ class App extends Component {
     }
 }
 
-function mapStateToProps(state) {
+const mapDispatchToProps = (dispatch) => ({
+    actions: bindActionCreators(actions, dispatch)
+});
+
+const mapStateToProps = (state) => {
     const { filterVals, charts, isUpdating, commissioningDesks } = state;
     return {
         filterVals,
@@ -41,6 +46,6 @@ function mapStateToProps(state) {
         isUpdating,
         commissioningDesks
     };
-}
+};
 
-export default connect(mapStateToProps, null)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);

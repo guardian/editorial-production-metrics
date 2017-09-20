@@ -1,9 +1,8 @@
 import { replace } from 'react-router-redux';
-import { Actions } from 'jumpstate';
+import actions from 'actions';
 import _isEqual from 'lodash/isEqual';
 import moment from 'moment';
 import { objectToParamString, paramStringToObject } from 'helpers/routingHelpers';
-
 export const updateUrlFromStateChangeMiddleware = ({ dispatch, getState }) => (next) => (action) => {
     const prevState = getState();
     let result = next(action);
@@ -21,11 +20,11 @@ export const updateUrlFromStateChangeMiddleware = ({ dispatch, getState }) => (n
             dispatch(updateAction);
         }
     }
-
+    
     return result;
 };
 
-export const updateStateFromUrlChangeMiddleware = ({ _, getState }) => (next) => (action) => {
+export const updateStateFromUrlChangeMiddleware = ({ dispatch, getState }) => (next) => (action) => {
     next(action);
     const newState = getState();
 
@@ -35,7 +34,7 @@ export const updateStateFromUrlChangeMiddleware = ({ _, getState }) => (next) =>
         filterObj['endDate'] = moment(filterObj['endDate']).utc().endOf('day');
 
         if (!_isEqual(filterObj, newState.filterVals)) {
-            Actions.filterDesk(filterObj);
+            dispatch(actions.filterDesk(filterObj));
         }
     }
 };

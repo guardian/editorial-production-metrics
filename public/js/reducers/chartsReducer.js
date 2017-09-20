@@ -1,66 +1,27 @@
-import { State, Actions, Effect } from 'jumpstate';
-import api from 'services/Api';
-import chartList from 'utils/chartList';
 import { createYTotalsList, createPartialsList, formattedSeries, compareDates, fillMissingDates } from 'helpers/chartsHelpers';
-import { reEstablishSession } from 'panda-session';
 import moment from 'moment';
 
-/* ------------- State Management ------------- */
-
-const updateAttemptActions = (chartData, chart, startDate, endDate) => {
-    Actions.toggleIsUpdatingCharts(false);
-    Actions[`update${chart}`]({ chartData, startDate, endDate });
-};
-
-const responseFailActions = (chart, error) => {
-    Actions.toggleIsUpdatingCharts(false);
-    Actions[`get${chart}Failed`](error);
-};
-
-Effect('filterDesk', (filterObj) => {
-    Actions.updateFilter(filterObj);
-    Actions.toggleIsUpdatingCharts(true);
-    const { startDate, endDate, desk, productionOffice } = filterObj;
-    chartList.map(chart => {
-        api[`get${chart}`](startDate, endDate, desk, productionOffice)
-            .then(chartData => updateAttemptActions(chartData, chart, startDate, endDate))
-            .catch(error => {
-                const status = error.response.status;
-                if (status === 419) {
-                    reEstablishSession('/reauth', 5000)
-                        .then(
-                            () => {
-                                api[`get${chart}`](startDate, endDate, desk, productionOffice)
-                                    .then(chartData => updateAttemptActions(chartData, chart, startDate, endDate));
-                            },
-                            error => responseFailActions(chart, error)
-                        );
-                } else {
-                    responseFailActions(chart, error);
-                }
-            });
-    });
-});
-
-const chartsRedux = State({
-    initial: {
-        composerVsInCopy: {
-            data: {
-                absolute: [],
-                percent: []
-            },
-            isStacked: true
+const initialState = {
+    composerVsInCopy: {
+        data: {
+            absolute: [],
+            percent: []
         },
-        inWorkflowVsNotInWorkflow: {
-            data: {
-                absolute: [],
-                percent: []
-            },
-            isStacked: true
-        }
+        isStacked: true
     },
+    inWorkflowVsNotInWorkflow: {
+        data: {
+            absolute: [],
+            percent: []
+        },
+        isStacked: true
+    }
+};
 
-    updateComposerVsIncopy(state, { chartData, startDate, endDate }) {
+const chartsReducer = (state = initialState, action) => {
+    const { type, chartData, startDate, endDate, error, isStacked } = action;
+    switch (type) {
+    case 'UPDATE_COMPOSER_VS_INCOPY': {
         const { composerResponse, inCopyResponse } = chartData;
         const range = endDate.diff(startDate, 'days');
         const composerData = composerResponse.data.length <= range ?  fillMissingDates(startDate, endDate, composerResponse.data).sort(compareDates) : composerResponse.data.sort(compareDates);
@@ -92,9 +53,16 @@ const chartsRedux = State({
                 isStacked: state.composerVsInCopy.isStacked
             }
         };
-    },
-
-    toggleStackChart(state, isStacked) {
+    }
+    case 'GET_COMPOSER_VS_INCOPY_FAILED':
+        return {
+            ...state,
+            composerVsInCopy: {
+                ...state.composerVsInCopy,
+                error
+            }
+        };
+    case 'TOGGLE_STACK_CHART':
         return {
             ...state,
             composerVsInCopy: {
@@ -102,19 +70,7 @@ const chartsRedux = State({
                 isStacked
             }
         };
-    },
-
-    getComposerVsIncopyFailed(state, error) {
-        return {
-            ...state,
-            composerVsInCopy: {
-                ...state.composerVsInCopy,
-                error: error.message
-            }
-        };
-    },
-
-    updateInWorkflowVsNotInWorkflow(state, { chartData, startDate, endDate }) {
+    case 'UPDATE_IN_WORKFLOW_VS_NOT_IN_WORKFLOW': {
         const { inWorkflowResponse, notInWorkflowResponse } = chartData;
         const range = endDate.diff(startDate, 'days');
         const inWorkflowData = inWorkflowResponse.data.length <= range ?  fillMissingDates(startDate, endDate, inWorkflowResponse.data).sort(compareDates) : inWorkflowResponse.data.sort(compareDates);
@@ -146,9 +102,8 @@ const chartsRedux = State({
                 isStacked: state.inWorkflowVsNotInWorkflow.isStacked
             }
         };  
-    },
-
-    getInWorkflowVsNotInWorkflowFailed(state, error) {
+    }
+    case 'GET_IN_WORKFLOW_VS_NOT_IN_WORKFLOW_FAILED':
         return {
             ...state,
             inWorkflowVsNotInWorkflow: {
@@ -156,7 +111,9 @@ const chartsRedux = State({
                 error: error.message
             }
         };
+    default:
+        return state;
     }
-});
+};
 
-export default chartsRedux;
+export default chartsReducer;

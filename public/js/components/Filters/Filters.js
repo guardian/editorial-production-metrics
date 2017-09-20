@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import moment from 'moment';
 import { DateRangePicker } from 'react-dates';
-import  { Actions } from 'jumpstate';
 
 // Remove the 'tracking/commissioningdesk/' bit from the desk identifier string, replace dashes with spaces and capitalize each word
 const formatDeskName = deskName => deskName.substr(27).replace(/-/g, ' ').replace(/\b\w/g, x => x.toUpperCase());
@@ -12,7 +11,7 @@ export default class Filters extends Component {
     state = { focusedInput: null };
 
     render() {
-        const { filterVals, isUpdating, desks } = this.props;
+        const { filterVals, isUpdating, desks, actions } = this.props;
         return (
             <form className="form">
                 <Grid fluid>
@@ -23,7 +22,7 @@ export default class Filters extends Component {
                                     <div>Filter by Desk:</div>
                                     <select
                                         className="form__field form__field--select"
-                                        onChange={event => Actions.filterDesk({ ...filterVals, desk: event.target.value })}
+                                        onChange={event => actions.filterDesk({ ...filterVals, desk: event.target.value })}
                                         value={filterVals.desk}
                                         disabled={isUpdating}
                                     >
@@ -38,7 +37,7 @@ export default class Filters extends Component {
                                     <div>Filter by Office:</div>
                                     <select
                                         className="form__field form__field--select"
-                                        onChange={event => Actions.filterDesk({ ...filterVals, productionOffice: event.target.value })}
+                                        onChange={event => actions.filterDesk({ ...filterVals, productionOffice: event.target.value })}
                                         value={filterVals.productionOffice}
                                         disabled={isUpdating}
                                     >   
@@ -54,20 +53,21 @@ export default class Filters extends Component {
                             <div className="form__row">
                                 <label>
                                     <div>Time Range:</div>
-                                    <DateRangePicker
-                                        className='date-picker-container'
-                                        hideKeyboardShortcutsPanel
-                                        initialVisibleMonth={() => moment().subtract(1, 'months')}
-                                        orientation={window.innerWidth > 640 ? 'horizontal' : 'vertical'}
-                                        displayFormat='DD/MM/YYYY'
-                                        disabled={isUpdating}
-                                        startDate={filterVals.startDate}
-                                        endDate={filterVals.endDate}
-                                        onDatesChange={({ startDate, endDate }) => endDate > startDate ? Actions.filterDesk({ ...filterVals, startDate: startDate.utc().startOf('day'), endDate: endDate.utc().endOf('day') }) : false }
-                                        focusedInput={this.state.focusedInput}
-                                        onFocusChange={focusedInput => this.setState({ focusedInput })}
-                                        isOutsideRange={(day) => day.isAfter(moment())}
-                                    />
+                                    <div className='date-picker-container'>
+                                        <DateRangePicker
+                                            hideKeyboardShortcutsPanel
+                                            initialVisibleMonth={() => moment().subtract(1, 'months')}
+                                            orientation={window.innerWidth > 640 ? 'horizontal' : 'vertical'}
+                                            displayFormat='DD/MM/YYYY'
+                                            disabled={isUpdating}
+                                            startDate={filterVals.startDate}
+                                            endDate={filterVals.endDate}
+                                            onDatesChange={({ startDate, endDate }) => endDate > startDate ? actions.filterDesk({ ...filterVals, startDate: startDate.utc().startOf('day'), endDate: endDate.utc().endOf('day') }) : false }
+                                            focusedInput={this.state.focusedInput}
+                                            onFocusChange={focusedInput => this.setState({ focusedInput })}
+                                            isOutsideRange={(day) => day.isAfter(moment())}
+                                        />
+                                    </div>
                                 </label>
                             </div>
                         </Col>
