@@ -1,5 +1,6 @@
 package util
 
+import com.github.tototoshi.slick.PostgresJodaSupport._
 import org.joda.time.DateTime
 import slick.jdbc.PostgresProfile.api._
 
