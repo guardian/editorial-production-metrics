@@ -9,12 +9,9 @@ import org.joda.time.DateTime
 import play.api.Logger
 import slick.jdbc.PostgresProfile.api._
 import util.AsyncHelpers._
+import util.PostgresOpsImport._
 
 class MetricsDB(val db: Database) {
-
-  private val dateTrunc: (Rep[String], Rep[DateTime]) => Rep[DateTime] =
-    SimpleFunction.binary[String, DateTime, DateTime]("date_trunc")
-
   def getComposerMetrics: Either[ProductionMetricsError, Seq[ComposerMetric]] = await(db.run(composerMetricsTable.result))
   def insertComposerMetric(metric: ComposerMetric): Either[ProductionMetricsError, Int] = await(db.run(composerMetricsTable += metric))
 
@@ -44,9 +41,12 @@ class MetricsDB(val db: Database) {
   }
 
   def getForks: Either[ProductionMetricsError, List[ForkResponse]] =
-    awaitWithTransformation(db.run(forksTable.map(f => (f.time, f.timeUntilFork)).result)){ dbResult =>
+    awaitWithTransformation(db.run(forksTable.map(f => (f.issueDate.toDayDateTrunc, f.secondsUntilFork)).result)){ dbResult =>
       dbResult.flatMap {
-        case (date, timeOpt) => timeOpt.fold(None: Option[ForkResponse])(time => Some(ForkResponse(date, time)))
+        case (dateOpt, timeOpt) => for {
+          date <- dateOpt
+          time <- timeOpt
+        } yield ForkResponse(date, time)
       }.toList
   }
   def insertFork(fork: Fork): Either[ProductionMetricsError, Int] = await(db.run(forksTable += fork))
@@ -54,7 +54,7 @@ class MetricsDB(val db: Database) {
   // This needs to return the data grouped by day. For this we've defined dateTrunc to tell Slick
   // to "import" the date_trunc function from postgresql
   def getGroupedByDayMetrics(implicit filters: MetricsFilters): Either[ProductionMetricsError, List[CountResponse]] =
-    awaitWithTransformation(db.run(metricsTable.filter(MetricsFilters.metricFilters).map(m => (m.id, dateTrunc("day", m.creationTime)))
+    awaitWithTransformation(db.run(metricsTable.filter(MetricsFilters.metricFilters).map(m => (m.id, m.creationTime.toDayDateTrunc))
       .groupBy(_._2).map {
         case (date, metric) => (date, metric.size)
       }.result)){ dbResult: Seq[(DateTime, Int)] =>

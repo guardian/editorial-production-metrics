@@ -114,7 +114,7 @@ case class Fork(
     wordCount: Int,
     revisionNumber: Int,
     issueDate: Option[DateTime] = None,
-    timeUntilFork: Option[Int] = None)
+    secondsUntilFork: Option[Int] = None)
 
 object Fork {
   def apply(forkData: ForkData): Fork =
@@ -128,5 +128,5 @@ object Fork {
       wordCount = tuple._4,
       revisionNumber = tuple._5,
       issueDate = tuple._6,
-      timeUntilFork = tuple._7)
+      secondsUntilFork = tuple._7)
 }

@@ -64,8 +64,8 @@ object Schema {
     def wordCount           = column[Int]("word_count")
     def revisionNumber      = column[Int]("revision_number")
     def issueDate           = column[Option[DateTime]]("issue_date")
-    def timeUntilFork       = column[Option[Int]]("time_until_fork")
-    def * = (id, composerId, time, wordCount, revisionNumber, issueDate, timeUntilFork) <> (Fork.customApply, Fork.unapply)
+    def secondsUntilFork       = column[Option[Int]]("seconds_until_fork")
+    def * = (id, composerId, time, wordCount, revisionNumber, issueDate, secondsUntilFork) <> (Fork.customApply, Fork.unapply)
   }
 }
 
