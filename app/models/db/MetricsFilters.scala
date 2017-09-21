@@ -86,4 +86,4 @@ object CountResponse {
   implicit val metricEncoder: Encoder[Metric] = deriveEncoder
 }
 
-case class ForkResponse(date: DateTime, time: Int)
+case class ForkResponse(issueDate: DateTime, secondsUntilFork: Int)
