@@ -65,7 +65,8 @@ class App(val wsClient: WSClient, val config: Config, val db: MetricsDB) extends
         for {
           bodyString <- extractRequestBody(req.body.asJson.map(_.toString))
           metricOpt <- extractFromString[MetricOpt](bodyString)
-          metric <- db.updateOrInsert(db.getPublishingMetricsWithComposerId(metricOpt.composerId), metricOpt)
+          metricFromDb <- db.getPublishingMetricsWithComposerId(metricOpt.composerId)
+          metric <- db.updateOrInsert(metricFromDb, metricOpt)
         } yield metric
       }
     }
@@ -81,10 +82,10 @@ class App(val wsClient: WSClient, val config: Config, val db: MetricsDB) extends
     }
   }
 
-  def getForks(inWorkflow: Boolean) = APIAuthAction { req =>
+  def getForks() = APIAuthAction { req =>
     APIResponse {
       for {
-        metric <- db.getGroupedByDayMetrics(MetricsFilters(req.queryString).copy(inWorkflow = Some(inWorkflow)))
+        metric <- db.getGroupedByDayMetrics(MetricsFilters(req.queryString))
       } yield metric
     }
   }

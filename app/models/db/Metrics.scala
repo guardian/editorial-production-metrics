@@ -112,17 +112,21 @@ case class Fork(
     composerId: String,
     time: DateTime,
     wordCount: Int,
-    revisionNumber: Int)
+    revisionNumber: Int,
+    issueDate: Option[DateTime] = None,
+    timeUntilFork: Option[Int] = None)
 
 object Fork {
   def apply(forkData: ForkData): Fork =
     new Fork(id = UUID.randomUUID.toString, forkData.composerId, forkData.time, forkData.wordCount, forkData.revisionNumber)
 
-  def customApply(tuple: (String, String, DateTime, Int, Int)): Fork =
+  def customApply(tuple: (String, String, DateTime, Int, Int, Option[DateTime], Option[Int])): Fork =
     Fork(
       id = tuple._1,
       composerId = tuple._2,
       time = tuple._3,
       wordCount = tuple._4,
-      revisionNumber = tuple._5)
+      revisionNumber = tuple._5,
+      issueDate = tuple._6,
+      timeUntilFork = tuple._7)
 }

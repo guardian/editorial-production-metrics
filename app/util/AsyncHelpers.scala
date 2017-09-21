@@ -1,5 +1,6 @@
 package util
 
+import models.{FailedFutureError, ProductionMetricsError}
 import play.api.Logger
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -13,6 +14,13 @@ object AsyncHelpers {
   }
 
   private val maxWait: FiniteDuration = 15.seconds
-  def await[A](result: Future[A]): A = Await.result(io(result), maxWait)
-
+  def awaitWithTransformation[A, B](result: Future[A])(transformation: A => B): Either[ProductionMetricsError, B] = {
+    val future: Future[Either[ProductionMetricsError, B]] = io(result)
+      .map { r => Right(transformation(r)) }
+      .recover { case _ => Left(FailedFutureError) }
+    Await.result(future, maxWait)
+  }
+  def await[A](result: Future[A]): Either[ProductionMetricsError, A] = awaitWithTransformation[A, A](result)(identity)
 }
+
+
