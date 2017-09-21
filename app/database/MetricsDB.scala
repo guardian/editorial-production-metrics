@@ -45,8 +45,8 @@ class MetricsDB(val db: Database) {
 
   def getForks: Either[ProductionMetricsError, List[ForkResponse]] =
     awaitWithTransformation(db.run(forksTable.map(f => (f.time, f.timeUntilFork)).result)){ dbResult =>
-      dbResult.map {
-        case (date, timeOpt) => ForkResponse(date, timeOpt.get)
+      dbResult.flatMap {
+        case (date, timeOpt) => timeOpt.fold(None: Option[ForkResponse])(time => Some(ForkResponse(date, time)))
       }.toList
   }
   def insertFork(fork: Fork): Either[ProductionMetricsError, Int] = await(db.run(forksTable += fork))
