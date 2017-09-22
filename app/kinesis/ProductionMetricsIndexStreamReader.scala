@@ -2,6 +2,7 @@ package lib.kinesis
 
 import java.util.UUID
 
+import cats.syntax.either._
 import com.amazonaws.auth.AWSCredentialsProviderChain
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorFactory
 import com.gu.editorialproductionmetricsmodels.models.EventType.CapiContent
@@ -9,7 +10,6 @@ import com.gu.editorialproductionmetricsmodels.models.{CapiData, KinesisEvent, M
 import config.Config
 import database.MetricsDB
 import io.circe.Json
-import io.circe.syntax._
 import lib.kinesis.EventProcessor.EventWithSize
 import lib.kinesis.ProductionMetricsStreamReader.ProductionMetricsEventProcessor
 import models.db.Metric
@@ -71,7 +71,7 @@ object ProductionMetricsStreamReader {
       (for {
         creationDate <- convertStringToDateTime(capiData.creationDate)
         firstPublicationDate <- convertStringToDateTime(capiData.firstPublicationDate)
-        existingMetric = db.getPublishingMetricsWithComposerId(Some(capiData.composerId))
+        existingMetric = db.getPublishingMetricsWithComposerId(Some(capiData.composerId)).toOption.flatten
         metric = MetricOpt(
           id = existingMetric.map(_.id).orElse(Some(UUID.randomUUID().toString)),
           originatingSystem = Some(capiData.originatingSystem),
