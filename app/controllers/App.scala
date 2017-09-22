@@ -84,9 +84,7 @@ class App(val wsClient: WSClient, val config: Config, val db: MetricsDB) extends
 
   def getForks() = APIAuthAction { _ =>
     APIResponse {
-      for {
-        forks <- db.getForks
-      } yield forks
+      db.getForks
     }
   }
 }

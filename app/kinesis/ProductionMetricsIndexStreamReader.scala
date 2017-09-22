@@ -17,6 +17,7 @@ import models.{ProductionMetricsError, UnexpectedExceptionError}
 import play.api.Logger
 import util.Parser
 import util.Utils.convertStringToDateTime
+import cats.syntax.either._
 
 import scala.concurrent.duration.{Duration, _}
 
@@ -71,7 +72,7 @@ object ProductionMetricsStreamReader {
       (for {
         creationDate <- convertStringToDateTime(capiData.creationDate)
         firstPublicationDate <- convertStringToDateTime(capiData.firstPublicationDate)
-        existingMetric = db.getPublishingMetricsWithComposerId(Some(capiData.composerId)).fold(_ => None, identity)
+        existingMetric = db.getPublishingMetricsWithComposerId(Some(capiData.composerId)).toOption.flatten
         metric = MetricOpt(
           id = existingMetric.map(_.id).orElse(Some(UUID.randomUUID().toString)),
           originatingSystem = Some(capiData.originatingSystem),
