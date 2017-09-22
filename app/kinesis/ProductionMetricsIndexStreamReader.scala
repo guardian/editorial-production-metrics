@@ -2,6 +2,7 @@ package lib.kinesis
 
 import java.util.UUID
 
+import cats.syntax.either._
 import com.amazonaws.auth.AWSCredentialsProviderChain
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorFactory
 import com.gu.editorialproductionmetricsmodels.models.EventType.CapiContent
@@ -9,7 +10,6 @@ import com.gu.editorialproductionmetricsmodels.models.{CapiData, KinesisEvent, M
 import config.Config
 import database.MetricsDB
 import io.circe.Json
-import io.circe.syntax._
 import lib.kinesis.EventProcessor.EventWithSize
 import lib.kinesis.ProductionMetricsStreamReader.ProductionMetricsEventProcessor
 import models.db.Metric
@@ -17,7 +17,6 @@ import models.{ProductionMetricsError, UnexpectedExceptionError}
 import play.api.Logger
 import util.Parser
 import util.Utils.convertStringToDateTime
-import cats.syntax.either._
 
 import scala.concurrent.duration.{Duration, _}
 

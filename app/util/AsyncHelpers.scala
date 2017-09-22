@@ -17,7 +17,7 @@ object AsyncHelpers {
   def awaitWithTransformation[A, B](result: Future[A])(transformation: A => B): Either[ProductionMetricsError, B] = {
     val future: Future[Either[ProductionMetricsError, B]] = io(result)
       .map { r => Right(transformation(r)) }
-      .recover { case err => Left(FailedFutureError(err)) }
+      .recover { case err => Left(FailedFutureError(err.getMessage)) }
     Await.result(future, maxWait)
   }
   def await[A](result: Future[A]): Either[ProductionMetricsError, A] = awaitWithTransformation[A, A](result)(identity)
