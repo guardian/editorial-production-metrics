@@ -1,4 +1,4 @@
-import { createYTotalsList, createPartialsList, formattedSeries, compareDates, fillMissingDates } from 'helpers/chartsHelpers';
+import { createYTotalsList, createPartialsList, formattedSeries, compareDates, compareIssueDates, fillMissingDates } from 'helpers/chartsHelpers';
 import moment from 'moment';
 
 const initialState = {
@@ -15,6 +15,11 @@ const initialState = {
             percent: []
         },
         isStacked: true
+    },
+    forkTime: {
+        data: {
+            absolute: []
+        }
     }
 };
 
@@ -57,7 +62,6 @@ const charts = (state = initialState, action) => {
     case 'GET_COMPOSER_VS_INCOPY_FAILED':
         return Object.assign({}, state, { composerVsInCopy: { ...state.composerVsInCopy, error }});
 
-    
     case 'TOGGLE_STACK_CHART':
         return Object.assign({}, state, { composerVsInCopy: { ...state.composerVsInCopy, isStacked }});
 
@@ -97,6 +101,34 @@ const charts = (state = initialState, action) => {
     case 'GET_IN_WORKFLOW_VS_NOT_IN_WORKFLOW_FAILED':
         return Object.assign({}, state, { inWorkflowVsNotInWorkflow: { ...state.inWorkflowVsNotInWorkflow, error }});
         
+    case 'UPDATE_FORK_TIME': {
+        const forkTimeData = chartData.data.sort(compareIssueDates);
+        const forkTimeSeries = [{ data: forkTimeData }];
+        const seriesWithLabels = forkTimeSeries.map(series => {
+            return {
+                data: series.data.map((dataPoint) => {
+                    const date = moment(dataPoint['issueDate']).utc();
+                    return {
+                        x: date.valueOf(),
+                        y: dataPoint.secondsUntilFork,
+                        label: `${(dataPoint.secondsUntilFork / 3600).toFixed(1)} hours`,
+                        size: 2.5
+                    };
+                })
+            };
+        });
+        return {
+            ...state,
+            forkTime: {
+                data: {
+                    absolute: seriesWithLabels
+                }
+            }
+        };
+    }
+    case 'GET_FORK_TIME_FAILED': 
+        return Object.assign({}, state, { forkTime: { ...state.forkTime, error }});
+
     default:
         return state;
     }

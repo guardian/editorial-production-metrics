@@ -18,6 +18,8 @@ const getWorkflowCount = (isInWorkflow, startDate, endDate, desk, productionOffi
 
 const getCommissioningDesks = () => pandaFetch('api/commissioningDesks', null);
 
+const getForkTime = (startDate, endDate, newspaperBook) => pandaFetch(`api/fork/${newspaperBook}`, buildQueryParams(startDate, endDate));
+
 const getComposerVsIncopy = (startDate, endDate, desk, productionOffice) =>
     axios.all([
         getOriginatingSystem('composer', startDate, endDate, desk, productionOffice),
@@ -41,5 +43,6 @@ const getInWorkflowVsNotInWorkflow = (startDate, endDate, desk, productionOffice
 export default {
     getComposerVsIncopy,
     getInWorkflowVsNotInWorkflow,
-    getCommissioningDesks
+    getCommissioningDesks,
+    getForkTime
 };

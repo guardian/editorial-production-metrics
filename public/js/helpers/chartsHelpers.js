@@ -39,6 +39,8 @@ const formattedSeries = (series, yTotalsList) => series.map((singleSeries) => { 
 // Sort by more recent date
 const compareDates = (a, b) => a['date'] < b['date'] ? -1 : 1;
 
+const compareIssueDates = (a, b) => a['issueDate'] < b['issueDate'] ? -1 : 1;
+
 // Fill in empty datapoints with the corresponding missing date and a value of 0 for the content produced on that day
 const fillMissingDates = (startDate, endDate, data) => {
     const now = startDate.utc().startOf('day').clone();
@@ -78,4 +80,4 @@ const downloadCSV = (data, chartType) => {
     saveAs(blob, `${chartType}_${dateRangeString}.csv`);
 };
 
-export { createPartialsList, formattedSeries, createYTotalsList, compareDates, fillMissingDates, downloadCSV };
+export { createPartialsList, formattedSeries, createYTotalsList, compareDates, compareIssueDates, fillMissingDates, downloadCSV };

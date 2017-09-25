@@ -189,7 +189,10 @@ export default {
                     stroke: 'transparent',
                     strokeWidth: 0
                 },
-                labels: centeredLabelStyles
+                labels: { 
+                    ...centeredLabelStyles,
+                    fill: '#333333'
+                }
             },
             ...baseProps
         },
