@@ -46,7 +46,7 @@ class MetricsDB(val db: Database) {
         .join(metricsTable).on(_._1 === _.composerId)
         .filter(MetricsFilters.forksFilters).result)){ dbResult =>
       dbResult.flatMap {
-        case ((_, dateOpt, timeOpt), _) => for {
+        case ((composerId, dateOpt, timeOpt), metric) => for {
           date <- dateOpt
           time <- timeOpt
         } yield ForkResponse(date, time)
