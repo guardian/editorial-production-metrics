@@ -47,8 +47,6 @@ object MetricsFilters {
     }
   }
 
-  private def getOptionFromQS(key: String, qs: Map[String, Seq[String]]): Option[String] = qs.get(key).flatMap(_.headOption)
-
   private def parseDate(dateString: String): Option[DateTime] = dateString match {
     case "" => None
     case _ =>
@@ -66,13 +64,19 @@ object MetricsFilters {
     case "" => None
   }
 
-  def metricFilters(implicit filters: MetricsFilters): DBMetric => Rep[Option[Boolean]] = { metric =>
+  private def getOptionFromQS(key: String, qs: Map[String, Seq[String]]): Option[String] = qs.get(key).flatMap(_.headOption)
+
+  def metricFilters(implicit filters: MetricsFilters): DBMetric => Rep[Option[Boolean]] = metric => checkMetricsFilters(metric)
+
+  def forksFilters[T](implicit filters: MetricsFilters): ((T, DBMetric)) => Rep[Option[Boolean]] = forkAndMetric => checkMetricsFilters(forkAndMetric._2)
+
+  private def checkMetricsFilters(metric: Schema.DBMetric)(implicit filters: MetricsFilters): Rep[Option[Boolean]] = {
     import MetricHelpers._
     filters.desk.fold(TrueOptCol)(d => metric.commissioningDesk.toLowerCase === d.toLowerCase) &&
-    filters.originatingSystem.fold(TrueOptCol)(os => metric.originatingSystem.? === os) &&
-    filters.dateRange.fold(TrueOptCol)(dr => metric.creationTime.? >= dr.from && metric.creationTime.? <= dr.to) &&
-    filters.productionOffice.fold(TrueOptCol)(po => metric.productionOffice === po) &&
-    filters.inWorkflow.fold(TrueOptCol)(inWf => metric.inWorkflow.? === inWf)
+      filters.originatingSystem.fold(TrueOptCol)(os => metric.originatingSystem.? === os) &&
+      filters.dateRange.fold(TrueOptCol)(dr => metric.creationTime.? >= dr.from && metric.creationTime.? <= dr.to) &&
+      filters.productionOffice.fold(TrueOptCol)(po => metric.productionOffice === po) &&
+      filters.inWorkflow.fold(TrueOptCol)(inWf => metric.inWorkflow.? === inWf)
   }
 }
 

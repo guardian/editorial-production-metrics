@@ -40,10 +40,13 @@ class MetricsDB(val db: Database) {
       upsertPublishingMetric(Metric(metricOpt))
   }
 
-  def getForks: Either[ProductionMetricsError, List[ForkResponse]] =
-    awaitWithTransformation(db.run(forksTable.map(f => (f.issueDate.toDayDateTrunc, f.secondsUntilFork)).result)){ dbResult =>
+  def getForks(implicit filters: MetricsFilters): Either[ProductionMetricsError, List[ForkResponse]] =
+    awaitWithTransformation(db.run(
+      forksTable.map(f => (f.composerId, f.issueDate.toDayDateTrunc, f.secondsUntilFork))
+        .join(metricsTable).on(_._1 === _.composerId)
+        .filter(MetricsFilters.forksFilters).result)){ dbResult =>
       dbResult.flatMap {
-        case (dateOpt, timeOpt) => for {
+        case ((composerId, dateOpt, timeOpt), metric) => for {
           date <- dateOpt
           time <- timeOpt
         } yield ForkResponse(date, time)
