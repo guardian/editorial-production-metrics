@@ -20,7 +20,8 @@ case class MetricsFilters(
   desk: Option[String] = None,
   originatingSystem: Option[OriginatingSystem] = None,
   productionOffice: Option[ProductionOffice] = None,
-  inWorkflow: Option[Boolean] = None
+  inWorkflow: Option[Boolean] = None,
+  newspaperBook: Option[String] = None
 )
 
 object MetricsFilters {
@@ -76,7 +77,8 @@ object MetricsFilters {
       filters.originatingSystem.fold(TrueOptCol)(os => metric.originatingSystem.? === os) &&
       filters.dateRange.fold(TrueOptCol)(dr => metric.creationTime.? >= dr.from && metric.creationTime.? <= dr.to) &&
       filters.productionOffice.fold(TrueOptCol)(po => metric.productionOffice === po) &&
-      filters.inWorkflow.fold(TrueOptCol)(inWf => metric.inWorkflow.? === inWf)
+      filters.inWorkflow.fold(TrueOptCol)(inWf => metric.inWorkflow.? === inWf) &&
+      filters.newspaperBook.fold(TrueOptCol)(nb => metric.composerId === nb)
   }
 }
 
