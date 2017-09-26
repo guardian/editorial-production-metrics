@@ -28,6 +28,8 @@ object Schema {
     def issueDate             = column[Option[DateTime]]("issue_date")
     def bookSectionName       = column[Option[String]]("book_section_name")
     def bookSectionCode       = column[Option[String]]("book_section_code")
+    def newspaperBook         = column[Option[String]]("newspaper_book")
+    def newspaperBookSection  = column[Option[String]]("newspaper_book_section")
     def * = (
       id,
       originatingSystem,
@@ -43,7 +45,9 @@ object Schema {
       productionOffice,
       issueDate,
       bookSectionName,
-      bookSectionCode) <> (Metric.customApply _, Metric.unapply _)
+      bookSectionCode,
+      newspaperBook,
+      newspaperBookSection) <> (Metric.customApply _, Metric.unapply _)
   }
 
   class DBFork(tag: Tag) extends Table[Fork](tag, "forks") {

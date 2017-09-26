@@ -29,7 +29,9 @@ case class Metric(
    productionOffice: Option[ProductionOffice] = None,
    issueDate: Option[DateTime] = None,
    bookSectionName: Option[String] = None,
-   bookSectionCode: Option[String] = None)
+   bookSectionCode: Option[String] = None,
+   newspaperBook: Option[String] = None,
+   newspaperBookSection: Option[String] = None)
 
 object Metric {
   def apply(metricOpt: MetricOpt): Metric = Metric(
@@ -64,6 +66,8 @@ object Metric {
       Option[ProductionOffice],
       Option[DateTime],
       Option[String],
+      Option[String],
+      Option[String],
       Option[String])
    ): Metric =
     Metric(
@@ -81,7 +85,9 @@ object Metric {
       productionOffice = tuple._12,
       issueDate = tuple._13,
       bookSectionName = tuple._14,
-      bookSectionCode = tuple._15)
+      bookSectionCode = tuple._15,
+      newspaperBook = tuple._16,
+      newspaperBookSection = tuple._17)
 
   implicit val timeEncoder = new Encoder[DateTime] {
     def apply(d: DateTime) = d.toString(datePattern).asJson
