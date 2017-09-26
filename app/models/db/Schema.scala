@@ -1,4 +1,4 @@
-    package models.db
+package models.db
 
 import com.github.tototoshi.slick.PostgresJodaSupport._
 import com.gu.editorialproductionmetricsmodels.models.{OriginatingSystem, ProductionOffice}
