@@ -78,7 +78,7 @@ object MetricsFilters {
       filters.dateRange.fold(TrueOptCol)(dr => metric.creationTime.? >= dr.from && metric.creationTime.? <= dr.to) &&
       filters.productionOffice.fold(TrueOptCol)(po => metric.productionOffice === po) &&
       filters.inWorkflow.fold(TrueOptCol)(inWf => metric.inWorkflow.? === inWf) &&
-      filters.newspaperBook.fold(TrueOptCol)(nb => metric.composerId === nb)
+      filters.newspaperBook.fold(TrueOptCol)(nb => metric.newspaperBook === nb)
   }
 }
 
