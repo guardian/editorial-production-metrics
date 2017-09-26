@@ -90,4 +90,13 @@ object CountResponse {
   implicit val metricEncoder: Encoder[Metric] = deriveEncoder
 }
 
-case class ForkResponse(issueDate: DateTime, secondsUntilFork: Int)
+case class ForkResponse(issueDate: DateTime, timeToPublication: Int)
+
+object ForkResponse {
+
+  def convertToForkResponse(pair : (Option[Int], Option[DateTime])) =
+    for {
+      timeToPublication <- pair._1
+      issueDate <- pair._2
+    } yield ForkResponse(issueDate, timeToPublication)
+}

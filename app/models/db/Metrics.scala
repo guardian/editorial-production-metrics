@@ -15,18 +15,22 @@ import util.Parser.jsonToMetric
 import util.Utils.processException
 
 case class Metric(
-    id: String,
-    originatingSystem: OriginatingSystem,
-    composerId: Option[String] = None,
-    storyBundleId: Option[String] = None,
-    commissioningDesk: Option[String] = None,
-    userDesk: Option[String] = None,
-    inWorkflow: Boolean = false,
-    inNewspaper: Boolean = false,
-    creationTime: DateTime,
-    firstPublicationTime: Option[DateTime],
-    roundTrip: Boolean = false,
-    productionOffice: Option[ProductionOffice] = None)
+   id: String,
+   originatingSystem: OriginatingSystem,
+   composerId: Option[String] = None,
+   storyBundleId: Option[String] = None,
+   commissioningDesk: Option[String] = None,
+   userDesk: Option[String] = None,
+   inWorkflow: Boolean = false,
+   inNewspaper: Boolean = false,
+   creationTime: DateTime,
+   firstPublicationTime: Option[DateTime],
+   roundTrip: Boolean = false,
+   productionOffice: Option[ProductionOffice] = None,
+   issueDate: Option[DateTime] = None,
+   bookSectionName: Option[String] = None,
+   bookSectionCode: Option[String] = None)
+
 object Metric {
   def apply(metricOpt: MetricOpt): Metric = Metric(
     id = UUID.randomUUID().toString,
@@ -45,7 +49,23 @@ object Metric {
 
   private val datePattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
 
-  def customApply(tuple: (String, OriginatingSystem, Option[String],Option[String],Option[String],Option[String],Boolean,Boolean,DateTime,Option[DateTime],Boolean, Option[ProductionOffice])): Metric =
+  def customApply(tuple: (
+      String,
+      OriginatingSystem,
+      Option[String],
+      Option[String],
+      Option[String],
+      Option[String],
+      Boolean,
+      Boolean,
+      DateTime,
+      Option[DateTime],
+      Boolean,
+      Option[ProductionOffice],
+      Option[DateTime],
+      Option[String],
+      Option[String])
+   ): Metric =
     Metric(
       id = tuple._1,
       originatingSystem = tuple._2,
@@ -58,7 +78,10 @@ object Metric {
       creationTime = tuple._9,
       firstPublicationTime = tuple._10,
       roundTrip = tuple._11,
-      productionOffice = tuple._12)
+      productionOffice = tuple._12,
+      issueDate = tuple._13,
+      bookSectionName = tuple._14,
+      bookSectionCode = tuple._15)
 
   implicit val timeEncoder = new Encoder[DateTime] {
     def apply(d: DateTime) = d.toString(datePattern).asJson
@@ -96,31 +119,23 @@ object Metric {
   }
 }
 
-case class InCopyMetric(
-    storyBundleId: String,
-    timeFinalised: Option[DateTime],
-    wordCount: Int,
-    revisionNumber: Int)
-
-case class ComposerMetric(
-    composerId: String,
-    firstPublished: Option[DateTime],
-    createdInWorkflow: Option[Boolean])
-
 case class Fork(
-    id: String,
-    composerId: String,
-    time: DateTime,
-    wordCount: Int,
-    revisionNumber: Int,
-    issueDate: Option[DateTime] = None,
-    secondsUntilFork: Option[Int] = None)
+   id: String,
+   composerId: String,
+   time: DateTime,
+   wordCount: Int,
+   revisionNumber: Int,
+   issueDate: Option[DateTime] = None,
+   timeToPublication: Option[Int] = None,
+   octopusStatus: Option[String] = None,
+   forkApplication: Option[String] = None,
+   workflowStatus: Option[String] = None)
 
 object Fork {
   def apply(forkData: ForkData): Fork =
     new Fork(id = UUID.randomUUID.toString, forkData.composerId, forkData.time, forkData.wordCount, forkData.revisionNumber)
 
-  def customApply(tuple: (String, String, DateTime, Int, Int, Option[DateTime], Option[Int])): Fork =
+  def customApply(tuple: (String, String, DateTime, Int, Int, Option[DateTime], Option[Int], Option[String], Option[String], Option[String])): Fork =
     Fork(
       id = tuple._1,
       composerId = tuple._2,
@@ -128,5 +143,8 @@ object Fork {
       wordCount = tuple._4,
       revisionNumber = tuple._5,
       issueDate = tuple._6,
-      secondsUntilFork = tuple._7)
+      timeToPublication = tuple._7,
+      octopusStatus = tuple._8,
+      forkApplication = tuple._9,
+      workflowStatus = tuple._10)
 }
