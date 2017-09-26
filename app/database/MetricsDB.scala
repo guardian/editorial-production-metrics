@@ -12,14 +12,7 @@ import util.AsyncHelpers._
 import util.PostgresOpsImport._
 
 class MetricsDB(val db: Database) {
-  def getComposerMetrics: Either[ProductionMetricsError, Seq[ComposerMetric]] = await(db.run(composerMetricsTable.result))
-  def insertComposerMetric(metric: ComposerMetric): Either[ProductionMetricsError, Int] = await(db.run(composerMetricsTable += metric))
 
-  def getInCopyMetrics: Either[ProductionMetricsError, Seq[InCopyMetric]] = await(db.run(inCopyMetricsTable.result))
-  def insertInCopyMetric(metric: InCopyMetric): Either[ProductionMetricsError, Int] = await(db.run(inCopyMetricsTable += metric))
-
-  def getPublishingMetrics: Either[ProductionMetricsError, Seq[Metric]] = await(db.run(metricsTable.result))
-  def insertPublishingMetric(metric: Metric): Either[ProductionMetricsError, Int] = await(db.run(metricsTable += metric))
   def upsertPublishingMetric(metric: Metric): Either[ProductionMetricsError, Metric] = {
     val result: Either[ProductionMetricsError, Int] = await(db.run(metricsTable.insertOrUpdate(metric)))
     if (result.isLeft) Left(UnexpectedDbExceptionError) else Right(metric)
@@ -42,16 +35,13 @@ class MetricsDB(val db: Database) {
 
   def getForks(implicit filters: MetricsFilters): Either[ProductionMetricsError, List[ForkResponse]] =
     awaitWithTransformation(db.run(
-      forksTable.map(f => (f.composerId, f.issueDate.toDayDateTrunc, f.secondsUntilFork))
+      forksTable.map(f => (f.composerId, f.timeToPublication))
         .join(metricsTable).on(_._1 === _.composerId)
-        .filter(MetricsFilters.forksFilters).result)){ dbResult =>
-      dbResult.flatMap {
-        case ((composerId, dateOpt, timeOpt), metric) => for {
-          date <- dateOpt
-          time <- timeOpt
-        } yield ForkResponse(date, time)
-      }.toList
-  }
+        .filter(MetricsFilters.forksFilters)
+        .map{case ((composerId, timeToPublication), metric) => (timeToPublication, metric.issueDate.toDayDateTrunc)}
+        .result)
+      )(_.flatMap(ForkResponse.convertToForkResponse).toList)
+
   def insertFork(fork: Fork): Either[ProductionMetricsError, Int] = await(db.run(forksTable += fork))
 
   // This needs to return the data grouped by day. For this we've defined dateTrunc to tell Slick

@@ -1,4 +1,4 @@
-package models.db
+    package models.db
 
 import com.github.tototoshi.slick.PostgresJodaSupport._
 import com.gu.editorialproductionmetricsmodels.models.{OriginatingSystem, ProductionOffice}
@@ -9,8 +9,6 @@ import slick.lifted.{TableQuery, Tag}
 object Schema {
 
   val metricsTable: TableQuery[DBMetric] = TableQuery[DBMetric]
-  val inCopyMetricsTable: TableQuery[DBInCopyMetric] = TableQuery[DBInCopyMetric]
-  val composerMetricsTable: TableQuery[DBComposerMetric] = TableQuery[DBComposerMetric]
   val forksTable: TableQuery[DBFork] = TableQuery[DBFork]
 
   class DBMetric(tag: Tag) extends Table[Metric](tag, "metrics") {
@@ -27,6 +25,9 @@ object Schema {
     def firstPublicationTime  = column[Option[DateTime]]("publication_time")
     def roundTrip             = column[Boolean]("round_trip")
     def productionOffice      = column[Option[ProductionOffice]]("production_office")
+    def issueDate             = column[Option[DateTime]]("issue_date")
+    def bookSectionName       = column[Option[String]]("book_section_name")
+    def bookSectionCode       = column[Option[String]]("book_section_code")
     def * = (
       id,
       originatingSystem,
@@ -39,22 +40,10 @@ object Schema {
       creationTime,
       firstPublicationTime,
       roundTrip,
-      productionOffice) <> (Metric.customApply _, Metric.unapply _)
-  }
-
-  class DBInCopyMetric(tag: Tag) extends Table[InCopyMetric](tag, "incopy_metrics") {
-    def storyBundleId       = column[String]("story_bundle_id", O.PrimaryKey)
-    def timeFinalised       = column[Option[DateTime]]("time_finalised")
-    def wordCount           = column[Int]("word_count")
-    def revisionNumber      = column[Int]("revision_number")
-    def * = (storyBundleId, timeFinalised, wordCount, revisionNumber) <> (InCopyMetric.tupled, InCopyMetric.unapply)
-  }
-
-  class DBComposerMetric(tag: Tag) extends Table[ComposerMetric](tag, "composer_metrics") {
-    def composerId          = column[String]("composer_id", O.PrimaryKey)
-    def firstPublished      = column[Option[DateTime]]("first_published")
-    def createdInWorkflow   = column[Option[Boolean]]("created_in_workflow")
-    def * = (composerId, firstPublished, createdInWorkflow) <> (ComposerMetric.tupled, ComposerMetric.unapply)
+      productionOffice,
+      issueDate,
+      bookSectionName,
+      bookSectionCode) <> (Metric.customApply _, Metric.unapply _)
   }
 
   class DBFork(tag: Tag) extends Table[Fork](tag, "forks") {
@@ -64,8 +53,21 @@ object Schema {
     def wordCount           = column[Int]("word_count")
     def revisionNumber      = column[Int]("revision_number")
     def issueDate           = column[Option[DateTime]]("issue_date")
-    def secondsUntilFork       = column[Option[Int]]("seconds_until_fork")
-    def * = (id, composerId, time, wordCount, revisionNumber, issueDate, secondsUntilFork) <> (Fork.customApply, Fork.unapply)
+    def timeToPublication   = column[Option[Int]]("time_to_publication")
+    def octopusStatus       = column[Option[String]]("octopus_status")
+    def forkApplication     = column[Option[String]]("fork_application")
+    def workflowStatus      = column[Option[String]]("workflow_status")
+    def * = (
+      id,
+      composerId,
+      time,
+      wordCount,
+      revisionNumber,
+      issueDate,
+      timeToPublication,
+      octopusStatus,
+      forkApplication,
+      workflowStatus) <> (Fork.customApply, Fork.unapply)
   }
 }
 
