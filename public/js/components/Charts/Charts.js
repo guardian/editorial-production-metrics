@@ -3,7 +3,7 @@ import { Themes } from 'formidable-charts';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import AreaChartWrap from './AreaChartWrap';
 
-const Charts = ({ charts, isUpdating }) => {
+const Charts = ({ charts, isUpdating, toggleStackChart }) => {
 
     const renderToolOfOriginTitle = () => {
         return(
@@ -26,6 +26,7 @@ const Charts = ({ charts, isUpdating }) => {
             <Row around='xs'>
                 <Col xs={12} md={6}>
                     <AreaChartWrap
+                        toggleStackChart={toggleStackChart}
                         chartType={'ComposerVsIncopy'}
                         titleHeader={renderToolOfOriginTitle()}
                         scale='time'

@@ -1,20 +1,22 @@
 import axios from 'axios';
-import moment from 'moment';
+import { pandaFetch } from './pandaFetch';
 
-export const httpClient = axios.create({
-    timeout: 5000,
-    withCredentials: true
+const buildQueryParams = (startDate, endDate, desk, productionOffice) => ({
+    params: {
+        startDate: startDate.format(),
+        endDate: endDate.format(),
+        desk: desk !== 'tracking/commissioningdesk/all' && desk || null,
+        productionOffice: productionOffice !== 'all' && productionOffice || null
+    }
 });
 
-const getOriginatingSystem = (system, startDate, endDate, desk, productionOffice) =>
-    httpClient.get(`api/originatingSystem/${system}`, {
-        params: {
-            startDate: startDate.format(),
-            endDate: endDate.format(),
-            desk: desk !== 'tracking/commissioningdesk/all' && desk || null,
-            productionOffice: productionOffice !== 'all' && productionOffice || null
-        }
-    });
+const getOriginatingSystem = (system, startDate, endDate, desk, productionOffice) => 
+    pandaFetch(`api/originatingSystem/${system}`, buildQueryParams(startDate, endDate, desk, productionOffice));
+
+const getWorkflowCount = (isInWorkflow, startDate, endDate, desk, productionOffice) =>
+    pandaFetch(`api/inWorkflow/${isInWorkflow}`, buildQueryParams(startDate, endDate, desk, productionOffice));
+
+const getCommissioningDesks = () => pandaFetch('api/commissioningDesks', null);
 
 const getComposerVsIncopy = (startDate, endDate, desk, productionOffice) =>
     axios.all([
@@ -26,16 +28,6 @@ const getComposerVsIncopy = (startDate, endDate, desk, productionOffice) =>
         })
     );
 
-const getWorkflowCount = (isInWorkflow, startDate, endDate, desk, productionOffice) =>
-    httpClient.get(`api/inWorkflow/${isInWorkflow}`, {
-        params: {
-            startDate: startDate.format(),
-            endDate: endDate.format(),
-            desk: desk !== 'tracking/commissioningdesk/all' && desk || null,
-            productionOffice: productionOffice !== 'all' && productionOffice || null
-        }
-    });
-
 const getInWorkflowVsNotInWorkflow = (startDate, endDate, desk, productionOffice) =>
     axios.all([
         getWorkflowCount('true', startDate, endDate, desk, productionOffice),
@@ -45,8 +37,6 @@ const getInWorkflowVsNotInWorkflow = (startDate, endDate, desk, productionOffice
             return { inWorkflowResponse, notInWorkflowResponse };
         })
     );
-
-const getCommissioningDesks = () => httpClient.get('api/commissioningDesks');
 
 export default {
     getComposerVsIncopy,

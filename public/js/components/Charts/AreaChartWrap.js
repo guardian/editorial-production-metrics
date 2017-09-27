@@ -1,12 +1,11 @@
 import React from 'react';
-import { Actions } from 'jumpstate';
 import { AreaChart , Themes } from 'formidable-charts';
 import { downloadCSV } from 'helpers/chartsHelpers'
 import ChartTheme from '../ChartTheme/theme';
 
 const customisedTheme = Object.assign({}, Themes.simple, ChartTheme);
 
-const AreaChartWrap = ({ data, xLabel, yLabel, yLabelStacked, isUpdating, scale, isStacked, error, hasToggle, height, titleHeader, chartType }) => {
+const AreaChartWrap = ({ data, xLabel, yLabel, yLabelStacked, isUpdating, scale, isStacked, error, hasToggle, height, titleHeader, chartType, toggleStackChart }) => {
     function getClassName() {
         if (error) {
             return 'chart-wrap chart-wrap__error';
@@ -21,7 +20,7 @@ const AreaChartWrap = ({ data, xLabel, yLabel, yLabelStacked, isUpdating, scale,
                 <input
                     type="checkbox"
                     defaultChecked={isStacked}
-                    onChange={event => Actions.toggleStackChart(event.target.checked)}
+                    onChange={event => toggleStackChart(event.target.checked)}
                 />
                 Show percent ratio
             </span>

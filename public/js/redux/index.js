@@ -1,19 +1,19 @@
 import { combineReducers } from 'redux';
-import { routerReducer } from 'react-router-redux';
+import { routerReducer as routing } from 'react-router-redux';
 import configureStore from './configureStore';
-import chartsRedux from './chartsRedux';
-import updateFilterRedux from './updateFilterRedux';
-import updateProgressRedux from './updateProgressRedux';
-import commissioningDesksRedux from './commissioningDesksRedux';
+import charts from 'reducers/chartsReducer';
+import filterVals from 'reducers/updateFilterReducer';
+import isUpdating from 'reducers/updateProgressReducer';
+import commissioningDesks from 'reducers/commissioningDesksReducer';
 
 export default () => {
     /* ------------- Assemble The Reducers ------------- */
     const rootReducer = combineReducers({
-        filterVals: updateFilterRedux,
-        charts: chartsRedux,
-        isUpdating: updateProgressRedux,
-        commissioningDesks: commissioningDesksRedux,
-        routing: routerReducer 
+        filterVals,
+        charts,
+        isUpdating,
+        commissioningDesks,
+        routing 
     });
 
     return configureStore(rootReducer);
