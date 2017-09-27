@@ -38,7 +38,7 @@ class MetricsDB(val db: Database) {
       forksTable.map(f => (f.composerId, f.timeToPublication))
         .join(metricsTable).on(_._1 === _.composerId)
         .filter(MetricsFilters.forksFilters)
-        .map{case ((composerId, timeToPublication), metric) => (timeToPublication, metric.issueDate.toDayDateTrunc)}
+        .map { case ((composerId, timeToPublication), metric) => (timeToPublication, metric.issueDate.toDayDateTrunc) }
         .result)
       )(_.flatMap(ForkResponse.convertToForkResponse).toList)
 

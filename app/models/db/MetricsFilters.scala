@@ -25,7 +25,7 @@ case class MetricsFilters(
 )
 
 object MetricsFilters {
-  private val TrueOptCol : Rep[Option[Boolean]] = LiteralColumn(Some(true))
+  private val TrueOptCol: Rep[Option[Boolean]] = LiteralColumn(Some(true))
 
   def apply(queryString: Map[String, Seq[String]]): MetricsFilters =
     MetricsFilters(
@@ -74,11 +74,11 @@ object MetricsFilters {
   private def checkMetricsFilters(metric: Schema.DBMetric)(implicit filters: MetricsFilters): Rep[Option[Boolean]] = {
     import MetricHelpers._
     filters.desk.fold(TrueOptCol)(d => metric.commissioningDesk.toLowerCase === d.toLowerCase) &&
-      filters.originatingSystem.fold(TrueOptCol)(os => metric.originatingSystem.? === os) &&
-      filters.dateRange.fold(TrueOptCol)(dr => metric.creationTime.? >= dr.from && metric.creationTime.? <= dr.to) &&
-      filters.productionOffice.fold(TrueOptCol)(po => metric.productionOffice === po) &&
-      filters.inWorkflow.fold(TrueOptCol)(inWf => metric.inWorkflow.? === inWf) &&
-      filters.newspaperBook.fold(TrueOptCol)(nb => metric.newspaperBook === nb)
+    filters.originatingSystem.fold(TrueOptCol)(os => metric.originatingSystem.? === os) &&
+    filters.dateRange.fold(TrueOptCol)(dr => metric.creationTime.? >= dr.from && metric.creationTime.? <= dr.to) &&
+    filters.productionOffice.fold(TrueOptCol)(po => metric.productionOffice === po) &&
+    filters.inWorkflow.fold(TrueOptCol)(inWf => metric.inWorkflow.? === inWf) &&
+    filters.newspaperBook.fold(TrueOptCol)(nb => metric.newspaperBook.toLowerCase === nb.toLowerCase)
   }
 }
 
