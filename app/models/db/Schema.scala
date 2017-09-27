@@ -56,7 +56,6 @@ object Schema {
     def time                = column[DateTime]("time")
     def wordCount           = column[Int]("word_count")
     def revisionNumber      = column[Int]("revision_number")
-    def issueDate           = column[Option[DateTime]]("issue_date")
     def timeToPublication   = column[Option[Int]]("time_to_publication")
     def octopusStatus       = column[Option[String]]("octopus_status")
     def forkApplication     = column[Option[String]]("fork_application")
@@ -67,7 +66,6 @@ object Schema {
       time,
       wordCount,
       revisionNumber,
-      issueDate,
       timeToPublication,
       octopusStatus,
       forkApplication,

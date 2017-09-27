@@ -131,7 +131,6 @@ case class Fork(
    time: DateTime,
    wordCount: Int,
    revisionNumber: Int,
-   issueDate: Option[DateTime] = None,
    timeToPublication: Option[Int] = None,
    octopusStatus: Option[String] = None,
    forkApplication: Option[String] = None,
@@ -139,18 +138,26 @@ case class Fork(
 
 object Fork {
   def apply(forkData: ForkData): Fork =
-    new Fork(id = UUID.randomUUID.toString, forkData.composerId, forkData.time, forkData.wordCount, forkData.revisionNumber)
+    new Fork(
+      id = UUID.randomUUID.toString,
+      forkData.digitalDetails.composerId,
+      forkData.time,
+      forkData.printDetails.wordCount,
+      forkData.digitalDetails.revisionNumber,
+      Some(forkData.timeToPublication),
+      Some(forkData.printDetails.octopusStatus),
+      Some(forkData.printDetails.forkApplication),
+      Some(forkData.digitalDetails.workflowStatus))
 
-  def customApply(tuple: (String, String, DateTime, Int, Int, Option[DateTime], Option[Int], Option[String], Option[String], Option[String])): Fork =
+  def customApply(tuple: (String, String, DateTime, Int, Int, Option[Int], Option[String], Option[String], Option[String])): Fork =
     Fork(
       id = tuple._1,
       composerId = tuple._2,
       time = tuple._3,
       wordCount = tuple._4,
       revisionNumber = tuple._5,
-      issueDate = tuple._6,
-      timeToPublication = tuple._7,
-      octopusStatus = tuple._8,
-      forkApplication = tuple._9,
-      workflowStatus = tuple._10)
+      timeToPublication = tuple._6,
+      octopusStatus = tuple._7,
+      forkApplication = tuple._8,
+      workflowStatus = tuple._9)
 }
