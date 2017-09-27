@@ -1,5 +1,5 @@
 import { replace } from 'react-router-redux';
-import actions from 'actions';
+import { filterDesk } from 'actions';
 import _isEqual from 'lodash/isEqual';
 import moment from 'moment';
 import { objectToParamString, paramStringToObject } from 'helpers/routingHelpers';
@@ -34,7 +34,7 @@ export const updateStateFromUrlChangeMiddleware = ({ dispatch, getState }) => (n
         filterObj['endDate'] = moment(filterObj['endDate']).utc().endOf('day');
 
         if (!_isEqual(filterObj, newState.filterVals)) {
-            dispatch(actions.filterDesk(filterObj));
+            dispatch(filterDesk(filterObj));
         }
     }
 };

@@ -1,6 +1,6 @@
 const initialState = false;
 
-const updateProgressReducer = (state = initialState, action) => {
+const isUpdating = (state = initialState, action) => {
     switch (action.type) {
     case 'TOGGLE_IS_UPDATING_CHARTS':
         return action.isUpdating;
@@ -9,4 +9,4 @@ const updateProgressReducer = (state = initialState, action) => {
     }
 };
 
-export default updateProgressReducer;
+export default isUpdating;

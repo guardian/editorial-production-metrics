@@ -11,7 +11,7 @@ export default class Filters extends Component {
     state = { focusedInput: null };
 
     render() {
-        const { filterVals, isUpdating, desks, actions } = this.props;
+        const { filterVals, isUpdating, desks, filterDesk } = this.props;
         return (
             <form className="form">
                 <Grid fluid>
@@ -22,7 +22,7 @@ export default class Filters extends Component {
                                     <div>Filter by Desk:</div>
                                     <select
                                         className="form__field form__field--select"
-                                        onChange={event => actions.filterDesk({ ...filterVals, desk: event.target.value })}
+                                        onChange={event => filterDesk({ ...filterVals, desk: event.target.value })}
                                         value={filterVals.desk}
                                         disabled={isUpdating}
                                     >
@@ -37,7 +37,7 @@ export default class Filters extends Component {
                                     <div>Filter by Office:</div>
                                     <select
                                         className="form__field form__field--select"
-                                        onChange={event => actions.filterDesk({ ...filterVals, productionOffice: event.target.value })}
+                                        onChange={event => filterDesk({ ...filterVals, productionOffice: event.target.value })}
                                         value={filterVals.productionOffice}
                                         disabled={isUpdating}
                                     >   
@@ -62,7 +62,7 @@ export default class Filters extends Component {
                                             disabled={isUpdating}
                                             startDate={filterVals.startDate}
                                             endDate={filterVals.endDate}
-                                            onDatesChange={({ startDate, endDate }) => endDate > startDate ? actions.filterDesk({ ...filterVals, startDate: startDate.utc().startOf('day'), endDate: endDate.utc().endOf('day') }) : false }
+                                            onDatesChange={({ startDate, endDate }) => endDate > startDate ? filterDesk({ ...filterVals, startDate: startDate.utc().startOf('day'), endDate: endDate.utc().endOf('day') }) : false }
                                             focusedInput={this.state.focusedInput}
                                             onFocusChange={focusedInput => this.setState({ focusedInput })}
                                             isOutsideRange={(day) => day.isAfter(moment())}

@@ -18,7 +18,7 @@ const initialState = {
     }
 };
 
-const chartsReducer = (state = initialState, action) => {
+const charts = (state = initialState, action) => {
     const { type, chartData, startDate, endDate, error, isStacked } = action;
     switch (type) {
     case 'UPDATE_COMPOSER_VS_INCOPY': {
@@ -55,21 +55,12 @@ const chartsReducer = (state = initialState, action) => {
         };
     }
     case 'GET_COMPOSER_VS_INCOPY_FAILED':
-        return {
-            ...state,
-            composerVsInCopy: {
-                ...state.composerVsInCopy,
-                error
-            }
-        };
+        return Object.assign({}, state, { composerVsInCopy: { ...state.composerVsInCopy, error }});
+
+    
     case 'TOGGLE_STACK_CHART':
-        return {
-            ...state,
-            composerVsInCopy: {
-                ...state.composerVsInCopy,
-                isStacked
-            }
-        };
+        return Object.assign({}, state, { composerVsInCopy: { ...state.composerVsInCopy, isStacked }});
+
     case 'UPDATE_IN_WORKFLOW_VS_NOT_IN_WORKFLOW': {
         const { inWorkflowResponse, notInWorkflowResponse } = chartData;
         const range = endDate.diff(startDate, 'days');
@@ -104,16 +95,11 @@ const chartsReducer = (state = initialState, action) => {
         };  
     }
     case 'GET_IN_WORKFLOW_VS_NOT_IN_WORKFLOW_FAILED':
-        return {
-            ...state,
-            inWorkflowVsNotInWorkflow: {
-                ...state.inWorkflowVsNotInWorkflow,
-                error: error.message
-            }
-        };
+        return Object.assign({}, state, { inWorkflowVsNotInWorkflow: { ...state.inWorkflowVsNotInWorkflow, error }});
+        
     default:
         return state;
     }
 };
 
-export default chartsReducer;
+export default charts;

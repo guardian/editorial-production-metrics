@@ -22,11 +22,11 @@ class App extends Component {
                     filterVals={filterVals}
                     isUpdating={isUpdating}
                     desks={commissioningDesks.desksList}
-                    actions={actions}
+                    filterDesk={actions.filterDesk}
                 />
                 <Charts
                     charts={charts}
-                    actions={actions}
+                    toggleStackChart={actions.toggleStackChart}
                     isUpdating={isUpdating}
                 />
             </Page>

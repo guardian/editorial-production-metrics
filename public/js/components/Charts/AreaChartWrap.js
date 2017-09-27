@@ -5,7 +5,7 @@ import ChartTheme from '../ChartTheme/theme';
 
 const customisedTheme = Object.assign({}, Themes.simple, ChartTheme);
 
-const AreaChartWrap = ({ data, xLabel, yLabel, yLabelStacked, isUpdating, scale, isStacked, error, hasToggle, height, titleHeader, chartType, actions }) => {
+const AreaChartWrap = ({ data, xLabel, yLabel, yLabelStacked, isUpdating, scale, isStacked, error, hasToggle, height, titleHeader, chartType, toggleStackChart }) => {
     function getClassName() {
         if (error) {
             return 'chart-wrap chart-wrap__error';
@@ -20,7 +20,7 @@ const AreaChartWrap = ({ data, xLabel, yLabel, yLabelStacked, isUpdating, scale,
                 <input
                     type="checkbox"
                     defaultChecked={isStacked}
-                    onChange={event => actions.toggleStackChart(event.target.checked)}
+                    onChange={event => toggleStackChart(event.target.checked)}
                 />
                 Show percent ratio
             </span>

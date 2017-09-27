@@ -2,7 +2,7 @@ const initialState = {
     desksList: ['tracking/commissioningdesk/all']
 };
 
-const commissioningDesksReducer = (state = initialState, action) => {
+const commissioningDesks = (state = initialState, action) => {
     const { desksList, error, type } = action;
     switch (type) {
     case 'UPDATE_COMMISSIONING_DESKS':
@@ -20,4 +20,4 @@ const commissioningDesksReducer = (state = initialState, action) => {
     }
 };
 
-export default commissioningDesksReducer;
+export default commissioningDesks;

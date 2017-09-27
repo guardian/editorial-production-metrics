@@ -8,7 +8,7 @@ const initialState = {
 };
 
 
-const updateFilterReducer = (state = initialState, action) => {
+const filterVals = (state = initialState, action) => {
     switch (action.type) {
     case 'UPDATE_FILTER':
         return action.filterObj;
@@ -17,4 +17,4 @@ const updateFilterReducer = (state = initialState, action) => {
     }
 };
 
-export default updateFilterReducer;
+export default filterVals;
