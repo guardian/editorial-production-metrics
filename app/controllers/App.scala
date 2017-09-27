@@ -72,7 +72,7 @@ class App(val wsClient: WSClient, val config: Config, val db: MetricsDB) extends
     }
   }
 
-  def insertFork() = Action { req =>
+  def insertFork() = APIHMACAuthAction { req =>
     APIResponse {
       for {
         bodyString <- extractRequestBody(req.body.asJson.map(_.toString))
