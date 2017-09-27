@@ -35,6 +35,8 @@ Alternatively to compile client side assets on change run `yarn build-dev` or `n
 
 ### Adding a new Metric
 
+For a practical example please refer to [this PR](https://github.com/guardian/editorial-production-metrics/pull/87/commits/8fed3025dd56612509ff9d673394af5cf64c11c6).
+
 The frontend is built in React. The app's state is managed with [redux](https://github.com/reactjs/redux). The library currently used for rendering the charts is [formidable-charts](https://github.com/FormidableLabs/formidable-charts), a collection of react components. Further documentation for the charts can be found [here](https://formidable.com/open-source/victory/docs/victory-chart/).
 
 #### Fetching the data
