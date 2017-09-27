@@ -77,8 +77,11 @@ class App(val wsClient: WSClient, val config: Config, val db: MetricsDB) extends
       for {
         bodyString <- extractRequestBody(req.body.asJson.map(_.toString))
         forkData <- extractFromString[ForkData](bodyString)
-        result <- db.insertFork(Fork(forkData))
-      } yield result
+        metricOpt = MetricOpt(forkData)
+        metricFromDB <- db.getPublishingMetricsWithComposerId(Some(forkData.digitalDetails.composerId))
+        metric <- db.updateOrInsert(metricFromDB, metricOpt)
+        fork <- db.insertFork(Fork(forkData))
+      } yield forkData
     }
   }
 

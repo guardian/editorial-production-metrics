@@ -16,7 +16,7 @@ import util.Utils.processException
 
 case class Metric(
    id: String,
-   originatingSystem: OriginatingSystem,
+   originatingSystem: OriginatingSystem = OriginatingSystem.Composer,
    composerId: Option[String] = None,
    storyBundleId: Option[String] = None,
    commissioningDesk: Option[String] = None,
@@ -24,7 +24,7 @@ case class Metric(
    inWorkflow: Boolean = false,
    inNewspaper: Boolean = false,
    creationTime: DateTime,
-   firstPublicationTime: Option[DateTime],
+   firstPublicationTime: Option[DateTime] = None,
    roundTrip: Boolean = false,
    productionOffice: Option[ProductionOffice] = None,
    issueDate: Option[DateTime] = None,
