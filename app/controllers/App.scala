@@ -85,9 +85,9 @@ class App(val wsClient: WSClient, val config: Config, val db: MetricsDB) extends
     }
   }
 
-  def getForks() = APIAuthAction { req =>
+  def getForks(newspaperBook: String) = APIAuthAction { req =>
     APIResponse {
-      db.getForks(MetricsFilters(req.queryString))
+      db.getForks(MetricsFilters(req.queryString).copy(newspaperBook = Some(newspaperBook)))
     }
   }
 }
