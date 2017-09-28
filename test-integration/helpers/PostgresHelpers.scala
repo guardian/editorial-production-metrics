@@ -18,6 +18,17 @@ trait PostgresHelpers extends Suite with BeforeAndAfterAll with BeforeAndAfterEa
 
   lazy val databaseApi = injector.instanceOf[DBApi]
 
+  private[this] val driver = "slick.jdbc.PostgresProfile"
+
+  private[this] val setupJdbcUrl = "jdbc:postgresql://localhost:5903/metricsdb"
+
+  private[this] val testDbName = "metricsdb" //Random.alphanumeric.take(10).mkString.replaceAll("[0-9]", "").toLowerCase
+  //  private[this] val testJdbcUrl = setupJdbcUrl.take(setupJdbcUrl.lastIndexOf("/") + 1) + testDbName // replace setupDbName with random one
+  private[this] val testDbUser = "postgres"
+  private[this] val testDbPassword = "postgres"
+  // This db is used for initial connection only (for setup purposes)
+  private[this] val dbSetup = Database.forURL(setupJdbcUrl, driver = driver, user = testDbUser, password = testDbPassword)
+
   val database = Databases(
     driver = "org.postgresql.Driver",
     url = "jdbc:postgresql://localhost:5903/metricsdb",
@@ -28,24 +39,10 @@ trait PostgresHelpers extends Suite with BeforeAndAfterAll with BeforeAndAfterEa
     )
   )
   val d = databaseApi.database("metricsdb")
-
-  private[this] val driver = "slick.jdbc.PostgresProfile"
-
-  private[this] val setupJdbcUrl = "jdbc:postgresql://localhost:5903/metricsdb"
-
-  private[this] val testDbName = "metricsdb"//Random.alphanumeric.take(10).mkString.replaceAll("[0-9]", "").toLowerCase
-  //  private[this] val testJdbcUrl = setupJdbcUrl.take(setupJdbcUrl.lastIndexOf("/") + 1) + testDbName // replace setupDbName with random one
-  private[this] val testDbUser = "postgres"
-  private[this] val testDbPassword = "postgres"
-  // This db is used for initial connection only (for setup purposes)
-  private[this] val dbSetup = Database.forURL(setupJdbcUrl, driver = driver, user = testDbUser, password = testDbPassword)
-
   implicit val db: Database = Database.forURL(setupJdbcUrl, driver = driver, user = testDbUser, password = testDbPassword)
 
-
-
   override def beforeAll() {
-//    println("config", config)
+    println("config", config)
     await(dbSetup.run(DBIO.seq(
       sqlu"DROP DATABASE IF EXISTS #$testDbName",
       sqlu"CREATE DATABASE #$testDbName")))

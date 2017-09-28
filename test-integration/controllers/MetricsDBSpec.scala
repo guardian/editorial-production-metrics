@@ -11,7 +11,7 @@ import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{FunSuite, Matchers}
 import play.api.mvc.Results
 
-class ApplicationSpec extends FunSuite with MockitoSugar with Matchers with Results with PostgresHelpers {
+class MetricsDBSpec extends FunSuite with MockitoSugar with Matchers with Results with PostgresHelpers {
   implicit val metricsDb: MetricsDB = new MetricsDB()
 
   val testMetric = Metric(
