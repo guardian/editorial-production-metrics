@@ -42,7 +42,6 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala, RiffRaffArtifact
       "com.gu"                 %% "panda-hmac"                   % "1.2.0",
       "org.postgresql"         % "postgresql"                    % "42.1.1",
       "org.scalatest"          %% "scalatest"                    % "3.0.1" % "test",
-      "org.scalatestplus.play" %% "scalatestplus-play"           % "2.0.1" % "test",
       "org.mockito"            % "mockito-core"                  % "1.9.5" % "test"
     ) ++ sharedDependencies ++ databaseDependencies,
     routesGenerator := InjectedRoutesGenerator,
@@ -81,8 +80,6 @@ javaSource in IntegrationTests := baseDirectory.value / "/test-integration"
 resourceDirectory in IntegrationTests := baseDirectory.value / "/test-integration/resources"
 
 scalaSource in IntegrationTests := baseDirectory.value / "/test-integration"
-
-javaOptions in IntegrationTests += s"-Dconfig.file=${baseDirectory.value}/test-integration/resources/application.test.conf"
 
 testOptions in IntegrationTests += Tests.Setup(_ => {
   val dbUser = "postgres"

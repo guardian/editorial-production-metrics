@@ -8,6 +8,14 @@ You'll need the [AWS CLI](http://docs.aws.amazon.com/cli/latest/userguide/instal
 for the composer AWS account from [janus](https://janus.gutools.co.uk). You'll also need to follow the
 'Install SSL certificates' step in the [dev-nginx readme](https://github.com/guardian/dev-nginx). Then:
 
+### Testing the app
+
+Running the unit tests: `sbt test`
+
+Running the integration tests: `sbt it:test`
+ 
+Running all the tests: `sbt testAll`
+
 ### Local Config
 
 This project uses [Configuration Magic](https://github.com/guardian/configuration-magic/) so you need to fetch a config file to use locally. Do this with the `fetch-config.sh` script. By default this will get the DEV config but you can also pass it a `DEV` or `CODE` parameter.
