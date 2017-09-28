@@ -5,6 +5,7 @@ import java.util.UUID
 import com.gu.editorialproductionmetricsmodels.models.OriginatingSystem
 import database.MetricsDB
 import helpers.PostgresHelpers
+import models.ProductionMetricsError
 import models.db.Metric
 import org.joda.time.DateTime
 import org.scalatest.mockito.MockitoSugar
@@ -16,14 +17,14 @@ class MetricsDBSpec extends FunSuite with MockitoSugar with Matchers with Result
 
   val testMetric = Metric(
     id = UUID.randomUUID().toString,
-    composerId = Some(UUID.randomUUID().toString),
+    composerId = Some("composerid"),
     originatingSystem = OriginatingSystem.Composer,
     creationTime = DateTime.now(),
-    firstPublicationTime = Some(DateTime.now()))
+    firstPublicationTime = None)
 
-  test("Application index endpoint") {
-    metricsDb.upsertPublishingMetric(testMetric)
+  test("Upsert new metric") {
+    val result: Either[ProductionMetricsError, Metric] = metricsDb.upsertPublishingMetric(testMetric)
 
-    metricsDb.getPublishingMetricsWithComposerId(testMetric.composerId) shouldBe testMetric
+    result.right.get shouldBe testMetric
   }
 }
