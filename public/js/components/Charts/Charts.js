@@ -4,7 +4,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid';
 import AreaChartWrap from './AreaChartWrap';
 import ScatterChartWrap from './ScatterChartWrap';
 
-const Charts = ({ charts, isUpdating, toggleStackChart }) => {
+const Charts = ({ charts, isUpdating, toggleStackChart, filterVals }) => {
 
     const renderTitle = (type) => {
         switch (type) {
@@ -19,18 +19,28 @@ const Charts = ({ charts, isUpdating, toggleStackChart }) => {
         }
     };
 
+    const getClassName = (error) => {
+        if (error) {
+            return 'chart-wrap chart-wrap__error';
+        } else {
+            return isUpdating ? 'chart-wrap chart-wrap__updating' : 'chart-wrap';
+        }
+    };
+
     return (
         <Grid fluid>
             <Row around='xs'>
                 <Col xs={12} md={6}>
                     <AreaChartWrap
+                        getClassName={getClassName}
+                        filterVals={filterVals}
+                        hasCsvButton={true}
                         toggleStackChart={toggleStackChart}
                         chartType={'ComposerVsIncopy'}
                         titleHeader={renderTitle('originatingSystem')}
                         scale='time'
                         data={charts.composerVsInCopy.data}
                         isStacked={charts.composerVsInCopy.isStacked}
-                        isUpdating={isUpdating}
                         error={charts.composerVsInCopy.error}
                         hasToggle={true}
                         height={250}
@@ -40,12 +50,14 @@ const Charts = ({ charts, isUpdating, toggleStackChart }) => {
                 </Col>
                 <Col xs={12} md={6}>
                     <AreaChartWrap
+                        getClassName={getClassName}
+                        filterVals={filterVals}
+                        hasCsvButton={true}
                         chartType={'InWorkflowVsNotInWorkflow'}
                         titleHeader={renderTitle('workflowState')}
                         scale='time'
                         data={charts.inWorkflowVsNotInWorkflow.data}
                         isStacked={charts.inWorkflowVsNotInWorkflow.isStacked}
-                        isUpdating={isUpdating}
                         hasToggle={false}
                         error={charts.inWorkflowVsNotInWorkflow.error}
                         height={250}
@@ -57,10 +69,15 @@ const Charts = ({ charts, isUpdating, toggleStackChart }) => {
             <Row around='xs'>
                 <Col xs={12} md={8}>
                     <ScatterChartWrap
+                        hasToggle={false}
+                        error={charts.forkTime.error}
+                        chartType={'ForkTime'}
+                        getClassName={getClassName}
+                        filterVals={filterVals}
                         titleHeader={renderTitle('forkTime')}
+                        hasCsvButton={true}
                         scale='time'
                         data={charts.forkTime.data}
-                        isUpdating={isUpdating}
                         height={250}
                         yLabel='Time since forkage'
                     />

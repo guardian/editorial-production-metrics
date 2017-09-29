@@ -47,7 +47,6 @@ const charts = (state = initialState, action) => {
         });
         const totals = createYTotalsList(createPartialsList(seriesWithLabels));
         const percentSeries = formattedSeries(seriesWithLabels, totals);
-
         return {
             ...state,
             composerVsInCopy: {

@@ -26,6 +26,7 @@ class App extends Component {
                 />
                 <Charts
                     charts={charts}
+                    filterVals={filterVals}
                     toggleStackChart={actions.toggleStackChart}
                     isUpdating={isUpdating}
                 />
