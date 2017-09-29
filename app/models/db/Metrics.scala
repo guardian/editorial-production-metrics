@@ -140,14 +140,14 @@ object Fork {
   def apply(forkData: ForkData): Fork =
     new Fork(
       id = UUID.randomUUID.toString,
-      forkData.digitalDetails.composerId,
-      forkData.time,
-      forkData.printDetails.wordCount,
-      forkData.digitalDetails.revisionNumber,
-      Some(forkData.timeToPublication),
-      Some(forkData.printDetails.octopusStatus),
-      Some(forkData.printDetails.forkApplication),
-      Some(forkData.digitalDetails.workflowStatus))
+      composerId = forkData.digitalDetails.composerId,
+      time = forkData.time,
+      wordCount = forkData.printDetails.wordCount,
+      revisionNumber = forkData.digitalDetails.revisionNumber,
+      timeToPublication = Some(forkData.timeToPublication),
+      octopusStatus = Some(forkData.printDetails.octopusStatus),
+      forkApplication = Some(forkData.printDetails.forkApplication),
+      workflowStatus = Some(forkData.digitalDetails.workflowStatus))
 
   def customApply(tuple: (String, String, DateTime, Int, Int, Option[Int], Option[String], Option[String], Option[String])): Fork =
     Fork(

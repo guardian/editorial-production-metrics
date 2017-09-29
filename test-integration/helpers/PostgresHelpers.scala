@@ -7,16 +7,13 @@ import slick.jdbc.PostgresProfile.api._
 import util.AsyncHelpers.await
 
 trait PostgresHelpers extends Suite with BeforeAndAfterAll with BeforeAndAfterEach {
-
   private[this] val driver = "slick.jdbc.PostgresProfile"
   private[this] val testDbName = "default"
   private[this] val setupJdbcUrl = s"jdbc:postgresql://localhost:5903/$testDbName"
   private[this] val testDbUser = "postgres"
   private[this] val testDbPassword = "postgres"
-  implicit lazy val db: Database = Database.forURL(setupJdbcUrl, driver = driver, user = testDbUser, password = testDbPassword)
-
   //This is needed for applying evolutions.
-  val database = Databases(
+  private[this] val database = Databases(
     driver = "org.postgresql.Driver",
     url = s"jdbc:postgresql://localhost:5903/$testDbName",
     name = testDbName,
@@ -25,6 +22,7 @@ trait PostgresHelpers extends Suite with BeforeAndAfterAll with BeforeAndAfterEa
       "password" -> "postgres"
     )
   )
+  implicit lazy val db: Database = Database.forURL(setupJdbcUrl, driver = driver, user = testDbUser, password = testDbPassword)
 
   override def beforeAll() {
     await(db.run(DBIO.seq(
@@ -34,10 +32,7 @@ trait PostgresHelpers extends Suite with BeforeAndAfterAll with BeforeAndAfterEa
   }
 
   override def beforeEach() {
-//    DbConstants.setup(db)
-  }
-  override def afterEach() {
-//    await(db.run(Tables.schema.drop))
+    DummyData.setup(db)
   }
 
   override def afterAll() {

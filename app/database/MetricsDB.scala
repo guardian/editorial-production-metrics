@@ -2,9 +2,9 @@ package database
 
 import com.github.tototoshi.slick.PostgresJodaSupport._
 import com.gu.editorialproductionmetricsmodels.models.MetricOpt
+import models.ProductionMetricsError
 import models.db.Schema._
 import models.db._
-import models.{ProductionMetricsError, UnexpectedDbExceptionError}
 import org.joda.time.DateTime
 import play.api.Logger
 import slick.jdbc.PostgresProfile.api._

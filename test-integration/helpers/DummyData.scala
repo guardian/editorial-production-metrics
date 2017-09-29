@@ -1,5 +1,0 @@
-package helpers
-
-object DummyData {
-
-}
