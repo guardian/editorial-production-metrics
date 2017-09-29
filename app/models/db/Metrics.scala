@@ -35,7 +35,7 @@ case class Metric(
 
 object Metric {
   def apply(metricOpt: MetricOpt): Metric = Metric(
-    id = UUID.randomUUID().toString,
+    id = metricOpt.id.getOrElse(UUID.randomUUID().toString),
     originatingSystem = metricOpt.originatingSystem.getOrElse(OriginatingSystem.Composer),
     composerId = metricOpt.composerId,
     storyBundleId = metricOpt.storyBundleId,
@@ -46,7 +46,12 @@ object Metric {
     creationTime = metricOpt.creationTime.getOrElse(DateTime.now()),
     firstPublicationTime = metricOpt.firstPublicationTime,
     roundTrip = metricOpt.roundTrip.getOrElse(false),
-    productionOffice = metricOpt.productionOffice
+    productionOffice = metricOpt.productionOffice,
+    issueDate = metricOpt.issueDate,
+    bookSectionName = metricOpt.bookSectionName,
+    bookSectionCode = metricOpt.bookSectionCode,
+    newspaperBook = metricOpt.newspaperBook,
+    newspaperBookSection = metricOpt.newspaperBookSection
   )
 
   private val datePattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"

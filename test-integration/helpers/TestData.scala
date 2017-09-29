@@ -9,12 +9,11 @@ import org.joda.time.DateTime
 import slick.jdbc.PostgresProfile.api._
 import util.AsyncHelpers.await
 
-object DummyData {
+object TestData {
   private[this] val sampleSize = 50
   private[this] val random = new scala.util.Random(scala.util.Random.nextLong)
   private[this] val composerIds = composerIdsGenerator(Nil, sampleSize)
   private[this] val originatingSystems: List[OriginatingSystem] = OriginatingSystem.values.toList
-  private[this] val storyBundleIds: List[String] = List("111", "222", "333", "444", "555", "666")
   private[this] val commissioningDesks: List[String] = List("tracking/commissioningdesk/uk-science", "tracking/commissioningdesk/cities", "tracking/commissioningdesk/uk-culture")
   private[this] val userDesks: List[String] = List("userDesk_1", "userDesk_2", "userDesk_3")
   private[this] val productionOffices: List[ProductionOffice] = ProductionOffice.values.toList
@@ -28,10 +27,13 @@ object DummyData {
   private[this] val metrics: List[Metric] = randomMetrics(Nil, sampleSize)
   private[this] val forks: List[Fork] = randomForks(Nil, sampleSize)
 
-  def setup(db: Database): Unit = {
-    metrics.foreach(metric => await(db.run(metricsTable += metric)))
-    forks.foreach(fork => await(db.run(forksTable += fork)))
+  def setup(implicit db: Database): Unit = {
+    metrics.foreach(addMetric)
+    forks.foreach(addFork)
   }
+
+  def addFork(fork: Fork)(implicit db: Database) = await(db.run(forksTable += fork))
+  def addMetric(metric: Metric)(implicit db: Database) = await(db.run(metricsTable += metric))
 
   private[this] def chooseItem[A](list: List[A]): A = list(random.nextInt(list.size - 1))
 
@@ -39,7 +41,7 @@ object DummyData {
 
   private[this] def chooseDate: DateTime = DateTime.now().minusHours(random.nextInt(24 * 50))
 
-  private[this] def chooseInt: Int = random.nextInt
+  private[this] def chooseInt: Int = Math.abs(random.nextInt)
 
   private[this] def opt[A](a: A): Option[A] = if (chooseBool) Some(a) else None
 
@@ -49,8 +51,8 @@ object DummyData {
   private[this] def generateRandomMetric(pos: Int): Metric = Metric(
     id = UUID.randomUUID().toString, //unique
     originatingSystem = chooseItem(originatingSystems),
-    composerId = opt(s"composer_$pos"), //unique
-    storyBundleId = opt(chooseItem(storyBundleIds)), //unique
+    composerId = Some(s"composerId_$pos"), //unique
+    storyBundleId = opt(s"storyBundleId_$pos"), //unique
     commissioningDesk = Some(chooseItem(commissioningDesks)),
     userDesk = Some(chooseItem(userDesks)),
     inWorkflow = chooseBool,
@@ -65,6 +67,11 @@ object DummyData {
     newspaperBook = opt(chooseItem(newspaperBooks)),
     newspaperBookSection = opt(chooseItem(newspaperBookSections))
   )
+
+  def randomMetricWith(composerId: String, storyBundleId: String): Metric =
+    generateRandomMetric(0).copy(composerId = Some(composerId), storyBundleId = Some(storyBundleId))
+
+  def randomForkWith(composerId: String) = generateRandomFork.copy(composerId = composerId)
 
   private[this] def randomMetrics(acc: List[Metric], size: Int): List[Metric] =
     if (size == 0) acc else randomMetrics(generateRandomMetric(size) :: acc, size - 1)
