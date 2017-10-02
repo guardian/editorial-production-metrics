@@ -35,9 +35,9 @@ class MetricsDBSpec extends FunSuite with MockitoSugar with Matchers with Result
     newspaperBookSection = metric.newspaperBookSection
   )
 
-  private[this] val testMetric: Metric = TestData.randomMetricWith("cId_upsert", "sbId_upsert")
+  private[this] val testMetric: Metric = TestData.randomMetricWith("composerId_upsert", "storyBundleId_upsert")
 
-  test("Upsert metric - insert metric") {
+  test("Upsert metric - should insert a metric when it doesn't already exist in the db") {
     val result: Either[ProductionMetricsError, Metric] = metricsDb.updateOrInsert(None, metricToMetricOpt(testMetric))
     result shouldBe a [Right[_,_]]
 
@@ -46,7 +46,7 @@ class MetricsDBSpec extends FunSuite with MockitoSugar with Matchers with Result
     actualMetric shouldBe expectedMetric
   }
 
-  test("Upsert metric - update metric") {
+  test("Upsert metric - update a metric when it's found in the db") {
     val updatedMetricOpt = metricToMetricOpt(testMetric).copy(
       commissioningDesk = Some("updatedCommissioningDesk"),
       productionOffice = None
@@ -63,11 +63,11 @@ class MetricsDBSpec extends FunSuite with MockitoSugar with Matchers with Result
     val getInitialForks = metricsDb.getForks(MetricsFilters())
     getInitialForks shouldBe a [Right[_,_]]
 
-    TestData.addMetric(TestData.randomMetricWith("cId_fork1", "sbId_fork1").copy(commissioningDesk = Some("testFilters"), issueDate = Some(new DateTime("2017-01-01"))))
-    TestData.addFork(TestData.randomForkWith("cId_fork1").copy(timeToPublication = Some(1234)))
+    TestData.addMetric(TestData.randomMetricWith("composerId_fork1", "storyBundleId_fork1").copy(commissioningDesk = Some("testFilters"), issueDate = Some(new DateTime("2017-01-01"))))
+    TestData.addFork(TestData.randomForkWith("composerId_fork1").copy(timeToPublication = Some(1234)))
 
-    TestData.addMetric(TestData.randomMetricWith("cId_fork2", "sbId_fork2").copy(commissioningDesk = Some("testFilters"), issueDate = Some(new DateTime("2017-11-11"))))
-    TestData.addFork(TestData.randomForkWith("cId_fork2").copy(timeToPublication = Some(4321)))
+    TestData.addMetric(TestData.randomMetricWith("composerId_fork2", "storyBundleId_fork2").copy(commissioningDesk = Some("testFilters"), issueDate = Some(new DateTime("2017-11-11"))))
+    TestData.addFork(TestData.randomForkWith("composerId_fork2").copy(timeToPublication = Some(4321)))
 
     val getFilteredForks = metricsDb.getForks(MetricsFilters(desk = Some("testFilters")))
     getFilteredForks shouldBe a [Right[_,_]]
