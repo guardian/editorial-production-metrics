@@ -90,4 +90,6 @@ class App(val wsClient: WSClient, val config: Config, val db: MetricsDB) extends
       db.getForks(MetricsFilters(req.queryString).copy(newspaperBook = Some(newspaperBook)))
     }
   }
+
+  def getNewspaperBookList = Action(APIResponse(db.getDistinctNewspaperBooks))
 }
