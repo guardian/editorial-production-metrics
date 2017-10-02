@@ -35,7 +35,7 @@ case class Metric(
 
 object Metric {
   def apply(metricOpt: MetricOpt): Metric = Metric(
-    id = UUID.randomUUID().toString,
+    id = metricOpt.id.getOrElse(UUID.randomUUID().toString),
     originatingSystem = metricOpt.originatingSystem.getOrElse(OriginatingSystem.Composer),
     composerId = metricOpt.composerId,
     storyBundleId = metricOpt.storyBundleId,
@@ -46,7 +46,12 @@ object Metric {
     creationTime = metricOpt.creationTime.getOrElse(DateTime.now()),
     firstPublicationTime = metricOpt.firstPublicationTime,
     roundTrip = metricOpt.roundTrip.getOrElse(false),
-    productionOffice = metricOpt.productionOffice
+    productionOffice = metricOpt.productionOffice,
+    issueDate = metricOpt.issueDate,
+    bookSectionName = metricOpt.bookSectionName,
+    bookSectionCode = metricOpt.bookSectionCode,
+    newspaperBook = metricOpt.newspaperBook,
+    newspaperBookSection = metricOpt.newspaperBookSection
   )
 
   private val datePattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
@@ -140,14 +145,14 @@ object Fork {
   def apply(forkData: ForkData): Fork =
     new Fork(
       id = UUID.randomUUID.toString,
-      forkData.digitalDetails.composerId,
-      forkData.time,
-      forkData.printDetails.wordCount,
-      forkData.digitalDetails.revisionNumber,
-      Some(forkData.timeToPublication),
-      Some(forkData.printDetails.octopusStatus),
-      Some(forkData.printDetails.forkApplication),
-      Some(forkData.digitalDetails.workflowStatus))
+      composerId = forkData.digitalDetails.composerId,
+      time = forkData.time,
+      wordCount = forkData.printDetails.wordCount,
+      revisionNumber = forkData.digitalDetails.revisionNumber,
+      timeToPublication = Some(forkData.timeToPublication),
+      octopusStatus = Some(forkData.printDetails.octopusStatus),
+      forkApplication = Some(forkData.printDetails.forkApplication),
+      workflowStatus = Some(forkData.digitalDetails.workflowStatus))
 
   def customApply(tuple: (String, String, DateTime, Int, Int, Option[Int], Option[String], Option[String], Option[String])): Fork =
     Fork(

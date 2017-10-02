@@ -8,6 +8,17 @@ You'll need the [AWS CLI](http://docs.aws.amazon.com/cli/latest/userguide/instal
 for the composer AWS account from [janus](https://janus.gutools.co.uk). You'll also need to follow the
 'Install SSL certificates' step in the [dev-nginx readme](https://github.com/guardian/dev-nginx). Then:
 
+### Running the tests
+
+The tests are running on Docker.
+
+To install Docker on your machine go [here](https://docs.docker.com/docker-for-mac/install/#install-and-run-docker-for-mac) and follow the steps.
+Make sure Docker is running on your machine and then:
+
+- Run the unit tests: `sbt test`
+- Run the integration tests: `sbt it:test`
+- Run all the tests: `sbt testAll`
+
 ### Local Config
 
 This project uses [Configuration Magic](https://github.com/guardian/configuration-magic/) so you need to fetch a config file to use locally. Do this with the `fetch-config.sh` script. By default this will get the DEV config but you can also pass it a `DEV` or `CODE` parameter.

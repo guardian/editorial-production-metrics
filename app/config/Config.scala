@@ -3,41 +3,51 @@ package config
 import com.amazonaws.auth.profile.ProfileCredentialsProvider
 import com.amazonaws.auth.{AWSCredentialsProviderChain, InstanceProfileCredentialsProvider}
 import com.amazonaws.regions.Region
-import play.api.Configuration
+import com.gu.cm.{Mode, Configuration => ConfigurationMagic}
+import com.typesafe.config.Config
 import services.AwsInstanceTags
 
-class Config(config: Configuration) extends AwsInstanceTags {
+object Config extends AwsInstanceTags {
 
   val stage: String = readTag("Stage") getOrElse "DEV"
   val appName: String = readTag("App") getOrElse "editorial-production-metrics"
   val stack: String = readTag("Stack") getOrElse "flexible"
   val region: Region = services.EC2Client.region
 
-  val awsCredentialsProvider = new AWSCredentialsProviderChain(
+  val awsCredsProvider = new AWSCredentialsProviderChain(
     new ProfileCredentialsProvider("composer"),
     new InstanceProfileCredentialsProvider(false)
   )
-  val elkKinesisStream: String = getConfigString("elk.kinesis.stream")
-  val elkLoggingEnabled: Boolean = getConfigBoolean("elk.logging.enabled", Some(true))
 
-  val pandaDomain: String = getConfigString("panda.domain")
-  val pandaAuthCallback: String = getConfigString("panda.authCallback")
-  val pandaSystem: String = getConfigString("panda.system")
+  private val configMagicMode: Mode = stage match {
+    case "DEV" => Mode.Dev
+    case "CODE" => Mode.Prod
+    case "PROD" => Mode.Prod
+    case _ => sys.error("invalid stage")
+  }
 
-  val publishingMetricsKinesisStream: String = getConfigString("kinesis.publishingMetricsStream")
+  val config: Config = ConfigurationMagic(appName, configMagicMode).load.resolve()
 
-  val tagManagerUrl = s"${getConfigString("tagManager.url", Some("http://tagmanager.gutools.co.uk"))}/hyper/tags"
+  val elkKinesisStream: String = config.getString("elk.kinesis.stream")
+  val elkLoggingEnabled: Boolean = getPropertyWithDefault("elk.logging.enabled", config.getBoolean, default = true)
+
+  val pandaDomain: String = config.getString("panda.domain")
+  val pandaAuthCallback: String = config.getString("panda.authCallback")
+  val pandaSystem: String = config.getString("panda.system")
+
+  val publishingMetricsKinesisStream: String = config.getString("kinesis.publishingMetricsStream")
+
+  val tagManagerUrl = s"${getPropertyWithDefault("tagManager.url", config.getString, default = "http://tagmanager.gutools.co.uk")}/hyper/tags"
 
 //  This is for uniquely identifying the kinesis application when running the app locally on multiple DEV machines
-  val devIdentifier: String = if(stage == "DEV") getConfigString("user") else ""
+  val devIdentifier: String = if(stage == "DEV") config.getString("user") else ""
 
-  val workflowUrl: String =  getConfigString("workflow.url")
+  val workflowUrl: String =  config.getString("workflow.url")
 
-  val hmacSecret: String = getConfigString("hmacSecret")
+  val hmacSecret: String = config.getString("hmacSecret")
 
-  private def getConfigString(key: String, default: Option[String] = None): String =
-    config.getString(key).getOrElse(default.fold(throw new RuntimeException(s"String key $key not found in configuration"))(identity))
-
-  private def getConfigBoolean(key: String, default: Option[Boolean] = None): Boolean =
-    config.getBoolean(key).getOrElse(default.fold(throw new RuntimeException(s"Boolean key $key not found in configuration"))(identity))
+  private def getPropertyWithDefault[T](path: String, getVal: String => T, default: T): T = {
+    if (config.hasPath(path)) getVal(path)
+    else default
+  }
 }

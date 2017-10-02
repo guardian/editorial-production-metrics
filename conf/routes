@@ -1,14 +1,14 @@
-GET     /                                 controllers.App.index
+GET     /                                 controllers.Application.index
 
-GET     /api/originatingSystem/:system    controllers.App.getStartedIn(system: String)
-GET     /api/commissioningDesks           controllers.App.getCommissioningDeskList
-GET     /api/inWorkflow/:inWorkflow       controllers.App.getWorkflowData(inWorkflow: Boolean)
-GET     /api/fork/*newspaperBook          controllers.App.getForks(newspaperBook: String)
+GET     /api/originatingSystem/:system    controllers.Application.getStartedIn(system: String)
+GET     /api/commissioningDesks           controllers.Application.getCommissioningDeskList
+GET     /api/inWorkflow/:inWorkflow       controllers.Application.getWorkflowData(inWorkflow: Boolean)
+GET     /api/fork                         controllers.Application.getForks(newspaperBook: String)
 
 # endpoints for posting data from other apps
-OPTIONS /api/metric/*url                  controllers.App.allowCORSAccess(methods = "PUT, POST, DELETE", url: String)
-POST    /api/metric/digital               controllers.App.upsertMetric()
-POST    /api/metric/fork                  controllers.App.insertFork()
+OPTIONS /api/metric/*url                  controllers.Application.allowCORSAccess(methods = "PUT, POST, DELETE", url: String)
+POST    /api/metric/digital               controllers.Application.upsertMetric()
+POST    /api/metric/fork                  controllers.Application.insertFork()
 
 GET     /healthcheck                      controllers.Healthcheck.healthcheck
 

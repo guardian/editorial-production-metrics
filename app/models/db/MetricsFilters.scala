@@ -43,7 +43,6 @@ object MetricsFilters {
       case None => Some(DateRange(
         from = getOptionFromQS("startDate", qs).flatMap(parseDate).getOrElse(new DateTime(0)),
         to = getOptionFromQS("endDate", qs).flatMap(parseDate).getOrElse(DateTime.now())))
-
       case Some(range) => Some(range)
     }
   }

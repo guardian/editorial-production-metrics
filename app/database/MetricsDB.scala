@@ -2,21 +2,22 @@ package database
 
 import com.github.tototoshi.slick.PostgresJodaSupport._
 import com.gu.editorialproductionmetricsmodels.models.MetricOpt
+import models.ProductionMetricsError
 import models.db.Schema._
 import models.db._
-import models.{ProductionMetricsError, UnexpectedDbExceptionError}
 import org.joda.time.DateTime
 import play.api.Logger
 import slick.jdbc.PostgresProfile.api._
 import util.AsyncHelpers._
 import util.PostgresOpsImport._
 
-class MetricsDB(val db: Database) {
+class MetricsDB(implicit val db: Database) {
 
-  def upsertPublishingMetric(metric: Metric): Either[ProductionMetricsError, Metric] = {
+  private def upsertPublishingMetric(metric: Metric): Either[ProductionMetricsError, Metric] = {
     val result: Either[ProductionMetricsError, Int] = await(db.run(metricsTable.insertOrUpdate(metric)))
-    if (result.isLeft) Left(UnexpectedDbExceptionError) else Right(metric)
+    if (result.isLeft) Left(result.left.get) else Right(metric)
   }
+
   def getPublishingMetricsWithComposerId(composerId: Option[String]): Either[ProductionMetricsError, Option[Metric]] =
     await(db.run(metricsTable.filter(_.composerId === composerId).result.headOption))
 
