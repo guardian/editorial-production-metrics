@@ -1,7 +1,7 @@
 package services
 
 import com.amazonaws.regions.{Region, Regions}
-import com.amazonaws.services.ec2.AmazonEC2Client
+import com.amazonaws.services.ec2.AmazonEC2ClientBuilder
 import com.amazonaws.services.ec2.model.{DescribeTagsRequest, Filter}
 import com.amazonaws.util.EC2MetadataUtils
 
@@ -11,7 +11,7 @@ import scala.collection.JavaConversions._
 object EC2Client {
   lazy val region = Option(Regions.getCurrentRegion).getOrElse(Region.getRegion(Regions.EU_WEST_1))
 
-  lazy val EC2Client = region.createClient(classOf[AmazonEC2Client], null, null)
+  lazy val EC2Client = AmazonEC2ClientBuilder.standard().withRegion(region.getName).build()
 }
 
 trait AwsInstanceTags {
