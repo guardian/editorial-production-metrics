@@ -3,7 +3,8 @@ GET     /                                 controllers.Application.index
 GET     /api/originatingSystem/:system    controllers.Application.getStartedIn(system: String)
 GET     /api/commissioningDesks           controllers.Application.getCommissioningDeskList
 GET     /api/inWorkflow/:inWorkflow       controllers.Application.getWorkflowData(inWorkflow: Boolean)
-GET     /api/fork                         controllers.Application.getForks(newspaperBook: String)
+GET     /api/fork/                        controllers.Application.getForks(newspaperBook: String)
+GET     /api/newspaperBooks               controllers.Application.getNewspaperBookList
 
 # endpoints for posting data from other apps
 OPTIONS /api/metric/*url                  controllers.Application.allowCORSAccess(methods = "PUT, POST, DELETE", url: String)

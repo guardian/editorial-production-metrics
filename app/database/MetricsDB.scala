@@ -54,4 +54,7 @@ class MetricsDB(implicit val db: Database) {
       }.result)){ dbResult: Seq[(DateTime, Int)] =>
         dbResult.map(pair => CountResponse(new DateTime(pair._1), pair._2)).toList
       }
+
+  def getDistinctNewspaperBooks: Either[ProductionMetricsError, Seq[Option[String]]] =
+    await(db.run(metricsTable.filter(!_.newspaperBook.isEmpty).map(_.newspaperBook).distinct.result))
 }
