@@ -90,5 +90,5 @@ class Application(implicit val wsClient: WSClient, val db: MetricsDB) extends Co
     }
   }
 
-  def getNewspaperBookList = Action(APIResponse(db.getDistinctNewspaperBooks))
+  def getNewspaperBookList = APIAuthAction(APIResponse(db.getDistinctNewspaperBooks))
 }
