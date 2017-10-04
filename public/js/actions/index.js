@@ -1,5 +1,13 @@
 import chartList from 'utils/chartList';
-import { updateComposerVsIncopy, getComposerVsIncopyFailed, updateInWorkflowVsNotInWorkflow, getInWorkflowVsNotInWorkflowFailed } from './chartsActions';
+import {
+    updateComposerVsIncopy, 
+    getComposerVsIncopyFailed, 
+    updateInWorkflowVsNotInWorkflow,
+    getInWorkflowVsNotInWorkflowFailed,
+    updateForkTime,
+    getForkTimeFailed
+
+} from './chartsActions';
 import { toggleIsUpdatingCharts } from './uiActions';
 import { updateFilter, updateCommissioningDesks, getCommissioningDesksFailed } from './filtersActions';
 import api from 'services/Api';
@@ -8,7 +16,9 @@ const chartsActions = {
     updateComposerVsIncopy,
     getComposerVsIncopyFailed,
     updateInWorkflowVsNotInWorkflow,
-    getInWorkflowVsNotInWorkflowFailed
+    getInWorkflowVsNotInWorkflowFailed,
+    updateForkTime,
+    getForkTimeFailed
 };
 
 /*-------- HELPERS --------*/
