@@ -79,7 +79,7 @@ const Charts = ({ charts, isUpdating, toggleStackChart, filterVals }) => {
                         scale='time'
                         data={charts.forkTime.data}
                         height={250}
-                        yLabel='Time since forkage'
+                        yLabel='Time since fork'
                     />
                 </Col>
             </Row>
