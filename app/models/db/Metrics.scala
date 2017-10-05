@@ -152,7 +152,7 @@ object Fork {
       timeToPublication = Some(forkData.timeToPublication),
       octopusStatus = Some(forkData.printDetails.octopusStatus),
       forkApplication = Some(forkData.printDetails.forkApplication),
-      workflowStatus = Some(forkData.digitalDetails.workflowStatus))
+      workflowStatus = forkData.digitalDetails.workflowStatus)
 
   def customApply(tuple: (String, String, DateTime, Int, Int, Option[Int], Option[String], Option[String], Option[String])): Fork =
     Fork(
