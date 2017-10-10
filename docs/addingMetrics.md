@@ -1,6 +1,16 @@
-## Project Structure
+# Adding Metrics
 
-Metrics are collected via the kinesis stream. This stream is populated by the [production-metrics-lambdas](https://github.com/guardian/production-metrics-lambdas). Shared data models are in the [editorial-production-metrics-lib](https://github.com/guardian/editorial-production-metrics-lib)
+Currently data is collected from CAPI, Workflow and InCopy. Where possible data should be collected from CAPI.
+
+## Collecting metrics via the kinesis stream
+
+Metrics can be posted to the kinesis stream. Currently this stream is populated by the [production-metrics-lambdas](https://github.com/guardian/production-metrics-lambdas).
+ Shared data models are in the [editorial-production-metrics-lib](https://github.com/guardian/editorial-production-metrics-lib). If the data field is already in CAPI this lambda
+ and data model can be updated to include the new field 
+ 
+## Collecting Metrics via POST requests
+
+InCopy and Workflow both send data to metrics via POST requests
 
 ### Posting metrics from other apps
 
