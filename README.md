@@ -8,7 +8,7 @@ You'll need:
  * [AWS CLI](http://docs.aws.amazon.com/cli/latest/userguide/installing.html) installed
  * Credentials for the composer AWS account from [janus](https://janus.gutools.co.uk).
  * Set up SSL certificates by following the 'Install SSL certificates' step in the [dev-nginx readme](https://github.com/guardian/dev-nginx)
- * Set up config locally using [this guide](###Local Config)
+ * Set up config locally using [this guide](#local-config)
  * Setup the nginx mapping by following the instructions in the [dev-nginx readme](https://github.com/guardian/dev-nginx#install-config-for-an-application).
  * Install Client Side Dependencies with `./scripts/setup.sh`
  
