@@ -4,7 +4,6 @@ import com.amazonaws.auth.profile.ProfileCredentialsProvider
 import com.amazonaws.auth.{AWSCredentialsProviderChain, InstanceProfileCredentialsProvider}
 import com.amazonaws.regions.Region
 import com.gu.cm.{Mode, Configuration => ConfigurationMagic}
-import com.typesafe.config.Config
 import services.AwsInstanceTags
 
 object Config extends AwsInstanceTags {
@@ -26,7 +25,7 @@ object Config extends AwsInstanceTags {
     case _ => sys.error("invalid stage")
   }
 
-  val config: Config = ConfigurationMagic(appName, configMagicMode).load.resolve()
+  val config = ConfigurationMagic(appName, configMagicMode).load.resolve()
 
   val elkKinesisStream: String = config.getString("elk.kinesis.stream")
   val elkLoggingEnabled: Boolean = getPropertyWithDefault("elk.logging.enabled", config.getBoolean, default = true)
