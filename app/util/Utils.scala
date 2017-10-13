@@ -26,7 +26,7 @@ object Utils {
     Either.cond(body.isDefined, body.get, NoRequestBodyError)
 
   def convertStringToDateTime(dateTime: String): Option[DateTime] = {
-    val formatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+    val formatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
     try {
       Some(formatter.parseDateTime(dateTime))
     }

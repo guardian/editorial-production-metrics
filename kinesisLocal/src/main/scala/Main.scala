@@ -10,7 +10,8 @@ object Main {
       composerId = "testing123",
       storyBundleId = None,
       newspaperBookTag = None,
-      creationDate = "2017-07-20T13:00:06.000Z",
+      creationDate = "2017-10-11T23:22:17Z",
+      firstPublicationDate = "2017-10-11T23:22:17Z",
       commissioningDesk = "news",
       originatingSystem = InCopy,
       productionOffice = Some(ProductionOffice.Uk))
