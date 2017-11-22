@@ -5,3 +5,5 @@ resolvers += "Typesafe repository" at "https://dl.bintray.com/typesafe/maven-rel
 addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.5.9")
 
 addSbtPlugin("com.gu" % "sbt-riffraff-artifact" % "0.9.7")
+
+addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.5.3")

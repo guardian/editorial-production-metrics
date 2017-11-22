@@ -2,7 +2,6 @@ package util
 
 import cats.syntax.either._
 import com.gu.editorialproductionmetricsmodels.models.MetricOpt._
-import com.gu.editorialproductionmetricsmodels.models.ForkData._
 import com.gu.editorialproductionmetricsmodels.models.{CapiData, KinesisEvent, MetricOpt}
 import io.circe.generic.auto._
 import io.circe.{Decoder, Json, parser}
