@@ -3,7 +3,7 @@ import com.typesafe.sbt.packager.archetypes.ServerLoader.Systemd
 name := "editorial-production-metrics"
 version := "1.0"
 
-scalaVersion := "2.11.8"
+scalaVersion := "2.11.11"
 
 resolvers ++= Seq("Guardian Bintray" at "https://dl.bintray.com/guardian/editorial-tools")
 
@@ -103,6 +103,5 @@ addCommandAlias("testAll", "; test ; it:test")
 lazy val kinesisLocal = (project in file("kinesisLocal"))
   .settings(
     name := "kinesis-local",
-    scalaVersion := "2.11.8",
     libraryDependencies ++= sharedDependencies
   )

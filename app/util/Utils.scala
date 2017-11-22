@@ -9,7 +9,6 @@ import play.api.Logger
 import play.api.libs.ws.{WSClient, WSResponse}
 import util.AsyncHelpers.await
 
-import scala.concurrent.ExecutionContext.Implicits.global
 
 object Utils {
   def processException(exception: Exception): Either[ProductionMetricsError, Nothing] = {

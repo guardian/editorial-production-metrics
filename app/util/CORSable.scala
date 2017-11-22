@@ -1,6 +1,5 @@
 package util
 
-import play.api.Logger
 import play.api.mvc.{Action, BodyParser, Request, Result}
 
 import scala.concurrent.ExecutionContext.Implicits.global
