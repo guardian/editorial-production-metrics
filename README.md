@@ -5,7 +5,7 @@ A tool for recording and displaying metrics on how editorial content is produced
 ## Running locally
 
 You'll need:
- * [AWS CLI](http://docs.aws.amazon.com/cli/latest/userguide/installing.html) installed
+ * [AWS CLI](http://docs.aws.amazon.com/cli/latest/userguide/installing.html) installed. Version `1.11.190` or later.
  * Credentials for the composer AWS account from [janus](https://janus.gutools.co.uk).
  * Set up SSL certificates by following the 'Install SSL certificates' step in the [dev-nginx readme](https://github.com/guardian/dev-nginx)
  * Set up config locally using [this guide](#local-config)
@@ -13,7 +13,9 @@ You'll need:
  * Install Client Side Dependencies with `./scripts/setup.sh`
 
 Running the App:
- * Set up the Postgres database: We use a RDS Posgres database running in the composer account in AWS. To connect to it locally run `./setup-ssh-tunnel.sh -t <Endpoint of of database without the port number>`. Which database you use mush match the config you have. I.e. use the DEV database with the DEV config and CODE database with CODE config. Get the endpoint by looking in the Composer AWS account.
+ * Get some [local config](#local-config)
+ * Set up the Postgres database: We use a RDS Posgres database running in the composer account in AWS. To connect to it locally run `./setup-ssh-tunnel.sh -t <Endpoint of of database without the port number>`. Which database you use must match the config you have. I.e. use the DEV database with the DEV config and CODE database with CODE config. Get the endpoint by looking in the Composer AWS account.
+ * You need to use Node version 6. To manage different versions of node you can use [node version manager](https://github.com/creationix/nvm).
  * Run Client and Server: `./scripts/start.sh`
  * Run using sbt: `sbt "run 9051"`. (For quick restart you should run `sbt` and then `run 9051`, so that you can exit the application without exiting sbt.)
 
@@ -58,7 +60,7 @@ This project uses [Configuration Magic](https://github.com/guardian/configuratio
 `./fetch-config.sh CODE` or `./fetch-config.sh DEV`
 
 
- - If you get an error message saying that you requred AWS Signature Version 4, configure your aws cli by running `aws configure set default.s3.signature_version s3v4`
+ - If you get an error message saying that you requred AWS Signature Version 4, configure your aws cli by running `aws configure set default.s3.signature_version s3v4`. You must be running version `1.11.190` of the aws cli or later.
 
 The DEV config is best to use when developing code that makes changes to the database or writes and reads from kinesis stream. The CODE config points to the CODE database and is populated with the same data as in the PROD database so is useful when data that reflects PROD is needed.
 
