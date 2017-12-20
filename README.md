@@ -10,19 +10,30 @@ You'll need:
  * Set up SSL certificates by following the 'Install SSL certificates' step in the [dev-nginx readme](https://github.com/guardian/dev-nginx)
  * Set up config locally using [this guide](#local-config)
  * Setup the nginx mapping by following the instructions in the [dev-nginx readme](https://github.com/guardian/dev-nginx#install-config-for-an-application).
+
+Setting up your local config:
+ * Get some [local config](#local-config)
+
+ Connecting to the database:
+ * The database you use must match the config you have: use the DEV database with the DEV config and CODE database with CODE config.
+ * Set up the Postgres database: We use a RDS Posgres database running in the composer account in AWS.
+ * To connect to it locally run `./setup-ssh-tunnel.sh -t <Endpoint of of database without the port number>`.
+ * Get the endpoint by looking in the Composer AWS account.
+ * If you want to connect to a different database, you must kill the process running on port 5902 first.
+
+ Client side:
+ * You need to use Node version 6. To manage different versions of node you can use [node version manager](https://github.com/creationix/nvm).
  * Install Client Side Dependencies with `./scripts/setup.sh`
 
-Running the App:
- * Get some [local config](#local-config)
- * Set up the Postgres database: We use a RDS Posgres database running in the composer account in AWS. To connect to it locally run `./setup-ssh-tunnel.sh -t <Endpoint of of database without the port number>`. Which database you use must match the config you have. I.e. use the DEV database with the DEV config and CODE database with CODE config. Get the endpoint by looking in the Composer AWS account.
- * You need to use Node version 6. To manage different versions of node you can use [node version manager](https://github.com/creationix/nvm).
+ Running the App:
  * Run Client and Server: `./scripts/start.sh`
  * Run using sbt: `sbt "run 9051"`. (For quick restart you should run `sbt` and then `run 9051`, so that you can exit the application without exiting sbt.)
 
 ### Compiling Client Side Dependencies
 
-This project requires Node version 6. To manage different versions of node you can use [node version manager](https://github.com/creationix/nvm).
-You can compile client side dependencies with `yarn build` or `npm run build`.
+- This project requires Node version 6.
+- To manage different versions of node you can use [node version manager](https://github.com/creationix/nvm) and run `nvm use`.
+- You can compile client side dependencies with `yarn build` or `npm run build`.
 Alternatively to compile client side assets on change run `yarn build-dev` or `npm run build-dev`
 
 ### Running the tests
@@ -59,6 +70,7 @@ This project uses [Configuration Magic](https://github.com/guardian/configuratio
 
 `./fetch-config.sh CODE` or `./fetch-config.sh DEV`
 
+The app should now be running [here](https://productionmetrics.local.dev-gutools.co.uk/).
 
  - If you get an error message saying that you requred AWS Signature Version 4, configure your aws cli by running `aws configure set default.s3.signature_version s3v4`. You must be running version `1.11.190` of the aws cli or later.
 
