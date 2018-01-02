@@ -6,7 +6,8 @@ import Page from 'components/Page';
 import Filters from 'components/Filters/Filters';
 import Charts from 'components/Charts/Charts';
 import { getFilters } from "../selectors";
-import Tabs from 'components/Tabs';
+import Tabs from 'components/Tabs/Tabs';
+import Origin from 'components/Tabs/Origin';
 
 class App extends Component {
     componentDidMount() {
@@ -21,11 +22,6 @@ class App extends Component {
                 <div className='top-section'>
                     <h1>Guardian Tools Metrics</h1>
                 </div>
-                <Tabs labels={["Origin","Fork Time","Commissioned Length"]}>
-                    <div>1</div>
-                    <div>2</div>
-                    <div>3</div>
-                </Tabs>
                 <Filters
                     filterVals={filterVals}
                     isUpdating={isUpdating}
@@ -33,12 +29,19 @@ class App extends Component {
                     newspaperBooks={newspaperBooks.booksList}
                     runFilter={actions.runFilter}
                 />
-                <Charts
-                    charts={charts}
-                    filterVals={filterVals}
-                    toggleStackChart={actions.toggleStackChart}
-                    isUpdating={isUpdating}
-                />
+                <Tabs labels={["Origin","Fork Time","Commissioned Length"]}>
+                    <Origin
+                        filterVals={filterVals}
+                        isUpdating={isUpdating}
+                        desks={commissioningDesks.desksList}
+                        filterDesk={actions.filterDesk}
+                        charts={charts}
+                        toggleStackChart={actions.toggleStackChart}
+                    />
+                    <div>2</div>
+                    <div>3</div>
+                </ Tabs>
+
             </Page>
         );
     }
