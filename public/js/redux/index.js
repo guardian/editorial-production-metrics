@@ -5,6 +5,7 @@ import charts from 'reducers/chartsReducer';
 import filterVals from 'reducers/updateFilterReducer';
 import isUpdating from 'reducers/updateProgressReducer';
 import commissioningDesks from 'reducers/commissioningDesksReducer';
+import newspaperBooks from 'reducers/newspaperBooksReducer';
 
 export default () => {
     /* ------------- Assemble The Reducers ------------- */
@@ -13,6 +14,7 @@ export default () => {
         charts,
         isUpdating,
         commissioningDesks,
+        newspaperBooks,
         routing 
     });
 

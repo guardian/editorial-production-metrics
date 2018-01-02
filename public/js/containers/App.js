@@ -9,10 +9,11 @@ import Charts from 'components/Charts/Charts';
 class App extends Component {
     componentDidMount() {
         this.props.actions.fetchCommissioningDesks();
+        this.props.actions.fetchNewspaperBooks();
     }
 
     render() {
-        const { filterVals, isUpdating, charts, commissioningDesks, actions } = this.props;
+        const { filterVals, isUpdating, charts, commissioningDesks, newspaperBooks, actions } = this.props;
         return (
             <Page>
                 <div className='top-section'>
@@ -22,6 +23,7 @@ class App extends Component {
                     filterVals={filterVals}
                     isUpdating={isUpdating}
                     desks={commissioningDesks.desksList}
+                    newspaperBooks={newspaperBooks.booksList}
                     filterDesk={actions.filterDesk}
                 />
                 <Charts
@@ -40,12 +42,13 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 const mapStateToProps = (state) => {
-    const { filterVals, charts, isUpdating, commissioningDesks } = state;
+    const { filterVals, charts, isUpdating, commissioningDesks, newspaperBooks } = state;
     return {
         filterVals,
         charts,
         isUpdating,
-        commissioningDesks
+        commissioningDesks,
+        newspaperBooks
     };
 };
 

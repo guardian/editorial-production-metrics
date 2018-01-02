@@ -56,7 +56,13 @@ const fillMissingDates = (startDate, endDate, data) => {
 // Components helpers
 
 // Remove the 'tracking/commissioningdesk/' bit from the desk identifier string, replace dashes with spaces and capitalize each word
-const formatDeskName = deskName => deskName.substr(27).replace(/-/g, ' ').replace(/\b\w/g, x => x.toUpperCase());
+const tagToName = deskName =>
+  deskName
+    .replace("tracking/commissioningdesk/", "")
+    .replace(/the(guardian|observer)/, "The $1")
+    .replace(/-/g, " ")
+    .replace(/\//g, " - ")
+    .replace(/\b\w/g, x => x.toUpperCase());
 
 const humanizeKeys = (obj, system) => ({ date: moment(obj.x).format('ddd, Do MMMM YYYY'), [`${system}`]: obj['y'] });
 
@@ -85,11 +91,11 @@ const downloadCSV = (data, chartType, filterVals) => {
         csv = csv.join('\r\n');
         const blob = new Blob([csv], {type: 'text/csv;charset=utf-8'});
         const dateRangeString = `${filterVals.startDate.format('DD/MM/YYYY')}-${filterVals.endDate.format('DD/MM/YYYY')}`;
-        const fileName = `${chartType}_office=${filterVals.productionOffice}_desk=${formatDeskName(filterVals.desk)}_dateRange=${dateRangeString}.csv`;
+        const fileName = `${chartType}_office=${filterVals.productionOffice}_desk=${tagToName(filterVals.desk)}_dateRange=${dateRangeString}.csv`;
         saveAs(blob, fileName);
     } catch(e) {
         console.log(`Could not download csv due to this error: ${e.message}`);
     }
 };
 
-export { createPartialsList, formattedSeries, createYTotalsList, compareDates, compareIssueDates, fillMissingDates, downloadCSV, formatDeskName };
+export { createPartialsList, formattedSeries, createYTotalsList, compareDates, compareIssueDates, fillMissingDates, downloadCSV, tagToName };

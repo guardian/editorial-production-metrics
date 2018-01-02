@@ -18,7 +18,7 @@ const ScatterChartWrap = ({ scale, error, height, titleHeader, yLabel, data, get
             }}
             yAxis={{
                 label: yLabel,
-                tickFormat: (datum) => `${Math.round(datum / 3600)}h`
+                tickFormat: (datum) => `${datum}h`
             }}
         />
         <ChartsToggles

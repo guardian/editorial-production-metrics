@@ -107,10 +107,11 @@ const charts = (state = initialState, action) => {
             return {
                 data: series.data.map((dataPoint) => {
                     const date = moment(dataPoint['issueDate']).utc();
+                    const hours = dataPoint.timeToPublication / 3600 / 1000;
                     return {
                         x: date.valueOf(),
-                        y: dataPoint.secondsUntilFork,
-                        label: `${(dataPoint.secondsUntilFork / 3600).toFixed(1)} hours`,
+                        y: hours,
+                        label: `${hours.toFixed(1)} hours`,
                         size: 2.5
                     };
                 })

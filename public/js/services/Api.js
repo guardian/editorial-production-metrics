@@ -18,6 +18,8 @@ const getWorkflowCount = (isInWorkflow, startDate, endDate, desk, productionOffi
 
 const getCommissioningDesks = () => pandaFetch('api/commissioningDesks', null);
 
+const getNewspaperBooks = () => pandaFetch('api/newspaperBooks', null);
+
 const getForkTime = (startDate, endDate, newspaperBook) => pandaFetch(`api/fork/${newspaperBook}`, buildQueryParams(startDate, endDate));
 
 const getComposerVsIncopy = (startDate, endDate, desk, productionOffice) =>
@@ -44,5 +46,6 @@ export default {
     getComposerVsIncopy,
     getInWorkflowVsNotInWorkflow,
     getCommissioningDesks,
+    getNewspaperBooks,
     getForkTime
 };
