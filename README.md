@@ -17,7 +17,7 @@ Setting up your local config:
  Connecting to the database:
  * The database you use must match the config you have: use the DEV database with the DEV config and CODE database with CODE config.
  * Set up the Postgres database: We use a RDS Posgres database running in the composer account in AWS.
- * To connect to it locally run `./setup-ssh-tunnel.sh -t <Endpoint of of database without the port number>`.
+ * To connect to it locally run `./setup-ssh-tunnel.sh -t <Endpoint of of database without the port number>`. For this to work you need to be in the 'Editorial Tools SSHAccess' github team. If you're not already in it you'll need to wait for the cron to run on the box  which pulls over these keys (runs every 30 mins).
  * Get the endpoint by looking in the Composer AWS account.
  * If you want to connect to a different database, you must kill the process running on port 5902 first.
 
