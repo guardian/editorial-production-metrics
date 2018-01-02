@@ -6,6 +6,7 @@ import Page from 'components/Page';
 import Filters from 'components/Filters/Filters';
 import Charts from 'components/Charts/Charts';
 import { getFilters } from "../selectors";
+import Tabs from 'components/Tabs';
 
 class App extends Component {
     componentDidMount() {
@@ -20,6 +21,11 @@ class App extends Component {
                 <div className='top-section'>
                     <h1>Guardian Tools Metrics</h1>
                 </div>
+                <Tabs labels={["Origin","Fork Time","Commissioned Length"]}>
+                    <div>1</div>
+                    <div>2</div>
+                    <div>3</div>
+                </Tabs>
                 <Filters
                     filterVals={filterVals}
                     isUpdating={isUpdating}
