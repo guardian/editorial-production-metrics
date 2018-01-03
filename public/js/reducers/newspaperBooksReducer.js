@@ -1,5 +1,5 @@
 const initialState = {
-    booksList: ['all']
+    booksList: []
 };
 
 const newspaperBooks = (state = initialState, action) => {

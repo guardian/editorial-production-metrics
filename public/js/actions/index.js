@@ -59,11 +59,11 @@ export const runFilter = (filterChangeset = {}) => {
         const updatedFilters = { ...filterVals, ...filterChangeset };
         dispatch(updateFilter(updatedFilters));
         dispatch(toggleIsUpdatingCharts(true));
-        const { startDate, endDate } = filterVals;
+        const { startDate, endDate } = updatedFilters;
         CHART_LIST
             .filter(chartNeedsUpdate(filterChangeset))
             .map(chart => {
-                api[`get${chart}`](...filtersToArgs(chart, filterVals))
+                api[`get${chart}`](...filtersToArgs(chart, updatedFilters))
                     .then(chartData => updateAttemptActions(chartData, chart, startDate, endDate, dispatch))
                     .catch(error => responseFailActions(chart, error, dispatch));
             });
@@ -87,7 +87,6 @@ export const fetchNewspaperBooks = () => {
         api.getNewspaperBooks()
             .then(response => {
                 const booksList = response.data;
-                booksList.push('all');
                 dispatch(updateNewspaperBooks(booksList));
             })
             .catch(dispatch(getNewspaperBooksFailed));

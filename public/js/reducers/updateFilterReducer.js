@@ -2,7 +2,7 @@ import moment from 'moment';
 
 const initialState = {
     desk: 'tracking/commissioningdesk/all',
-    newspaperBook: 'all',
+    newspaperBook: 'theguardian/main', // TODO: set this programatically
     productionOffice: 'all',
     startDate: moment().utc().startOf('day').subtract(7,'d'),
     endDate: moment().utc().endOf('day')
