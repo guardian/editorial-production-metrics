@@ -1,4 +1,5 @@
 import React, { Component, Children } from 'react';
+import { Grid } from 'react-flexbox-grid';
 
 export default class Tabs extends Component {
     state = {selectedIndex: 0};
@@ -11,10 +12,10 @@ export default class Tabs extends Component {
     render() {
         const selectedTab = Children.toArray(this.props.children)[this.state.selectedIndex];
         return (
-            <div>
+            <Grid fluid>
                 {this.props.labels.map((label, index) => <button key={label} onClick={event => this.onChange(event, index)}>{label}</button>)}
                 {selectedTab}
-            </div>
+            </Grid>
         );
     }
 }
