@@ -42,7 +42,6 @@ class App extends Component {
                         filterVals={filterVals}
                         isUpdating={isUpdating}
                         charts={charts}
-                        toggleStackChart={actions.toggleStackChart}
                     />
                     <CommissionedLength />
                 </Tabs>

@@ -11,7 +11,7 @@ const NoDataMessage = ({ filters }) =>
         <span className="filters">{filters.join(", ")}</span>
     </div>
 
-const ForkTimeCharts = ({ charts, isUpdating, toggleStackChart, filterVals }) => {
+const ForkTimeCharts = ({ charts, isUpdating, filterVals }) => {
 
     const getClassName = (error) => {
         if (error) {
