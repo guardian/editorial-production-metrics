@@ -20,7 +20,7 @@ export default class Filters extends Component {
             <form className="form">
                 <Grid fluid>
                     <Row>
-                        <Col xs={12} md={3}>
+                        <Col xs={12} md={2}>
                             <div className="form__row">
                                 <label>
                                     <div>Filter by Desk:</div>
@@ -35,10 +35,10 @@ export default class Filters extends Component {
                                 </label>
                             </div>
                         </Col>
-                        <Col xs={12} md={3}>
+                        <Col xs={12} md={2}>
                             <div className="form__row">
                                 <label>
-                                    <div>Filter by Newspaper book:</div>
+                                    <div>Filter by Newspaper:</div>
                                     <select
                                         className="form__field form__field--select"
                                         onChange={event => runFilter({ newspaperBook: event.target.value })}
@@ -50,7 +50,7 @@ export default class Filters extends Component {
                                 </label>
                             </div>
                         </Col>
-                        <Col xs={12} md={3}>
+                        <Col xs={12} md={2}>
                             <div className="form__row">
                                 <label>
                                     <div>Filter by Office:</div>
@@ -68,7 +68,7 @@ export default class Filters extends Component {
                                 </label>
                             </div>
                         </Col>
-                        <Col xs={12} md={3}>
+                        <Col xs={12} md={4}>
                             <div className="form__row">
                                 <label>
                                     <div>Time Range:</div>
