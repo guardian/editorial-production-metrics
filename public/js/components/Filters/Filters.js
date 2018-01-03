@@ -3,13 +3,16 @@ import { Grid, Row, Col } from 'react-flexbox-grid';
 import moment from 'moment';
 import { DateRangePicker } from 'react-dates';
 import { tagToName } from 'helpers/chartsHelpers';
+import SelectFilter from "./SelectFilter";
 
-const renderName = desks =>
-  desks.sort().map((desk, key) => (
-    <option value={desk} key={`desk-filter-key-${key}`}>
-      {tagToName(desk)}
-    </option>
-  ));
+const tagsToOptions = tags =>
+  tags.sort().reduce(
+    (options, tag) => ({
+      ...options,
+      [tag]: tagToName(tag)
+    }),
+    {}
+  );
 
 export default class Filters extends Component {
     state = { focusedInput: null };
@@ -21,52 +24,36 @@ export default class Filters extends Component {
                 <Grid fluid>
                     <Row>
                         <Col xs={12} md={2}>
-                            <div className="form__row">
-                                <label>
-                                    <div>Filter by Desk:</div>
-                                    <select
-                                        className="form__field form__field--select"
-                                        onChange={event => runFilter({ desk: event.target.value })}
-                                        value={filterVals.desk}
-                                        disabled={isUpdating}
-                                    >
-                                        {renderName(desks)}
-                                    </select>
-                                </label>
-                            </div>
+                            <SelectFilter
+                                label="Filter by Desk:"
+                                options={tagsToOptions(desks)}
+                                onChange={({ target }) => runFilter({ desk: target.value })}
+                                value={filterVals.desk}
+                                disabled={isUpdating}
+                            />
                         </Col>
                         <Col xs={12} md={2}>
-                            <div className="form__row">
-                                <label>
-                                    <div>Filter by Newspaper:</div>
-                                    <select
-                                        className="form__field form__field--select"
-                                        onChange={event => runFilter({ newspaperBook: event.target.value })}
-                                        value={filterVals.newspaperBook}
-                                        disabled={isUpdating}
-                                    >
-                                        {renderName(newspaperBooks)}
-                                    </select>
-                                </label>
-                            </div>
+                            <SelectFilter
+                                label="Filter by Newspaper:"
+                                options={tagsToOptions(newspaperBooks)}
+                                onChange={({ target }) => runFilter({ newspaperBook: target.value })}
+                                value={filterVals.newspaperBook}
+                                disabled={isUpdating}
+                            />
                         </Col>
                         <Col xs={12} md={2}>
-                            <div className="form__row">
-                                <label>
-                                    <div>Filter by Office:</div>
-                                    <select
-                                        className="form__field form__field--select"
-                                        onChange={event => runFilter({ productionOffice: event.target.value })}
-                                        value={filterVals.productionOffice}
-                                        disabled={isUpdating}
-                                    >   
-                                        <option value='all'>All</option>
-                                        <option value='uk'>UK</option>
-                                        <option value='us'>US</option>
-                                        <option value='aus'>Australia</option>
-                                    </select>
-                                </label>
-                            </div>
+                            <SelectFilter
+                                label="Filter by Office:"
+                                options={{
+                                    all: "All",
+                                    uk: "UK",
+                                    us: "US",
+                                    aus: "Australia"
+                                }}
+                                onChange={({ target }) => runFilter({ productionOffice: target.value })}
+                                value={filterVals.productionOffice}
+                                disabled={isUpdating}
+                            />
                         </Col>
                         <Col xs={12} md={4}>
                             <div className="form__row">
