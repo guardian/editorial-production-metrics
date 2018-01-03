@@ -2,41 +2,61 @@ import React, { Component } from 'react';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import moment from 'moment';
 import { DateRangePicker } from 'react-dates';
-import { formatDeskName } from 'helpers/chartsHelpers';
+import { tagToName } from 'helpers/chartsHelpers';
 
-const renderDesks = (desks) => desks.sort().map((desk, key) => <option value={desk} key={`desk-filter-key-${key}`}>{formatDeskName(desk)}</option>);
+const renderName = desks =>
+  desks.sort().map((desk, key) => (
+    <option value={desk} key={`desk-filter-key-${key}`}>
+      {tagToName(desk)}
+    </option>
+  ));
 
 export default class Filters extends Component {
     state = { focusedInput: null };
 
     render() {
-        const { filterVals, isUpdating, desks, filterDesk } = this.props;
+        const { filterVals, isUpdating, desks, newspaperBooks, runFilter } = this.props;
         return (
             <form className="form">
                 <Grid fluid>
                     <Row>
-                        <Col xs={12} md={4}>
+                        <Col xs={12} md={2}>
                             <div className="form__row">
                                 <label>
                                     <div>Filter by Desk:</div>
                                     <select
                                         className="form__field form__field--select"
-                                        onChange={event => filterDesk({ ...filterVals, desk: event.target.value })}
+                                        onChange={event => runFilter({ desk: event.target.value })}
                                         value={filterVals.desk}
                                         disabled={isUpdating}
                                     >
-                                        {renderDesks(desks)}
+                                        {renderName(desks)}
                                     </select>
                                 </label>
                             </div>
                         </Col>
-                        <Col xs={12} md={4}>
+                        <Col xs={12} md={2}>
+                            <div className="form__row">
+                                <label>
+                                    <div>Filter by Newspaper:</div>
+                                    <select
+                                        className="form__field form__field--select"
+                                        onChange={event => runFilter({ newspaperBook: event.target.value })}
+                                        value={filterVals.newspaperBook}
+                                        disabled={isUpdating}
+                                    >
+                                        {renderName(newspaperBooks)}
+                                    </select>
+                                </label>
+                            </div>
+                        </Col>
+                        <Col xs={12} md={2}>
                             <div className="form__row">
                                 <label>
                                     <div>Filter by Office:</div>
                                     <select
                                         className="form__field form__field--select"
-                                        onChange={event => filterDesk({ ...filterVals, productionOffice: event.target.value })}
+                                        onChange={event => runFilter({ productionOffice: event.target.value })}
                                         value={filterVals.productionOffice}
                                         disabled={isUpdating}
                                     >   
@@ -61,7 +81,7 @@ export default class Filters extends Component {
                                             disabled={isUpdating}
                                             startDate={filterVals.startDate}
                                             endDate={filterVals.endDate}
-                                            onDatesChange={({ startDate, endDate }) => endDate > startDate ? filterDesk({ ...filterVals, startDate: startDate.utc().startOf('day'), endDate: endDate.utc().endOf('day') }) : false }
+                                            onDatesChange={({ startDate, endDate }) => endDate > startDate ? runFilter({ ...filterVals, startDate: startDate.utc().startOf('day'), endDate: endDate.utc().endOf('day') }) : false }
                                             focusedInput={this.state.focusedInput}
                                             onFocusChange={focusedInput => this.setState({ focusedInput })}
                                             isOutsideRange={(day) => day.isAfter(moment())}

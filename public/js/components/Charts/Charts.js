@@ -3,6 +3,13 @@ import { Themes } from 'formidable-charts';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import AreaChartWrap from './AreaChartWrap';
 import ScatterChartWrap from './ScatterChartWrap';
+import { CHART_FILTERS_MAP } from "../../utils/chartList";
+
+const NoDataMessage = ({ filters }) =>
+    <div className="no-data">
+        No data, please update any of the following:<br />
+        <span className="filters">{filters.join(", ")}</span>
+    </div>
 
 const Charts = ({ charts, isUpdating, toggleStackChart, filterVals }) => {
 
@@ -78,8 +85,9 @@ const Charts = ({ charts, isUpdating, toggleStackChart, filterVals }) => {
                         hasCsvButton={true}
                         scale='time'
                         data={charts.forkTime.data}
+                        noDataMessage={<NoDataMessage filters={CHART_FILTERS_MAP["ForkTime"]} />}
                         height={250}
-                        yLabel='Time since fork'
+                        yLabel='Time to Publication'
                     />
                 </Col>
             </Row>

@@ -56,9 +56,9 @@ All api calls are done with [axios](https://github.com/mzabriskie/axios). To fet
 
 #### Merging the data into the store
 
-All api calls for the different charts are triggered by the `filterDesk` action creator in `public/js/actions/index.js`, which dispatches async calls thanks to the `thunk` middleware. Currently, every endpoint for every metrics is called every time the url's query params have been changed by the filters (thanks to a custom routing middleware).
+All api calls for the different charts are triggered by the `runFilter` action creator in `public/js/actions/index.js`, which dispatches async calls thanks to the `thunk` middleware. Currently, every endpoint for every metrics is called every time the url's query params have been changed by the filters (thanks to a custom routing middleware).
 
-You should add the name of your new metric to the list in `public/js/utils/chartsList`: if you are consistent with the naming of the metric across the app, you should be able to easily add the new api call to the ones already being executed by the effect. The `filterDesk` action creator triggers the merge actions for every chart if fetching is successful, and the error actions if fetching fails. These actions are being listened by the reducer in `public/js/reducers/chartsReducer`, this is where the fetched data is manipulated and merged into the store.
+You should add the name of your new metric to the list in `public/js/utils/chartsList`: if you are consistent with the naming of the metric across the app, you should be able to easily add the new api call to the ones already being executed by the effect. The `runFilter` action creator triggers the merge actions for every chart if fetching is successful, and the error actions if fetching fails. These actions are being listened by the reducer in `public/js/reducers/chartsReducer`, this is where the fetched data is manipulated and merged into the store.
 
 You need to add your new metric to the reducers's initial state, following this structure:
 
@@ -79,13 +79,13 @@ All chart components are stored in `public/js/componets/Charts`. Just add a new 
 
 #### Adding a new filter
 
-There is a unique reducer for all filters, in `updateFilterReducer.js`: just update the inital state, then in `Filters.js` add your filter and update the object by launching the `filterDesk()` action with the updated `filterVals` when your filter changes. Example: 
+There is a unique reducer for all filters, in `updateFilterReducer.js`: just update the inital state, then in `Filters.js` add your filter and update the object by launching the `runFilter()` action with the updated `filterVals` when your filter changes. Example: 
 ```
-<select onChange={event => filterDesk({ ...filterVals, theFilterBeingUpdated: event.target.value })}> ... </select>
+<select onChange={event => runFilter({ theFilterBeingUpdated: event.target.value })}> ... </select>
 ```
 You can add the new query param in `Api.js` by simply adding a key to the `params` object built by the `buildQueryParams` function. 
 
-`filterDesk` will update the filter object with the new value and proceed to call the api again with the updated values.
+`runFilter` will update the filter object with the new value and proceed to call the api again with the updated values.
 
 #### Routing
 

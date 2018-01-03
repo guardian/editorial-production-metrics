@@ -1,4 +1,4 @@
-import chartList from 'utils/chartList';
+import { CHART_LIST, CHART_FILTERS_MAP } from 'utils/chartList';
 import {
     updateComposerVsIncopy, 
     getComposerVsIncopyFailed, 
@@ -9,7 +9,13 @@ import {
 
 } from './chartsActions';
 import { toggleIsUpdatingCharts } from './uiActions';
-import { updateFilter, updateCommissioningDesks, getCommissioningDesksFailed } from './filtersActions';
+import {
+  updateFilter,
+  updateCommissioningDesks,
+  getCommissioningDesksFailed,
+  updateNewspaperBooks,
+  getNewspaperBooksFailed
+} from "./filtersActions";
 import api from 'services/Api';
 
 const chartsActions = { 
@@ -35,16 +41,32 @@ const responseFailActions = (chart, error, dispatch) => {
 
 /*-------- DISPATCHABLE --------*/
 
-export const filterDesk = (filterObj = {}) => {
-    return (dispatch) => {
-        dispatch(updateFilter(filterObj));
+// Maps the filters to argument positions
+const filtersToArgs = (chart, filterObj) =>
+    CHART_FILTERS_MAP[chart].map(filter => filterObj[filter]);
+
+// Test whether any of the changed filters are used for this chart
+const chartNeedsUpdate = (chart, filterChangeset = {}) => {
+    const changedFilters = Object.keys(filterChangeset);
+    const chartFilters = CHART_FILTERS_MAP[chart];
+
+    return changedFilters.some(filter => chartFilters.includes(filter));
+};
+
+export const runFilter = (filterChangeset = {}) => {
+    return (dispatch, getState) => {
+        const { filterVals } = getState();
+        const updatedFilters = { ...filterVals, ...filterChangeset };
+        dispatch(updateFilter(updatedFilters));
         dispatch(toggleIsUpdatingCharts(true));
-        const { startDate, endDate, desk, productionOffice } = filterObj;
-        chartList.map(chart => {
-            api[`get${chart}`](startDate, endDate, desk, productionOffice)
-                .then(chartData => updateAttemptActions(chartData, chart, startDate, endDate, dispatch))
-                .catch(error => responseFailActions(chart, error, dispatch));
-        });
+        const { startDate, endDate } = updatedFilters;
+        CHART_LIST
+            .filter(chart => chartNeedsUpdate(chart, filterChangeset))
+            .map(chart => {
+                api[`get${chart}`](...filtersToArgs(chart, updatedFilters))
+                    .then(chartData => updateAttemptActions(chartData, chart, startDate, endDate, dispatch))
+                    .catch(error => responseFailActions(chart, error, dispatch));
+            });
     };
 };
 
@@ -60,11 +82,22 @@ export const fetchCommissioningDesks = () => {
     };
 };
 
+export const fetchNewspaperBooks = () => {
+    return (dispatch) => {
+        api.getNewspaperBooks()
+            .then(response => {
+                const booksList = response.data;
+                dispatch(updateNewspaperBooks(booksList));
+            })
+            .catch(dispatch(getNewspaperBooksFailed));
+    };
+};
+
 export const toggleStackChart = (isStacked) => ({
     type: 'TOGGLE_STACK_CHART',
     isStacked
 });
 
-const actions = { filterDesk, fetchCommissioningDesks, toggleStackChart };
+const actions = { runFilter, fetchCommissioningDesks, fetchNewspaperBooks, toggleStackChart };
 
 export default actions;
