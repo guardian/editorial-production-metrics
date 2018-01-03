@@ -11,7 +11,7 @@ const initialState = {
 const filterVals = (state = initialState, action) => {
     switch (action.type) {
     case 'UPDATE_FILTER':
-        return Object.assign({}, state, filterVals);
+        return Object.assign({}, state, action.filterObj);
     default:
         return state;
     }
