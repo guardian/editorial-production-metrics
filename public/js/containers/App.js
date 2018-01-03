@@ -33,15 +33,12 @@ class App extends Component {
                     <Origin
                         filterVals={filterVals}
                         isUpdating={isUpdating}
-                        desks={commissioningDesks.desksList}
-                        filterDesk={actions.filterDesk}
                         charts={charts}
                         toggleStackChart={actions.toggleStackChart}
                     />
-                    <div>2</div>
-                    <div>3</div>
-                </ Tabs>
-
+                    <div>Fork Time</div>
+                    <div>Commissioned Length</div>
+                </Tabs>
             </Page>
         );
     }

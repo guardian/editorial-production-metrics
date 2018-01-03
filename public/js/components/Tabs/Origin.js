@@ -1,17 +1,11 @@
 import React from 'react';
 import Filters from '../Filters/Filters';
-import Charts from '../Charts/Charts';
+import OriginCharts from '../Charts/OriginCharts';
 
-const Origin = ({filterVals, isUpdating, desks, filterDesk, charts, toggleStackChart}) => {
+const Origin = ({filterVals, isUpdating, charts, toggleStackChart}) => {
     return (
         <div>
-            <Filters
-                filterVals={filterVals}
-                isUpdating={isUpdating}
-                desks={desks}
-                filterDesk={filterDesk}
-            />
-            <Charts
+            <OriginCharts
                 charts={charts}
                 filterVals={filterVals}
                 toggleStackChart={toggleStackChart}
