@@ -31,7 +31,10 @@ case class Metric(
    bookSectionName: Option[String] = None,
    bookSectionCode: Option[String] = None,
    newspaperBook: Option[String] = None,
-   newspaperBookSection: Option[String] = None)
+   newspaperBookSection: Option[String] = None,
+   path: Option[String] = None,
+   wordCount: Option[Int] = None,
+   commissionedWordCount: Option[Int] = None)
 
 object Metric {
   def apply(metricOpt: MetricOpt): Metric = Metric(
@@ -51,7 +54,10 @@ object Metric {
     bookSectionName = metricOpt.bookSectionName,
     bookSectionCode = metricOpt.bookSectionCode,
     newspaperBook = metricOpt.newspaperBook,
-    newspaperBookSection = metricOpt.newspaperBookSection
+    newspaperBookSection = metricOpt.newspaperBookSection,
+    path = metricOpt.path,
+    wordCount = metricOpt.wordCount,
+    commissionedWordCount = metricOpt.commissionedWordCount
   )
 
   private val datePattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
@@ -73,7 +79,10 @@ object Metric {
       Option[String],
       Option[String],
       Option[String],
-      Option[String])
+      Option[String],
+      Option[String],
+      Option[Int],
+      Option[Int])
    ): Metric =
     Metric(
       id = tuple._1,
@@ -92,7 +101,11 @@ object Metric {
       bookSectionName = tuple._14,
       bookSectionCode = tuple._15,
       newspaperBook = tuple._16,
-      newspaperBookSection = tuple._17)
+      newspaperBookSection = tuple._17,
+      path = tuple._18,
+      wordCount = tuple._19,
+      commissionedWordCount = tuple._20
+    )
 
   implicit val timeEncoder = new Encoder[DateTime] {
     def apply(d: DateTime) = d.toString(datePattern).asJson
