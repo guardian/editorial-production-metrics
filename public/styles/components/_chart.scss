@@ -62,3 +62,10 @@ $loadingLabelHeight: 300px;
 .chart-title--second-series {
   color: $cGreen33;
 }
+
+.no-data {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 1.25rem;
+  padding: 3rem 1rem;
+  text-align: center;
+}
