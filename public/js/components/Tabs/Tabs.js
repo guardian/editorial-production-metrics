@@ -5,7 +5,6 @@ export default class Tabs extends Component {
 
     onChange(event, index) {
         event.preventDefault();
-        console.log(index);
         this.setState({selectedIndex: index});
     }
 

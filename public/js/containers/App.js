@@ -9,6 +9,7 @@ import { getFilters } from "../selectors";
 import Tabs from 'components/Tabs/Tabs';
 import Origin from 'components/Tabs/Origin';
 import CommissionedLength from '../components/Tabs/CommissionedLength';
+import ForkTime from '../components/Tabs/ForkTime';
 
 class App extends Component {
     componentDidMount() {
@@ -37,7 +38,12 @@ class App extends Component {
                         charts={charts}
                         toggleStackChart={actions.toggleStackChart}
                     />
-                    <div>Fork Time</div>
+                    <ForkTime
+                        filterVals={filterVals}
+                        isUpdating={isUpdating}
+                        charts={charts}
+                        toggleStackChart={actions.toggleStackChart}
+                    />
                     <CommissionedLength />
                 </Tabs>
             </Page>
