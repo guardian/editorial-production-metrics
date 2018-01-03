@@ -1,4 +1,4 @@
-import { CHART_LIST, CHART_ARGS_MAP } from 'utils/chartList';
+import { CHART_LIST, CHART_FILTERS_MAP } from 'utils/chartList';
 import {
     updateComposerVsIncopy, 
     getComposerVsIncopyFailed, 
@@ -41,19 +41,32 @@ const responseFailActions = (chart, error, dispatch) => {
 
 /*-------- DISPATCHABLE --------*/
 
+// Maps the filters to argument positions
 const filtersToArgs = (chart, filterObj) =>
-    CHART_ARGS_MAP[chart].map(filter => filterObj[filter]);
+    CHART_FILTERS_MAP[chart].map(filter => filterObj[filter]);
 
-export const filterDesk = (filterObj = {}) => {
-    return (dispatch) => {
-        dispatch(updateFilter(filterObj));
+// Test whether any of the changed filters are used for this chart
+const chartNeedsUpdate = (filterChangeset = {}) => chart => {
+    const changedFilters = Object.keys(filterChangeset);
+    const chartFilters = CHART_FILTERS_MAP[chart];
+
+    return changedFilters.some(filter => chartFilters.includes(filter));
+};
+
+export const runFilter = (filterChangeset = {}) => {
+    return (dispatch, getState) => {
+        const { filterVals } = getState();
+        const updatedFilters = { ...filterVals, ...filterChangeset };
+        dispatch(updateFilter(updatedFilters));
         dispatch(toggleIsUpdatingCharts(true));
-        const { startDate, endDate } = filterObj;
-        CHART_LIST.map(chart => {
-            api[`get${chart}`](...filtersToArgs(chart, filterObj))
-                .then(chartData => updateAttemptActions(chartData, chart, startDate, endDate, dispatch))
-                .catch(error => responseFailActions(chart, error, dispatch));
-        });
+        const { startDate, endDate } = filterVals;
+        CHART_LIST
+            .filter(chartNeedsUpdate(filterChangeset))
+            .map(chart => {
+                api[`get${chart}`](...filtersToArgs(chart, filterVals))
+                    .then(chartData => updateAttemptActions(chartData, chart, startDate, endDate, dispatch))
+                    .catch(error => responseFailActions(chart, error, dispatch));
+            });
     };
 };
 
@@ -86,6 +99,6 @@ export const toggleStackChart = (isStacked) => ({
     isStacked
 });
 
-const actions = { filterDesk, fetchCommissioningDesks, fetchNewspaperBooks, toggleStackChart };
+const actions = { runFilter, fetchCommissioningDesks, fetchNewspaperBooks, toggleStackChart };
 
 export default actions;

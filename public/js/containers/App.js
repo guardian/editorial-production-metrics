@@ -24,7 +24,7 @@ class App extends Component {
                     isUpdating={isUpdating}
                     desks={commissioningDesks.desksList}
                     newspaperBooks={newspaperBooks.booksList}
-                    filterDesk={actions.filterDesk}
+                    runFilter={actions.runFilter}
                 />
                 <Charts
                     charts={charts}
