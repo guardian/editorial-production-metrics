@@ -46,7 +46,7 @@ const filtersToArgs = (chart, filterObj) =>
     CHART_FILTERS_MAP[chart].map(filter => filterObj[filter]);
 
 // Test whether any of the changed filters are used for this chart
-const chartNeedsUpdate = (filterChangeset = {}) => chart => {
+const chartNeedsUpdate = (chart, filterChangeset = {}) => {
     const changedFilters = Object.keys(filterChangeset);
     const chartFilters = CHART_FILTERS_MAP[chart];
 
@@ -61,7 +61,7 @@ export const runFilter = (filterChangeset = {}) => {
         dispatch(toggleIsUpdatingCharts(true));
         const { startDate, endDate } = updatedFilters;
         CHART_LIST
-            .filter(chartNeedsUpdate(filterChangeset))
+            .filter(chart => chartNeedsUpdate(chart, filterChangeset))
             .map(chart => {
                 api[`get${chart}`](...filtersToArgs(chart, updatedFilters))
                     .then(chartData => updateAttemptActions(chartData, chart, startDate, endDate, dispatch))
