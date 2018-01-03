@@ -87,7 +87,7 @@ const Charts = ({ charts, isUpdating, toggleStackChart, filterVals }) => {
                         data={charts.forkTime.data}
                         noDataMessage={<NoDataMessage filters={CHART_FILTERS_MAP["ForkTime"]} />}
                         height={250}
-                        yLabel='Time since fork'
+                        yLabel='Time to Publication'
                     />
                 </Col>
             </Row>
