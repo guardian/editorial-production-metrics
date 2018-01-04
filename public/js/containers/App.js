@@ -5,6 +5,7 @@ import actions from 'actions';
 import Page from 'components/Page';
 import Filters from 'components/Filters/Filters';
 import Charts from 'components/Charts/Charts';
+import { getFilters } from "../selectors";
 
 class App extends Component {
     componentDidMount() {
@@ -42,9 +43,10 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 const mapStateToProps = (state) => {
-    const { filterVals, charts, isUpdating, commissioningDesks, newspaperBooks } = state;
+    const { charts, isUpdating, commissioningDesks, newspaperBooks } = state;
+    
     return {
-        filterVals,
+        filterVals: getFilters(state),
         charts,
         isUpdating,
         commissioningDesks,

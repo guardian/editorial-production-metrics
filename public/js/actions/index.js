@@ -17,6 +17,7 @@ import {
   getNewspaperBooksFailed
 } from "./filtersActions";
 import api from 'services/Api';
+import moment from "moment";
 
 const chartsActions = { 
     updateComposerVsIncopy,
@@ -59,7 +60,9 @@ export const runFilter = (filterChangeset = {}) => {
         const updatedFilters = { ...filterVals, ...filterChangeset };
         dispatch(updateFilter(updatedFilters));
         dispatch(toggleIsUpdatingCharts(true));
-        const { startDate, endDate } = updatedFilters;
+        
+        const startDate = moment(updatedFilters.startDate);
+        const endDate = moment(updatedFilters.endDate);
         CHART_LIST
             .filter(chart => chartNeedsUpdate(chart, filterChangeset))
             .map(chart => {
