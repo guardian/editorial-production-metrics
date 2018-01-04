@@ -1,27 +1,51 @@
 import React from "react";
 import { bandName } from "../utils/BandUtils";
+import { Table, Td, Tr, Th } from "./Table";
 
-const BandedCount = ({ data }) => (
-  <table>
-    <thead>
-      <tr>
-        {data.map((band) => (
-          <th key={bandName(band)}>
-            {bandName(band)}
-          </th>
-        ))}
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        {data.map(({ min, max, count }) => (
-          <td key={`${min}-${max}`}>
+const isNumeric = n => !isNaN(parseFloat(n)) && isFinite(n);
+
+const BandedCount = ({ bands, title, noBandCount, noBandTitle }) => (
+  <div>
+    <h3>{title}</h3>
+    <Table
+      centered
+      alternate
+      headTitle="Bands"
+      bodyTitle="Count"
+      head={
+        <Tr>
+          {bands.map((band) => (
+            <Th key={bandName(band)}>
+              {bandName(band)}
+            </Th>
+          ))}
+          {isNumeric(noBandCount) && (
+            <Th key="no-band">
+              {noBandTitle}
+            </Th>
+          )}
+        </Tr>
+      }
+    >
+      <Tr>
+        {bands.map(({ min, max, count }) => (
+          <Td key={`${min}-${max}`}>
             {count}
-          </td>
+          </Td>
         ))}
-      </tr>
-    </tbody>
-  </table>
+        {isNumeric(noBandCount) && (
+          <Td key="no-band">
+            {noBandCount}
+          </Td>
+        )}
+      </Tr>
+    </Table>
+  </div>
 );
+
+BandedCount.defaultProps = {
+  noBandTitle: "No band",
+  noBandCount: null,
+};
 
 export default BandedCount;

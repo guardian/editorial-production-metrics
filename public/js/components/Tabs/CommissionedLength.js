@@ -8,7 +8,11 @@ import { Row, Col } from 'react-flexbox-grid';
 const CommissionedLength = () => {
     return (
         <div>
-            <BandedCount data={TEST_DATA.wordCountBands} />
+            <BandedCount
+                title="Commisioned Lengths"
+                bands={TEST_DATA.commissionedLengthBands}
+                noBandCount={TEST_DATA.withoutCommissionedLengthCount}
+            />
             <Row around='xs'>
                 <Col xs={12} md={6}>
                     <PieChartWrap
@@ -24,7 +28,7 @@ const CommissionedLength = () => {
                         } />
                 </Col>
             </Row>
-            <BandedCount data={TEST_DATA.commissionedLengthBands} />
+            <BandedCount title="Word Counts" bands={TEST_DATA.wordCountBands} />
         </div>
     );
 };
