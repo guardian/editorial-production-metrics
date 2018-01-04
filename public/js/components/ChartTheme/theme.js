@@ -127,7 +127,8 @@ export default {
         chart: {
             style: {
                 parent: {
-                    background: '#393939'
+                    background: '#393939',
+                    width: "100%"
                 }
             },
             ...baseProps
@@ -173,7 +174,8 @@ export default {
                 },
                 labels: {
                     ...baseLabelStyles,
-                    padding: 20
+                    padding: 20,
+                    fontSize: 20
                 }
             },
             colorScale: colors,
