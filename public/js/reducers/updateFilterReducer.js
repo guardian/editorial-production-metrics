@@ -6,8 +6,8 @@ const initialState = {
     desk: 'tracking/commissioningdesk/all',
     newspaperBook: 'theguardian/main', // TODO: set this programatically
     productionOffice: 'all',
-    startDate: getYesterday().startOf('day').subtract(7,'d'),
-    endDate: getYesterday().endOf('day')
+    startDate: getYesterday().startOf('day').subtract(7,'d').format(),
+    endDate: getYesterday().endOf('day').format()
 };
 
 const filterVals = (state = initialState, action) => {

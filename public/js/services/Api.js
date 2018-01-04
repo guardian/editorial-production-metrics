@@ -3,8 +3,8 @@ import { pandaFetch } from './pandaFetch';
 
 const buildQueryParams = (startDate, endDate, desk, productionOffice) => ({
     params: {
-        startDate: startDate.format(),
-        endDate: endDate.format(),
+        startDate: startDate,
+        endDate: endDate,
         desk: desk !== 'tracking/commissioningdesk/all' && desk || null,
         productionOffice: productionOffice !== 'all' && productionOffice || null
     }
