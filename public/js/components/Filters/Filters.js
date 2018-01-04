@@ -34,15 +34,6 @@ export default class Filters extends Component {
                         </Col>
                         <Col xs={12} md={2}>
                             <SelectFilter
-                                label="Filter by Newspaper:"
-                                options={tagsToOptions(newspaperBooks)}
-                                onChange={({ target }) => runFilter({ newspaperBook: target.value })}
-                                value={filterVals.newspaperBook}
-                                disabled={isUpdating}
-                            />
-                        </Col>
-                        <Col xs={12} md={2}>
-                            <SelectFilter
                                 label="Filter by Office:"
                                 options={{
                                     all: "All",
@@ -52,6 +43,15 @@ export default class Filters extends Component {
                                 }}
                                 onChange={({ target }) => runFilter({ productionOffice: target.value })}
                                 value={filterVals.productionOffice}
+                                disabled={isUpdating}
+                            />
+                        </Col>
+                        <Col xs={12} md={4}>
+                            <SelectFilter
+                                label="Filter by Newspaper:"
+                                options={tagsToOptions(newspaperBooks)}
+                                onChange={({ target }) => runFilter({ newspaperBook: target.value })}
+                                value={filterVals.newspaperBook}
                                 disabled={isUpdating}
                             />
                         </Col>
