@@ -4,6 +4,7 @@ import PieChartWrap from "../Charts/PieChartWrap";
 import TEST_DATA from "./_commissionedLengthTestData";
 import { bandName } from "../../utils/BandUtils";
 import { Row, Col } from 'react-flexbox-grid';
+import ArticleCommissionedLengthTable from '../ArticleCommissionedLengthTable';
 
 const CommissionedLength = () => {
     return (
@@ -28,7 +29,12 @@ const CommissionedLength = () => {
                         } />
                 </Col>
             </Row>
+<<<<<<< HEAD
             <BandedCount title="Word Counts" bands={TEST_DATA.wordCountBands} />
+=======
+            <BandedCount data={TEST_DATA.commissionedLengthBands} />
+            <ArticleCommissionedLengthTable articles={TEST_DATA.articles}/>
+>>>>>>> Add basic table for articles.
         </div>
     );
 };
