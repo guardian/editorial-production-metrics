@@ -29,12 +29,8 @@ const CommissionedLength = () => {
                         } />
                 </Col>
             </Row>
-<<<<<<< HEAD
             <BandedCount title="Word Counts" bands={TEST_DATA.wordCountBands} />
-=======
-            <BandedCount data={TEST_DATA.commissionedLengthBands} />
             <ArticleCommissionedLengthTable articles={TEST_DATA.articles}/>
->>>>>>> Add basic table for articles.
         </div>
     );
 };
