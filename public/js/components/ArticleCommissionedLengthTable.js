@@ -1,4 +1,5 @@
 import React from 'react';
+import {Table, Tr, Th, Td} from './Table';
 
 const compare = (article1, article2) => {
     return article2.commissionedWordCount - article1.commissionedWordCount;
@@ -9,49 +10,45 @@ const ArticleCommissionedLengthTable = ({articles}) => {
     const sortedArticles = articles.filter(article => article.commissionedWordCount > 0).sort(compare)
     return(
         <div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Headline</th>
-                        <th></th>
-                        <th>Word Count</th>
-                        <th>Commissioned Word Count</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {noCommissioningLength.map(x => 
-                        <tr key={x.path}>
-                            <td><a href={"https://www.theguardian.com/"+x.path} target="_blank">{x.headline}</a></td>
-                            <td><a href={"https://dashboard.ophan.co.uk/info?path=/"+x.path}>Ophan</a></td>
-                            <td>{x.wordCount}</td>
-                            <td>{x.commissionedWordCount}</td>
-                        </tr>
-                    )}
-                </tbody>
-            </table>
-
-            <table>
-                <thead>
-                    <tr>
-                        <th>Headline</th>
-                        <th></th>
-                        <th>Word Count</th>
-                        <th>Commissioned Word Count</th>
-                        <th>Number of words over</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {sortedArticles.map(x => 
-                    <tr key={x.path}>
-                        <td><a href={"https://www.theguardian.com/"+x.path} target="_blank">{x.headline}</a></td>
-                        <td><a href={"https://dashboard.ophan.co.uk/info?path=/"+x.path}>Ophan</a></td>
-                        <td>{x.wordCount}</td>
-                        <td>{x.commissionedWordCount}</td>
-                        <td>{x.wordCount - x.commissionedWordCount}</td>
-                    </tr>
+            <h3>Articles without a Commissioned Length</h3>
+            <Table alternate head={
+                <Tr>
+                    <Th>Headline</Th>
+                    <Th></Th>
+                    <Th>Word Count</Th>
+                    <Th>Commissioned Word Count</Th>
+                </Tr>
+            }>
+                {noCommissioningLength.map(x => 
+                    <Tr key={x.path}>
+                        <Td><a href={"https://www.theguardian.com/"+x.path} target="_blank" rel="noopener noreferrer">{x.headline}</a></Td>
+                        <Td><a href={"https://dashboard.ophan.co.uk/info?path=/"+x.path} target="_blank" rel="noopener noreferrer">Ophan</a></Td>
+                        <Td>{x.wordCount}</Td>
+                        <Td>{x.commissionedWordCount}</Td>
+                    </Tr>
                 )}
-                </tbody>
-            </table>
+            </Table>
+
+            <h3>Articles</h3>
+            <Table alternate head={
+                <Tr>
+                    <Th>Headline</Th>
+                    <Th></Th>
+                    <Th>Word Count</Th>
+                    <Th>Commissioned Word Count</Th>
+                    <Th>Number of words over</Th>
+                </Tr>
+            }>
+                {sortedArticles.map(x => 
+                    <Tr key={x.path}>
+                        <Td><a href={"https://www.theguardian.com/"+x.path} target="_blank" rel="noopener noreferrer">{x.headline}</a></Td>
+                        <Td><a href={"https://dashboard.ophan.co.uk/info?path=/"+x.path} target="_blank" rel="noopener noreferrer">Ophan</a></Td>
+                        <Td>{x.wordCount}</Td>
+                        <Td>{x.commissionedWordCount}</Td>
+                        <Td>{x.wordCount - x.commissionedWordCount}</Td>
+                    </Tr>
+                )}
+            </Table>
         </div>
     );
 };
