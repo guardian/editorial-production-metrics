@@ -12,7 +12,6 @@ const Chart = ({children, error, isUpdating}) => {
 
     return (
         <div className={getClassName(error, isUpdating)}>
-            {error}
             {children}
         </div>
     );
