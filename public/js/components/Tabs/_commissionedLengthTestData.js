@@ -20,7 +20,9 @@ const withoutCommissionedLengthCount = articleCount - withCommissionedLengthCoun
 
 const articles = [
   {headline: "Meltdown and Spectre: ‘worst ever’ CPU bugs affect virtually all computers", path:"technology/2018/jan/04/meltdown-spectre-worst-cpu-bugs-ever-found-affect-computers-intel-processors-security-flaw", wordCount: 650, commissionedWordCount: 600},
-  {headline: "Are there any good portable MP3 players for blind and visually impaired people?", path:"technology/askjack/2018/jan/04/apple-ipod-shuffle-good-mp3-portable-music-players-blind-visually-impaired-users", wordCount: 750, commissionedWordCount: 800},
+  {headline: "Are there any good portable MP3 players for blind and visually impaired people?", path:"technology/askjack/2018/jan/04/apple-ipod-shuffle-good-mp3-portable-music-players-blind-visually-impaired-users", wordCount: 750, commissionedWordCount: 0},
+  {headline: "Why couples should never go running together", path:"lifeandstyle/the-running-blog/2018/jan/04/why-couples-should-never-go-running-together", wordCount: 750, commissionedWordCount: 800},
+  {headline: "Windsor homeless: 'We're human beings too. I just want to get back on my feet'", path:"society/2018/jan/04/windsor-homeless-were-human-beings-i-just-want-to-get-back-on-my-feet", wordCount: 750, commissionedWordCount: 0},
   {headline: "Facebook declines to say why it deletes certain political accounts, but not others", path:"us-news/2018/jan/04/facebook-chechnya-ramzan-kadyrov-political-censorship", wordCount: 928, commissionedWordCount: 600},
   {headline: "Shares in spread betting firm Plus500 soar thanks to bitcoin boom ", path:"technology/2018/jan/03/spread-betting-firm-plus500s-shares-soar-bitcoin-boom", wordCount: 834, commissionedWordCount: 900},
   {headline: "Apple leads race to become world's first $1tn company", path:"business/2018/jan/03/apple-leads-race-to-become-world-first-1tn-dollar-company", wordCount: 340, commissionedWordCount: 350},
