@@ -1,15 +1,14 @@
 import moment from 'moment';
 
-const yesterday = moment().utc().subtract(1, 'd');
+const yesterday = moment().utc().startOf('day').subtract(1, 'd');
 
 const initialState = {
     desk: 'tracking/commissioningdesk/all',
     newspaperBook: 'theguardian/main', // TODO: set this programatically
     productionOffice: 'all',
-    startDate: yesterday.startOf('day').subtract(7,'d'),
-    endDate: yesterday.endOf('day')
+    startDate: yesterday.clone().startOf('day').subtract(7,'d'),
+    endDate: yesterday.clone().endOf('day')
 };
-
 
 const filterVals = (state = initialState, action) => {
     switch (action.type) {
