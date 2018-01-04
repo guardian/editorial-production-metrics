@@ -4,7 +4,6 @@ import { bindActionCreators } from 'redux';
 import actions from 'actions';
 import Page from 'components/Page';
 import Filters from 'components/Filters/Filters';
-import Charts from 'components/Charts/Charts';
 import { getFilters } from "../selectors";
 import Tabs from 'components/Tabs/Tabs';
 import Origin from 'components/Tabs/Origin';

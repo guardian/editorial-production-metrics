@@ -3,18 +3,18 @@ import { Themes } from 'formidable-charts';
 import { Row, Col } from 'react-flexbox-grid';
 import AreaChartWrap from './AreaChartWrap';
 
-const OriginCharts = ({ charts, isUpdating, toggleStackChart, filterVals }) => {
+const renderTitle = (type) => {
+    switch (type) {
+    case 'originatingSystem':
+        return <h3>Tool of Origin: <span className='chart-title--second-series'>InCopy</span> vs <span className='chart-title--first-series'>Composer</span></h3>;
+    case 'workflowState':
+        return <h3>Workflow State: <span className='chart-title--second-series'>Never Seen in Workflow</span> vs <span className='chart-title--first-series'>Seen in Workflow</span></h3>;
+    default:
+        '';
+    }
+};
 
-    const renderTitle = (type) => {
-        switch (type) {
-        case 'originatingSystem':
-            return <h3>Tool of Origin: <span className='chart-title--second-series'>InCopy</span> vs <span className='chart-title--first-series'>Composer</span></h3>;
-        case 'workflowState':
-            return <h3>Workflow State: <span className='chart-title--second-series'>Never Seen in Workflow</span> vs <span className='chart-title--first-series'>Seen in Workflow</span></h3>;
-        default:
-            '';
-        }
-    };
+const OriginCharts = ({ charts, isUpdating, toggleStackChart, filterVals }) => {
 
     return (
         <Row around='xs'>
