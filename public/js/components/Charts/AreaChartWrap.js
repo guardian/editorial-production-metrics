@@ -2,11 +2,12 @@ import React from 'react';
 import { AreaChart , Themes } from 'formidable-charts';
 import ChartTheme from '../ChartTheme/theme';
 import ChartsToggles from '../ChartsToggles';
+import Chart from './Chart';
 
 const customisedTheme = Object.assign({}, Themes.simple, ChartTheme);
 
-const AreaChartWrap = ({ data, xLabel, yLabel, yLabelStacked, scale, isStacked, error, hasToggle, height, titleHeader, chartType, toggleStackChart, filterVals, hasCsvButton, getClassName }) =>
-    <div className={getClassName(error)}>
+const AreaChartWrap = ({ data, xLabel, yLabel, yLabelStacked, scale, isStacked, error, hasToggle, height, titleHeader, chartType, toggleStackChart, filterVals, hasCsvButton, isUpdating }) =>
+    <Chart error={error} isUpdating={isUpdating}>
         {titleHeader}
         <AreaChart
             stacked={isStacked}
@@ -32,6 +33,6 @@ const AreaChartWrap = ({ data, xLabel, yLabel, yLabelStacked, scale, isStacked, 
             hasCsvButton={hasCsvButton}
             toggleStackChart={toggleStackChart}
         />
-    </div>;
+    </Chart>;
 
 export default AreaChartWrap;

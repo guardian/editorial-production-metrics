@@ -4,8 +4,11 @@ import { bindActionCreators } from 'redux';
 import actions from 'actions';
 import Page from 'components/Page';
 import Filters from 'components/Filters/Filters';
-import Charts from 'components/Charts/Charts';
 import { getFilters } from "../selectors";
+import Tabs from 'components/Tabs/Tabs';
+import Origin from 'components/Tabs/Origin';
+import CommissionedLength from '../components/Tabs/CommissionedLength';
+import ForkTime from '../components/Tabs/ForkTime';
 
 class App extends Component {
     componentDidMount() {
@@ -27,12 +30,20 @@ class App extends Component {
                     newspaperBooks={newspaperBooks.booksList}
                     runFilter={actions.runFilter}
                 />
-                <Charts
-                    charts={charts}
-                    filterVals={filterVals}
-                    toggleStackChart={actions.toggleStackChart}
-                    isUpdating={isUpdating}
-                />
+                <Tabs labels={["Origin","Fork Time","Commissioned Length"]}>
+                    <Origin
+                        filterVals={filterVals}
+                        isUpdating={isUpdating}
+                        charts={charts}
+                        toggleStackChart={actions.toggleStackChart}
+                    />
+                    <ForkTime
+                        filterVals={filterVals}
+                        isUpdating={isUpdating}
+                        charts={charts}
+                    />
+                    <CommissionedLength />
+                </Tabs>
             </Page>
         );
     }

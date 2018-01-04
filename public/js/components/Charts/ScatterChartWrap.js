@@ -3,13 +3,14 @@ import React from 'react';
 import { ScatterChart , Themes } from 'formidable-charts';
 import ChartTheme from '../ChartTheme/theme';
 import ChartsToggles  from '../ChartsToggles';
+import Chart from './Chart';
 
 const customisedTheme = Object.assign({}, Themes.simple, ChartTheme);
 
 const hasData = (data) => (((data || [])[0] || {})["data"] || []).length;
 
-const ScatterChartWrap = ({ scale, error, noDataMessage, height, titleHeader, yLabel, data, getClassName, chartType, hasToggle, hasCsvButton, filterVals }) =>
-    <div className={getClassName(error)}>
+const ScatterChartWrap = ({ scale, error, noDataMessage, height, titleHeader, yLabel, data, isUpdating, chartType, hasToggle, hasCsvButton, filterVals }) =>
+    <Chart error={error} isUpdating={isUpdating}>
         {titleHeader}
         {hasData(data.absolute) ? (
             <div>
@@ -38,6 +39,6 @@ const ScatterChartWrap = ({ scale, error, noDataMessage, height, titleHeader, yL
                 {noDataMessage}
             </div>
         )}
-    </div>;
+    </Chart>;
 
 export default ScatterChartWrap;
