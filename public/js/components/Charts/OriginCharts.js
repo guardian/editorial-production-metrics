@@ -1,8 +1,7 @@
 import React from 'react';
 import { Themes } from 'formidable-charts';
-import { Grid, Row, Col } from 'react-flexbox-grid';
+import { Row, Col } from 'react-flexbox-grid';
 import AreaChartWrap from './AreaChartWrap';
-import ScatterChartWrap from './ScatterChartWrap';
 
 const OriginCharts = ({ charts, isUpdating, toggleStackChart, filterVals }) => {
 
@@ -17,19 +16,11 @@ const OriginCharts = ({ charts, isUpdating, toggleStackChart, filterVals }) => {
         }
     };
 
-    const getClassName = (error) => {
-        if (error) {
-            return 'chart-wrap chart-wrap__error';
-        } else {
-            return isUpdating ? 'chart-wrap chart-wrap__updating' : 'chart-wrap';
-        }
-    };
-
     return (
         <Row around='xs'>
             <Col xs={12} md={6}>
                 <AreaChartWrap
-                    getClassName={getClassName}
+                    isUpdating={isUpdating}
                     filterVals={filterVals}
                     hasCsvButton={true}
                     toggleStackChart={toggleStackChart}
@@ -47,7 +38,7 @@ const OriginCharts = ({ charts, isUpdating, toggleStackChart, filterVals }) => {
             </Col>
             <Col xs={12} md={6}>
                 <AreaChartWrap
-                    getClassName={getClassName}
+                    isUpdating={isUpdating}
                     filterVals={filterVals}
                     hasCsvButton={true}
                     chartType={'InWorkflowVsNotInWorkflow'}

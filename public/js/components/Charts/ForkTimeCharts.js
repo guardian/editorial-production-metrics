@@ -1,7 +1,6 @@
 import React from 'react';
 import { Themes } from 'formidable-charts';
-import { Grid, Row, Col } from 'react-flexbox-grid';
-import AreaChartWrap from './AreaChartWrap';
+import { Row, Col } from 'react-flexbox-grid';
 import ScatterChartWrap from './ScatterChartWrap';
 import { CHART_FILTERS_MAP } from "../../utils/chartList";
 
@@ -13,14 +12,6 @@ const NoDataMessage = ({ filters }) =>
 
 const ForkTimeCharts = ({ charts, isUpdating, filterVals }) => {
 
-    const getClassName = (error) => {
-        if (error) {
-            return 'chart-wrap chart-wrap__error';
-        } else {
-            return isUpdating ? 'chart-wrap chart-wrap__updating' : 'chart-wrap';
-        }
-    };
-
     return (
         <Row>
             <Col xs={12} md={8}>
@@ -28,7 +19,7 @@ const ForkTimeCharts = ({ charts, isUpdating, filterVals }) => {
                     hasToggle={false}
                     error={charts.forkTime.error}
                     chartType={'ForkTime'}
-                    getClassName={getClassName}
+                    isUpdating={isUpdating}
                     filterVals={filterVals}
                     titleHeader={<h3>Fork Time</h3>}
                     hasCsvButton={true}
