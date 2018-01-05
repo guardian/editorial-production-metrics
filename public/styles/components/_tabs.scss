@@ -1,0 +1,25 @@
+.tabs {
+  &__button {
+    background-color: $color750Grey;
+    border-top: 1px solid $color550Grey;
+    color: $cWhite;
+    width: 100%;
+    padding: 1rem 0;
+
+    &--selected {
+      background-color: $color700Grey;
+      border-top: 1px solid $cYellow;
+      color: $cYellow;
+    }
+
+    &:hover,
+    &:focus {
+      color: $cYellow;
+    }
+  }
+
+  &__tab {
+    background-color: $color700Grey;
+    padding-bottom: 2rem;
+  }
+}

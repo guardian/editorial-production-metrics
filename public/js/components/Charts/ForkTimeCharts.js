@@ -13,7 +13,7 @@ const NoDataMessage = ({ filters }) =>
 const ForkTimeCharts = ({ charts, isUpdating, filterVals }) => {
 
     return (
-        <Row>
+        <Row around="xs">
             <Col xs={12} md={8}>
                 <ScatterChartWrap
                     hasToggle={false}
