@@ -63,11 +63,11 @@ class MetricsDBSpec extends FunSuite with MockitoSugar with Matchers with Result
     val getInitialForks = metricsDb.getForks(MetricsFilters())
     getInitialForks shouldBe a [Right[_,_]]
 
-    TestData.addMetric(TestData.randomMetricWith("composerId_fork1", "storyBundleId_fork1").copy(commissioningDesk = Some("testFilters"), issueDate = Some(new DateTime("2017-01-01"))))
-    TestData.addFork(TestData.randomForkWith("composerId_fork1").copy(timeToPublication = Some(1234)))
+    TestData.addMetric(TestData.randomMetricWith("composerId_fork1", "storyBundleId_fork1").copy(commissioningDesk = Some("testFilters")))
+    TestData.addFork(TestData.randomForkWith("composerId_fork1", new DateTime("2017-01-01")).copy(timeToPublication = Some(1234)))
 
-    TestData.addMetric(TestData.randomMetricWith("composerId_fork2", "storyBundleId_fork2").copy(commissioningDesk = Some("testFilters"), issueDate = Some(new DateTime("2017-11-11"))))
-    TestData.addFork(TestData.randomForkWith("composerId_fork2").copy(timeToPublication = Some(4321)))
+    TestData.addMetric(TestData.randomMetricWith("composerId_fork2", "storyBundleId_fork2").copy(commissioningDesk = Some("testFilters")))
+    TestData.addFork(TestData.randomForkWith("composerId_fork2", new DateTime("2017-11-11")).copy(timeToPublication = Some(4321)))
 
     val getFilteredForks = metricsDb.getForks(MetricsFilters(desk = Some("testFilters")))
     getFilteredForks shouldBe a [Right[_,_]]
