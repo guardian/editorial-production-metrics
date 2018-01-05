@@ -16,14 +16,12 @@ const ArticleCommissionedLengthTable = ({articles}) => {
                     <Th>Headline</Th>
                     <Th></Th>
                     <Th>Word Count</Th>
-                    <Th>Commissioned Word Count</Th>
                 </Tr>
             }>
                 {noCommissioningLength.map(x => 
                     <Tr key={x.path}>
                         <Td><a href={"https://www.theguardian.com/"+x.path} target="_blank" rel="noopener noreferrer">{x.headline}</a></Td>
                         <Td><a href={"https://dashboard.ophan.co.uk/info?path=/"+x.path} target="_blank" rel="noopener noreferrer">Ophan</a></Td>
-                        <Td>{x.wordCount}</Td>
                         <Td>{x.commissionedWordCount}</Td>
                     </Tr>
                 )}
