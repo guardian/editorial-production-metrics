@@ -3,8 +3,8 @@ import { Th } from './index';
 
 const tableClass = centered =>
   [
-    `table__table`,
-    centered ? `table__table--centered` : ""
+    "table",
+    centered ? `table--centered` : ""
   ]
     .join(" ")
     .replace(/\s+/, " ")
