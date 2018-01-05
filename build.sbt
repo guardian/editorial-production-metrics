@@ -3,7 +3,7 @@ import com.typesafe.sbt.packager.archetypes.ServerLoader.Systemd
 name := "editorial-production-metrics"
 version := "1.0"
 
-scalaVersion := "2.11.11"
+scalaVersion in ThisBuild := "2.11.11"
 
 resolvers ++= Seq("Guardian Bintray" at "https://dl.bintray.com/guardian/editorial-tools")
 
