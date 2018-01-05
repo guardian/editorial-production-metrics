@@ -1,14 +1,14 @@
 import React from "react";
-
-const baseClass = headerRow => `table__${headerRow ? `header-` : ""}row`;
+import cx from "classnames";
 
 const Tr = ({ children, headerRow, isOdd, ...trProps }) => (
   <tr
-    className={`${baseClass(headerRow)} ${
-      isOdd !== null
-        ? `${baseClass(headerRow)}--${isOdd ? "odd" : "even"}`
-        : ``
-    }`}
+    className={cx({
+      "table__row": true,
+      "table__row--header": headerRow,
+      "table__row--odd": isOdd,
+      "table__row--even": !isOdd,
+    })}
     {...trProps}
   >
     {children}
