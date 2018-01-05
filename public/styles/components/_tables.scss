@@ -19,21 +19,21 @@
     line-height: 18px;
 
     & + & {
-      border-left: 1px solid $color700Grey;
+      border-left: 1px solid $color650Grey;
     }
 
     &--header {
       & + & {
-        border-left: 1px solid $color750Grey;
+        border-left: 1px solid $color700Grey;
       }
     }
   }
 
   &__row {
-    background: $color650Grey;
+    background: $color600Grey;
 
     &--even {
-      background-color: $color600Grey;
+      background-color: $color550Grey;
     }
 
     &--highlight {
@@ -41,22 +41,22 @@
     }
 
     &:hover {
-      background-color: $color550Grey;
+      background-color: $color500Grey;
 
       & + & {
-        border-left: 1px solid $color650Grey;
+        border-left: 1px solid $color600Grey;
       }
     }
 
     & + & {
       .table__item {
-        border-top: 1px solid $color700Grey;
+        border-top: 1px solid $color650Grey;
       }
     }
   }
 
   &__header-row {
-    background: $color700Grey;
+    background: $color650Grey;
     border: {
       bottom: 1px solid $cYellow;
     };
@@ -65,7 +65,7 @@
 
     & + & {
       .table__item {
-        border-top: 1px solid $color750Grey;
+        border-top: 1px solid $color700Grey;
       }
     }
   }
