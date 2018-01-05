@@ -71,10 +71,10 @@ object MetricsFilters {
 
   def metricFilters(implicit filters: MetricsFilters): DBMetric => Rep[Option[Boolean]] = metric => checkMetricsFilters(metric)
 
-  def forksFilters(implicit filters: MetricsFilters): ((ForkFilterColumns, DBMetric)) => Rep[Option[Boolean]] = forkAndMetric =>
-    checkMetricsForkingFilters(forkAndMetric)
+  def forkFilters(implicit filters: MetricsFilters): ((ForkFilterColumns, DBMetric)) => Rep[Option[Boolean]] = forkAndMetric =>
+    checkMetricsForkFilters(forkAndMetric)
 
-  private def checkMetricsForkingFilters(data: (ForkFilterColumns, Schema.DBMetric))(implicit filters: MetricsFilters): Rep[Option[Boolean]] = {
+  private def checkMetricsForkFilters(data: (ForkFilterColumns, Schema.DBMetric))(implicit filters: MetricsFilters): Rep[Option[Boolean]] = {
     val (fork, metric) = data
     filters.dateRange.fold(TrueOptCol)(dr => fork._3.? >= dr.from && fork._3.? <= dr.to) &&
       checkCommonFilters(metric)

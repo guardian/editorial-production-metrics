@@ -38,7 +38,7 @@ class MetricsDB(implicit val db: Database) {
     awaitWithTransformation(db.run(
       forksTable.map(f => (f.composerId, f.timeToPublication, f.time))
         .join(metricsTable).on(_._1 === _.composerId)
-        .filter(MetricsFilters.forksFilters)
+        .filter(MetricsFilters.forkFilters)
         .map { case ((_, timeToPublication, forkTime), _) => (timeToPublication, forkTime.toDayDateTrunc) }
         .result)
     )(_.flatMap(ForkResponse.convertToForkResponse).toList)
