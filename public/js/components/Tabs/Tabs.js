@@ -5,9 +5,14 @@ import cx from "classnames";
 export default class Tabs extends Component {
     state = {selectedIndex: 0};
 
+    componentDidMount() {
+        // fire the initial tab index to the listener
+        this.props.onChange(this.state.selectedIndex);
+    }
+
     onChange(event, index) {
         event.preventDefault();
-        this.setState({selectedIndex: index});
+        this.setState({selectedIndex: index}, this.props.onChange(index));
     }
 
     render() {
@@ -49,4 +54,7 @@ export default class Tabs extends Component {
     }
 }
 
-Tabs.defaultProps = {labels: []};
+Tabs.defaultProps = {
+    labels: [],
+    onChange: () => {}
+};

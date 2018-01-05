@@ -79,13 +79,21 @@ All chart components are stored in `public/js/componets/Charts`. Just add a new 
 
 #### Adding a new filter
 
-There is a unique reducer for all filters, in `updateFilterReducer.js`: just update the inital state, then in `Filters.js` add your filter and update the object by launching the `runFilter()` action with the updated `filterVals` when your filter changes. Example: 
+There is a unique reducer for all filters, in `filterReducer.js`: just update the inital state, then in `Filters.js` add your filter and update the object by launching the `runFilter()` action with the updated `values` when your filter changes. Example: 
 ```
 <select onChange={event => runFilter({ theFilterBeingUpdated: event.target.value })}> ... </select>
 ```
 You can add the new query param in `Api.js` by simply adding a key to the `params` object built by the `buildQueryParams` function. 
 
 `runFilter` will update the filter object with the new value and proceed to call the api again with the updated values.
+
+#### Hiding a filter
+
+There is currently a relatively primative way of hiding filters for tabs. We listen for a callback when a tab changes and then dispatch `updateFilterStatuses` with the new statuses. By default this action will turn on _all_ filters - each call needs to specify which to hide. In order to disable the filter use `{ filterName: "disabled" }`. In future a `"hidden"` string will be accepted to completely hide the input.
+
+The spec for these is found in `App.js` where an array whose indices map onto the tab indices specifies which filters should be disabled or hidden for that index.
+
+If we added in `TabButton` components that could be composed by a `FilterTabButton` component then we could specify the filters as `FilterTabButton` props on this rather than as a variable in `App`.
 
 #### Routing
 
