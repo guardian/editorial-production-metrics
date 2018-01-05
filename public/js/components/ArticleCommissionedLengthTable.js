@@ -1,9 +1,7 @@
 import React from 'react';
 import {Table, Tr, Th, Td} from './Table';
 
-const compare = (article1, article2) => {
-    return article2.commissionedWordCount - article1.commissionedWordCount;
-}
+const compare = (article1, article2) => article2.commissionedWordCount - article1.commissionedWordCount;
 
 const ArticleCommissionedLengthTable = ({articles}) => {
     const noCommissioningLength = articles.filter(article => article.commissionedWordCount == 0)
