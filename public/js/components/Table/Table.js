@@ -1,14 +1,6 @@
 import React from "react";
 import { Th } from './index';
-
-const tableClass = centered =>
-  [
-    "table",
-    centered ? `table--centered` : ""
-  ]
-    .join(" ")
-    .replace(/\s+/, " ")
-    .trim();
+import cx from "classnames";
 
 const renderSection = (leftTitle, children, propFn) =>
   React.Children.map(children, (child, index) =>
@@ -26,7 +18,10 @@ const renderSection = (leftTitle, children, propFn) =>
   );
 
 const Table = ({ head, children, centered, headTitle, bodyTitle, alternate }) => (
-  <table className={tableClass(centered)}>
+  <table className={cx({
+    table: true,
+    "table--centered": centered,
+  })}>
     {head && (
       <thead className="table__head">
         {renderSection(headTitle, head, () => ({ headerRow: true }))}
