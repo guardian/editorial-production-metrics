@@ -89,7 +89,15 @@ You can add the new query param in `Api.js` by simply adding a key to the `param
 
 #### Hiding a filter
 
+<<<<<<< HEAD
 Filters are on a per-route basis. There is a component `TabRoute`  - a wrapper for a `<Route />` component from react-router - on which you can specify the filters to disable for a given route using `disabledFilters`. This internally runs `updateFilterStatuses` with the new statuses. In future a `"hidden"` we could also use a `hiddenFilters` prop for this to hide rather than simply disable a filter.
+=======
+There is currently a relatively primative way of hiding filters for tabs. We listen for a callback when a tab changes and then dispatch `updateFilterStatuses` with the new statuses. By default this action will turn on _all_ filters - each call needs to specify which to hide. In order to disable the filter use `{ filterName: "disabled" }`. In future a `"hidden"` string will be accepted to completely hide the input.
+
+The spec for these is found in `App.js` where an array whose indices map onto the tab indices specifies which filters should be disabled or hidden for that index.
+
+If we added in `TabButton` components that could be composed by a `FilterTabButton` component then we could specify the filters as `FilterTabButton` props on this rather than as a variable in `App`.
+>>>>>>> Disable unused filters
 
 #### Routing
 

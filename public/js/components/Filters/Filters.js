@@ -73,13 +73,13 @@ export default class Filters extends Component {
                                             startDate={this.state.startDate}
                                             endDate={this.state.endDate}
                                             onDatesChange={ ({ startDate, endDate }) => {
-                                              this.setState({ startDate, endDate });
-                                              if (startDate && endDate) {
-                                                runFilter({
-                                                  startDate: startDate.utc().startOf('day').format(),
-                                                  endDate: endDate.utc().endOf('day').format()
-                                                })
-                                              }
+                                                this.setState({ startDate, endDate });
+                                                if (startDate && endDate) {
+                                                    runFilter({
+                                                        startDate: startDate.utc().startOf('day').format(),
+                                                        endDate: endDate.utc().endOf('day').format()
+                                                    });
+                                                }
                                             }}
                                             focusedInput={this.state.focusedInput}
                                             onFocusChange={focusedInput => this.setState({ focusedInput })}
