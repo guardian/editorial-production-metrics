@@ -10,6 +10,18 @@ import Origin from 'components/Tabs/Origin';
 import CommissionedLength from '../components/Tabs/CommissionedLength';
 import ForkTime from '../components/Tabs/ForkTime';
 
+// Tabs will be enabled by the reducer each time unless specified
+const tabFilters = [
+    {
+        newspaperBook: "disabled",
+    }, {
+        desk: "disabled",
+        productionOffice: "disabled"
+    }, {
+
+    }
+];
+
 class App extends Component {
     componentDidMount() {
         this.props.actions.fetchCommissioningDesks();
@@ -17,7 +29,7 @@ class App extends Component {
     }
 
     render() {
-        const { filterVals, isUpdating, charts, commissioningDesks, newspaperBooks, actions } = this.props;
+        const { filterVals, filterStatuses, isUpdating, charts, commissioningDesks, newspaperBooks, actions } = this.props;
         return (
             <Page>
                 <div className='top-section'>
@@ -25,12 +37,16 @@ class App extends Component {
                 </div>
                 <Filters
                     filterVals={filterVals}
+                    filterStatuses={filterStatuses}
                     isUpdating={isUpdating}
                     desks={commissioningDesks.desksList}
                     newspaperBooks={newspaperBooks.booksList}
                     runFilter={actions.runFilter}
                 />
-                <Tabs labels={["Origin","Fork Time","Commissioned Length"]}>
+                <Tabs
+                    labels={["Origin","Fork Time","Commissioned Length"]}
+                    onChange={i => actions.updateFilterStatuses(tabFilters[i])}
+                >
                     <Origin
                         filterVals={filterVals}
                         isUpdating={isUpdating}
@@ -55,9 +71,12 @@ const mapDispatchToProps = (dispatch) => ({
 
 const mapStateToProps = (state) => {
     const { charts, isUpdating, commissioningDesks, newspaperBooks } = state;
+
+    const filters = getFilters(state);
     
     return {
-        filterVals: getFilters(state),
+        filterVals: filters.values,
+        filterStatuses: filters.statuses,
         charts,
         isUpdating,
         commissioningDesks,

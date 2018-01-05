@@ -9,12 +9,12 @@ export const updateUrlFromStateChangeMiddleware = ({ dispatch, getState }) => (n
     const newState = getState();
     // this formatting is needed as the dates in the state are moment objects, but need to be strings in the url
     const newStateFormattedFilters = {
-        ...newState.filterVals,
-        startDate: newState.filterVals.startDate,
-        endDate: newState.filterVals.endDate
+        ...newState.filters.values,
+        startDate: newState.filters.values.startDate,
+        endDate: newState.filters.values.endDate
     };
 
-    if (!_isEqual(prevState.filterVals, newState.filterVals)) {
+    if (!_isEqual(prevState.filters.values, newState.filters.values)) {
         const location = newState.routing.location;
         const paramString = `?${objectToParamString(newStateFormattedFilters)}`;
 
@@ -36,7 +36,7 @@ export const updateStateFromUrlChangeMiddleware = ({ dispatch, getState }) => (n
         const filterObj = paramStringToObject(newState.routing.location.search);
 
         const nextFilterVals = {
-            ...newState.filterVals,
+            ...newState.filters.values,
             ...filterObj
         }
 

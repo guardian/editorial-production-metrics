@@ -56,8 +56,8 @@ const chartNeedsUpdate = (chart, filterChangeset = {}) => {
 
 export const runFilter = (filterChangeset = {}) => {
     return (dispatch, getState) => {
-        const { filterVals } = getState();
-        const updatedFilters = { ...filterVals, ...filterChangeset };
+        const { filters: { values } } = getState();
+        const updatedFilters = { ...values, ...filterChangeset };
         dispatch(updateFilter(updatedFilters));
         dispatch(toggleIsUpdatingCharts(true));
         
@@ -101,6 +101,11 @@ export const toggleStackChart = (isStacked) => ({
     isStacked
 });
 
-const actions = { runFilter, fetchCommissioningDesks, fetchNewspaperBooks, toggleStackChart };
+export const updateFilterStatuses = statuses => ({
+    type: "UPDATE_FILTER_STATUSES",
+    statuses
+});
+
+const actions = { runFilter, updateFilterStatuses, fetchCommissioningDesks, fetchNewspaperBooks, toggleStackChart };
 
 export default actions;
