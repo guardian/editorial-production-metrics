@@ -71,7 +71,7 @@ object TestData {
   def randomMetricWith(composerId: String, storyBundleId: String): Metric =
     generateRandomMetric(0).copy(composerId = Some(composerId), storyBundleId = Some(storyBundleId))
 
-  def randomForkWith(composerId: String) = generateRandomFork.copy(composerId = composerId)
+  def randomForkWith(composerId: String, time: DateTime) = generateRandomFork.copy(composerId = composerId, time = time)
 
   private[this] def randomMetrics(acc: List[Metric], size: Int): List[Metric] =
     if (size == 0) acc else randomMetrics(generateRandomMetric(size) :: acc, size - 1)

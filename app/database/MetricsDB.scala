@@ -36,12 +36,12 @@ class MetricsDB(implicit val db: Database) {
 
   def getForks(implicit filters: MetricsFilters): Either[ProductionMetricsError, List[ForkResponse]] =
     awaitWithTransformation(db.run(
-      forksTable.map(f => (f.composerId, f.timeToPublication))
+      forksTable.map(f => (f.composerId, f.timeToPublication, f.time))
         .join(metricsTable).on(_._1 === _.composerId)
-        .filter(MetricsFilters.forksFilters)
-        .map { case ((composerId, timeToPublication), metric) => (timeToPublication, metric.issueDate.toDayDateTrunc) }
+        .filter(MetricsFilters.forkFilters)
+        .map { case ((_, timeToPublication, forkTime), _) => (timeToPublication, forkTime.toDayDateTrunc) }
         .result)
-      )(_.flatMap(ForkResponse.convertToForkResponse).toList)
+    )(_.flatMap(ForkResponse.convertToForkResponse).toList)
 
   def insertFork(fork: Fork): Either[ProductionMetricsError, Int] = await(db.run(forksTable += fork))
 

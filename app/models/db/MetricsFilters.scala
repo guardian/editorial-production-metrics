@@ -25,6 +25,9 @@ case class MetricsFilters(
 )
 
 object MetricsFilters {
+
+  type ForkFilterColumns = (Rep[String], Rep[Option[Int]], Rep[DateTime])
+
   private val TrueOptCol: Rep[Option[Boolean]] = LiteralColumn(Some(true))
 
   def apply(queryString: Map[String, Seq[String]]): MetricsFilters =
@@ -68,16 +71,27 @@ object MetricsFilters {
 
   def metricFilters(implicit filters: MetricsFilters): DBMetric => Rep[Option[Boolean]] = metric => checkMetricsFilters(metric)
 
-  def forksFilters[T](implicit filters: MetricsFilters): ((T, DBMetric)) => Rep[Option[Boolean]] = forkAndMetric => checkMetricsFilters(forkAndMetric._2)
+  def forkFilters(implicit filters: MetricsFilters): ((ForkFilterColumns, DBMetric)) => Rep[Option[Boolean]] = forkAndMetric =>
+    checkMetricsForkFilters(forkAndMetric)
+
+  private def checkMetricsForkFilters(data: (ForkFilterColumns, Schema.DBMetric))(implicit filters: MetricsFilters): Rep[Option[Boolean]] = {
+    val (fork, metric) = data
+    filters.dateRange.fold(TrueOptCol)(dr => fork._3.? >= dr.from && fork._3.? <= dr.to) &&
+      checkCommonFilters(metric)
+  }
 
   private def checkMetricsFilters(metric: Schema.DBMetric)(implicit filters: MetricsFilters): Rep[Option[Boolean]] = {
+    filters.dateRange.fold(TrueOptCol)(dr => metric.creationTime.? >= dr.from && metric.creationTime.? <= dr.to) &&
+      checkCommonFilters(metric)
+  }
+
+  private def checkCommonFilters(metric: Schema.DBMetric)(implicit filters: MetricsFilters): Rep[Option[Boolean]] = {
     import MetricHelpers._
     filters.desk.fold(TrueOptCol)(d => metric.commissioningDesk.toLowerCase === d.toLowerCase) &&
-    filters.originatingSystem.fold(TrueOptCol)(os => metric.originatingSystem.? === os) &&
-    filters.dateRange.fold(TrueOptCol)(dr => metric.creationTime.? >= dr.from && metric.creationTime.? <= dr.to) &&
-    filters.productionOffice.fold(TrueOptCol)(po => metric.productionOffice === po) &&
-    filters.inWorkflow.fold(TrueOptCol)(inWf => metric.inWorkflow.? === inWf) &&
-    filters.newspaperBook.fold(TrueOptCol)(nb => metric.newspaperBook.toLowerCase === nb.toLowerCase)
+      filters.originatingSystem.fold(TrueOptCol)(os => metric.originatingSystem.? === os) &&
+      filters.productionOffice.fold(TrueOptCol)(po => metric.productionOffice === po) &&
+      filters.inWorkflow.fold(TrueOptCol)(inWf => metric.inWorkflow.? === inWf) &&
+      filters.newspaperBook.fold(TrueOptCol)(nb => metric.newspaperBook.toLowerCase === nb.toLowerCase)
   }
 }
 
@@ -95,9 +109,10 @@ case class ForkResponse(issueDate: DateTime, timeToPublication: Int)
 
 object ForkResponse {
 
-  def convertToForkResponse(pair : (Option[Int], Option[DateTime])) =
-    for {
-      timeToPublication <- pair._1
-      issueDate <- pair._2
-    } yield ForkResponse(issueDate, timeToPublication)
+  def convertToForkResponse(pair : (Option[Int], DateTime)) = {
+
+    val (timeToPublicationOpt, forkTime) = pair
+
+    timeToPublicationOpt.map(timeToPublication => ForkResponse(forkTime, timeToPublication))
+  }
 }
