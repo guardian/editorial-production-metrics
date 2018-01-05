@@ -35,12 +35,14 @@
     border-radius: 0;
     text-indent: .01px;
     text-overflow: '';
+    transition: background-color 0.5s, border-color 0.5s;
   }
 
 }
 
 .form__field.form__field--select:disabled {
     background-color: $btnDisabledBgColor;
+    border-color: $btnDisabledBgColor;
     pointer-events: none;
 }
 

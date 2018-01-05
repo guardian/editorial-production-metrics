@@ -18,7 +18,7 @@ export default class Filters extends Component {
     state = { focusedInput: null };
 
     render() {
-        const { filterVals, isUpdating, desks, newspaperBooks, runFilter } = this.props;
+        const { filterVals, filterStatuses, isUpdating, desks, newspaperBooks, runFilter } = this.props;
         return (
             <form className="form">
                 <Grid fluid>
@@ -29,7 +29,7 @@ export default class Filters extends Component {
                                 options={tagsToOptions(desks)}
                                 onChange={({ target }) => runFilter({ desk: target.value })}
                                 value={filterVals.desk}
-                                disabled={isUpdating}
+                                disabled={isUpdating || filterStatuses.desk === "disabled"}
                             />
                         </Col>
                         <Col xs={12} md={2}>
@@ -43,7 +43,7 @@ export default class Filters extends Component {
                                 }}
                                 onChange={({ target }) => runFilter({ productionOffice: target.value })}
                                 value={filterVals.productionOffice}
-                                disabled={isUpdating}
+                                disabled={isUpdating || filterStatuses.productionOffice === "disabled"}
                             />
                         </Col>
                         <Col xs={12} md={4}>
@@ -52,7 +52,7 @@ export default class Filters extends Component {
                                 options={tagsToOptions(newspaperBooks)}
                                 onChange={({ target }) => runFilter({ newspaperBook: target.value })}
                                 value={filterVals.newspaperBook}
-                                disabled={isUpdating}
+                                disabled={isUpdating || filterStatuses.newspaperBook === "disabled"}
                             />
                         </Col>
                         <Col xs={12} md={4}>
@@ -65,7 +65,7 @@ export default class Filters extends Component {
                                             initialVisibleMonth={() => moment().subtract(1, 'months')}
                                             orientation={window.innerWidth > 640 ? 'horizontal' : 'vertical'}
                                             displayFormat='DD/MM/YYYY'
-                                            disabled={isUpdating}
+                                            disabled={isUpdating || filterStatuses.startDate === "disabled" && filterStatuses.endDate === "disabled"}
                                             startDate={filterVals.startDate}
                                             endDate={filterVals.endDate}
                                             onDatesChange={
