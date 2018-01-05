@@ -38,3 +38,13 @@ html {
   margin-top: 20px;
   margin-bottom: 40px;
 }
+
+a {
+  text-decoration: none;
+  color: $anchorColor;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

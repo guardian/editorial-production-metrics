@@ -10,7 +10,7 @@ const CommissionedLength = () => {
     return (
         <div>
             <BandedCount
-                title="Commisioned Lengths"
+                title="Commissioned Lengths"
                 bands={TEST_DATA.commissionedLengthBands}
                 noBandCount={TEST_DATA.withoutCommissionedLengthCount}
             />

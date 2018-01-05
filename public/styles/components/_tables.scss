@@ -5,15 +5,12 @@
 .table {
   width: 100%;
   margin: 0 auto;
+  color: $cWhite;
+  width: 100%;
+  text-align: left;
 
-  &__table {
-    color: $cWhite;
-    width: 100%;
-    text-align: left;
-
-    &--centered {
-      text-align: center;
-    }
+  &--centered {
+    text-align: center;
   }
 
   &__item {
@@ -44,7 +41,7 @@
     }
 
     &:hover {
-      background-color: $color500Grey;
+      background-color: $color550Grey;
 
       & + & {
         border-left: 1px solid $color650Grey;
@@ -70,20 +67,6 @@
       .table__item {
         border-top: 1px solid $color750Grey;
       }
-    }
-  }
-
-  &__link {
-    font-weight: bold;
-    text-decoration: none;
-    color: $cBlueLink;
-    cursor: pointer;
-    padding: 5px 0;
-    display: block;
-    width: 100%;
-
-    &:hover {
-      text-decoration: underline;
     }
   }
 }
