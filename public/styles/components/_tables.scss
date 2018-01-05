@@ -40,7 +40,7 @@
       background: $lightBrandColor;
     }
 
-    &:hover {
+    &:hover:not(.table__row--header) {
       background-color: $color500Grey;
 
       & + & {
@@ -53,19 +53,19 @@
         border-top: 1px solid $color650Grey;
       }
     }
-  }
 
-  &__header-row {
-    background: $color650Grey;
-    border: {
-      bottom: 1px solid $cYellow;
-    };
-    font-size: 13px;
-    font-weight: bold;
+    &--header {
+      background: $color650Grey;
+      border: {
+        bottom: 1px solid $cYellow;
+      };
+      font-size: 13px;
+      font-weight: bold;
 
-    & + & {
-      .table__item {
-        border-top: 1px solid $color700Grey;
+      & + & {
+        .table__item {
+          border-top: 1px solid $color700Grey;
+        }
       }
     }
   }
