@@ -1,4 +1,4 @@
-import { replace } from 'react-router-redux';
+import { push } from 'react-router-redux';
 import { runFilter } from 'actions';
 import _isEqual from 'lodash/isEqual';
 import moment from 'moment';
@@ -20,7 +20,7 @@ export const updateUrlFromStateChangeMiddleware = ({ dispatch, getState }) => (n
 
         if (location && paramString !== location.search) {
             const newLocation = { ...location, search: paramString || ''};
-            const updateAction = replace(newLocation);
+            const updateAction = push(newLocation);
             dispatch(updateAction);
         }
     }
@@ -38,9 +38,12 @@ export const updateStateFromUrlChangeMiddleware = ({ dispatch, getState }) => (n
         const nextFilterVals = {
             ...newState.filters.values,
             ...filterObj
-        }
+        };
 
-        if (!_isEqual(filterObj, newState.filterVals)) {
+        // In practice this stops react-router running the filters unless it's a
+        // page load as these should never not be equal during this action
+        // TODO: get the router info through other means on page load
+        if (!_isEqual(nextFilterVals, newState.filters.values)) {
             dispatch(runFilter(nextFilterVals));
         }
     }
