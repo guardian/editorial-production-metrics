@@ -1,10 +1,12 @@
 .tabs {
-  &__button {
+  &__link {
     background-color: $color750Grey;
     border-top: 1px solid $color550Grey;
     color: $cWhite;
-    width: 100%;
+    display: inline-block;
     padding: 1rem 0;
+    text-align: center;
+    width: 100%;
 
     &--selected {
       background-color: $color700Grey;
@@ -15,6 +17,7 @@
     &:hover,
     &:focus {
       color: $cYellow;
+      text-decoration: none;
     }
   }
 
