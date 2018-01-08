@@ -1,6 +1,6 @@
 import { createStore, compose, applyMiddleware } from 'redux';
 import logger from 'redux-logger';
-import createHistory from 'history/createBrowserHistory';
+import history from '../utils/history';
 import { routerMiddleware } from 'react-router-redux';
 import thunkMiddleware from 'redux-thunk';
 import { updateUrlFromStateChangeMiddleware, updateStateFromUrlChangeMiddleware } from 'services/routingMiddleware';
@@ -22,7 +22,6 @@ export default (rootReducer) => {
     middleware.push(logger);
 
     /* ------------- Router Middleware ------------- */
-    const history = createHistory();
     const router = routerMiddleware(history);
     middleware.push(router);
     middleware.push(updateUrlFromStateChangeMiddleware);

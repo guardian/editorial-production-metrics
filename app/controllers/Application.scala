@@ -26,7 +26,7 @@ class Application(implicit val wsClient: WSClient, val db: MetricsDB) extends Co
     }
   }
 
-  def index = AuthAction {
+  def index(path: String) = AuthAction {
     Logger.info(s"I am the $appName")
     Ok(views.html.index())
   }

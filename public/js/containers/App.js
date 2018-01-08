@@ -1,26 +1,22 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import actions from 'actions';
-import Page from 'components/Page';
-import Filters from 'components/Filters/Filters';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import actions from "actions";
+import Page from "components/Page";
+import Filters from "components/Filters/Filters";
 import { getFilters } from "../selectors";
-import Tabs from 'components/Tabs/Tabs';
-import Origin from 'components/Tabs/Origin';
-import CommissionedLength from '../components/Tabs/CommissionedLength';
-import ForkTime from '../components/Tabs/ForkTime';
-
-// Tabs will be enabled by the reducer each time unless specified
-const tabFilters = [
-    {
-        newspaperBook: "disabled",
-    }, {
-        desk: "disabled",
-        productionOffice: "disabled"
-    }, {
-
-    }
-];
+import Origin from "components/Tabs/Origin";
+import CommissionedLength from "../components/Tabs/CommissionedLength";
+import ForkTime from "../components/Tabs/ForkTime";
+import {
+    TabLink,
+    TabRoute,
+    TabsPanel,
+    TabsNav,
+    TabsContainer
+} from "../components/Tabs";
+import { Route } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 
 class App extends Component {
     componentDidMount() {
@@ -29,10 +25,18 @@ class App extends Component {
     }
 
     render() {
-        const { filterVals, filterStatuses, isUpdating, charts, commissioningDesks, newspaperBooks, actions } = this.props;
+        const {
+            filterVals,
+            filterStatuses,
+            isUpdating,
+            charts,
+            commissioningDesks,
+            newspaperBooks,
+            actions
+        } = this.props;
         return (
             <Page>
-                <div className='top-section'>
+                <div className="top-section">
                     <h1>Guardian Tools Metrics</h1>
                 </div>
                 <Filters
@@ -43,37 +47,56 @@ class App extends Component {
                     newspaperBooks={newspaperBooks.booksList}
                     runFilter={actions.runFilter}
                 />
-                <Tabs
-                    labels={["Origin","Fork Time","Commissioned Length"]}
-                    onChange={i => actions.updateFilterStatuses(tabFilters[i])}
-                >
-                    <Origin
-                        filterVals={filterVals}
-                        isUpdating={isUpdating}
-                        charts={charts}
-                        toggleStackChart={actions.toggleStackChart}
-                    />
-                    <ForkTime
-                        filterVals={filterVals}
-                        isUpdating={isUpdating}
-                        charts={charts}
-                    />
-                    <CommissionedLength />
-                </Tabs>
+                <TabsContainer>
+                    <TabsNav>
+                        <TabLink to="/origin">Origin</TabLink>
+                        <TabLink to="/fork-time">Fork Time</TabLink>
+                        <TabLink to="/commissioned-length">
+                            Commissioned Length
+                        </TabLink>
+                    </TabsNav>
+                    <TabsPanel>
+                        <Route exact path="/" render={() => <Redirect to="/origin"/>}/>
+                        <TabRoute
+                            path="/origin"
+                            disabledFilters={[ "newspaperBook" ]}
+                        >
+                            <Origin
+                                filterVals={filterVals}
+                                isUpdating={isUpdating}
+                                charts={charts}
+                                toggleStackChart={actions.toggleStackChart}
+                            />
+                        </TabRoute>
+                        <TabRoute
+                            path="/fork-time"
+                            disabledFilters={[ "desk", "productionOffice" ]}
+                        >
+                            <ForkTime
+                                filterVals={filterVals}
+                                isUpdating={isUpdating}
+                                charts={charts}
+                            />
+                        </TabRoute>
+                        <TabRoute path="/commissioned-length">
+                            <CommissionedLength />
+                        </TabRoute>
+                    </TabsPanel>
+                </TabsContainer>
             </Page>
         );
     }
 }
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(actions, dispatch)
 });
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
     const { charts, isUpdating, commissioningDesks, newspaperBooks } = state;
 
     const filters = getFilters(state);
-    
+
     return {
         filterVals: filters.values,
         filterStatuses: filters.statuses,
