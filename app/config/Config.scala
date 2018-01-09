@@ -45,6 +45,12 @@ object Config extends AwsInstanceTags {
 
   val hmacSecret: String = config.getString("hmacSecret")
 
+  // Config values for determining the bands we use to send out word count
+
+  val wordCountBands: List[Int] = List(0, 350, 650, 900)
+
+  val maxNumberOfArtcilesDisplayed: Int = 1000
+
   private def getPropertyWithDefault[T](path: String, getVal: String => T, default: T): T = {
     if (config.hasPath(path)) getVal(path)
     else default
