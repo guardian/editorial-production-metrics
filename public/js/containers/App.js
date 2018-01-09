@@ -6,7 +6,7 @@ import Page from "components/Page";
 import Filters from "components/Filters/Filters";
 import { getFilters } from "../selectors";
 import Origin from "components/Tabs/Origin";
-import CommissionedLength from "../components/Tabs/CommissionedLength";
+import CommissionedLengthData from "./CommissionedLengthData";
 import ForkTime from "../components/Tabs/ForkTime";
 import {
     TabLink,
@@ -79,7 +79,7 @@ class App extends Component {
                             />
                         </TabRoute>
                         <TabRoute path="/commissioned-length">
-                            <CommissionedLength />
+                            <CommissionedLengthData />
                         </TabRoute>
                     </TabsPanel>
                 </TabsContainer>

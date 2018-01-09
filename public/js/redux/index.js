@@ -6,6 +6,7 @@ import filters from 'reducers/filtersReducer';
 import isUpdating from 'reducers/updateProgressReducer';
 import commissioningDesks from 'reducers/commissioningDesksReducer';
 import newspaperBooks from 'reducers/newspaperBooksReducer';
+import articleWordCounts from 'reducers/articleWordCountsReducer';
 
 export default () => {
     /* ------------- Assemble The Reducers ------------- */
@@ -15,7 +16,8 @@ export default () => {
         isUpdating,
         commissioningDesks,
         newspaperBooks,
-        routing 
+        routing,
+        articleWordCounts
     });
 
     return configureStore(rootReducer);
