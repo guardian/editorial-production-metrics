@@ -30,6 +30,9 @@ object Schema {
     def bookSectionCode       = column[Option[String]]("book_section_code")
     def newspaperBook         = column[Option[String]]("newspaper_book")
     def newspaperBookSection  = column[Option[String]]("newspaper_book_section")
+    def path                  = column[Option[String]]("path")
+    def wordCount             = column[Option[Int]]("word_count")
+    def commissionedWordCount = column[Option[Int]]("commissioned_word_count")
     def * = (
       id,
       originatingSystem,
@@ -47,7 +50,10 @@ object Schema {
       bookSectionName,
       bookSectionCode,
       newspaperBook,
-      newspaperBookSection) <> (Metric.customApply _, Metric.unapply _)
+      newspaperBookSection,
+      path,
+      wordCount,
+      commissionedWordCount) <> (Metric.customApply _, Metric.unapply _)
   }
 
   class DBFork(tag: Tag) extends Table[Fork](tag, "forks") {

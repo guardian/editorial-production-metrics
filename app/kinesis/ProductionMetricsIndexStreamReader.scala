@@ -81,7 +81,10 @@ object ProductionMetricsStreamReader {
           creationTime = Some(creationDate),
           firstPublicationTime = Some(firstPublicationDate),
           inNewspaper = Some(capiData.newspaperBookTag.isDefined),
-          productionOffice = capiData.productionOffice)
+          productionOffice = capiData.productionOffice,
+          commissionedWordCount = capiData.commissionedWordCount,
+          path = Some(capiData.path),
+          wordCount = capiData.wordCount)
       } yield db.updateOrInsert(existingMetric, metric)).getOrElse(Left(UnexpectedExceptionError))
   }
 }
