@@ -11,6 +11,10 @@ export const getFilters = memoize(({ filters }) => ({
     }
 }));
 
+export const getIsUpdating = ({ isUpdating }) => isUpdating;
+
+export const getFilterVals = state => getFilters(state).values;
+
 const getArticleWordCounts = ({ articleWordCounts }) => articleWordCounts;
 
 export const getWordCountArticles = state =>

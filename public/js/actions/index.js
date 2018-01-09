@@ -17,7 +17,6 @@ import {
   getNewspaperBooksFailed
 } from "./filtersActions";
 import api from 'services/Api';
-import moment from "moment";
 
 const chartsActions = { 
     updateComposerVsIncopy,
@@ -32,7 +31,7 @@ const chartsActions = {
 
 const updateAttemptActions = (chartData, chart, startDate, endDate, dispatch) => {
     dispatch(toggleIsUpdatingCharts(false));
-    dispatch(chartsActions[`update${chart}`]({ chartData, startDate, endDate }));
+    dispatch(chartsActions[`update${chart}`](chartData, startDate, endDate));
 };
 
 const responseFailActions = (chart, error, dispatch) => {
@@ -61,8 +60,7 @@ export const runFilter = (filterChangeset = {}) => {
         dispatch(updateFilter(updatedFilters));
         dispatch(toggleIsUpdatingCharts(true));
         
-        const startDate = moment(updatedFilters.startDate);
-        const endDate = moment(updatedFilters.endDate);
+        const { startDate, endDate } = updatedFilters;
         CHART_LIST
             .filter(chart => chartNeedsUpdate(chart, filterChangeset))
             .map(chart => {
@@ -98,7 +96,9 @@ export const fetchNewspaperBooks = () => {
 
 export const toggleStackChart = (isStacked) => ({
     type: 'TOGGLE_STACK_CHART',
-    isStacked
+    payload: {
+        isStacked
+    }
 });
 
 export const updateFilterStatuses = statuses => ({
