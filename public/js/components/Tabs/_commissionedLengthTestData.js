@@ -29,7 +29,7 @@ const articles = [
   {headline: "Neurotechnology, Elon Musk and the goal of human enhancement ", path:"technology/2018/jan/01/elon-musk-neurotechnology-human-enhancement-brain-computer-interfaces", wordCount: 1000, commissionedWordCount: 0},
 ]
 
-export default {
+export {
   wordCountBands,
   commissionedLengthBands,
   articleCount, // number
