@@ -5,8 +5,9 @@ import actions from "actions";
 import Page from "components/Page";
 import Filters from "components/Filters/Filters";
 import { getFilters } from "../selectors";
-import Origin from "components/Tabs/Origin";
+import OriginData from "./OriginData";
 import CommissionedLengthData from "./CommissionedLengthData";
+import ForkTimeData from "./ForkTimeData";
 import ForkTime from "../components/Tabs/ForkTime";
 import {
     TabLink,
@@ -29,7 +30,6 @@ class App extends Component {
             filterVals,
             filterStatuses,
             isUpdating,
-            charts,
             commissioningDesks,
             newspaperBooks,
             actions
@@ -61,22 +61,13 @@ class App extends Component {
                             path="/origin"
                             disabledFilters={[ "newspaperBook" ]}
                         >
-                            <Origin
-                                filterVals={filterVals}
-                                isUpdating={isUpdating}
-                                charts={charts}
-                                toggleStackChart={actions.toggleStackChart}
-                            />
+                            <OriginData />
                         </TabRoute>
                         <TabRoute
                             path="/fork-time"
                             disabledFilters={[ "desk", "productionOffice" ]}
                         >
-                            <ForkTime
-                                filterVals={filterVals}
-                                isUpdating={isUpdating}
-                                charts={charts}
-                            />
+                            <ForkTimeData />
                         </TabRoute>
                         <TabRoute path="/commissioned-length">
                             <CommissionedLengthData />
@@ -93,14 +84,13 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const mapStateToProps = state => {
-    const { charts, isUpdating, commissioningDesks, newspaperBooks } = state;
+    const { isUpdating, commissioningDesks, newspaperBooks } = state;
 
     const filters = getFilters(state);
 
     return {
         filterVals: filters.values,
         filterStatuses: filters.statuses,
-        charts,
         isUpdating,
         commissioningDesks,
         newspaperBooks
