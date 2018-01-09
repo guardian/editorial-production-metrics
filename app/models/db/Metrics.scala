@@ -34,7 +34,8 @@ case class Metric(
    newspaperBookSection: Option[String] = None,
    path: Option[String] = None,
    wordCount: Option[Int] = None,
-   commissionedWordCount: Option[Int] = None)
+   commissionedWordCount: Option[Int] = None,
+   headline: Option[String] = None)
 
 object Metric {
   def apply(metricOpt: MetricOpt): Metric = Metric(
@@ -57,7 +58,8 @@ object Metric {
     newspaperBookSection = metricOpt.newspaperBookSection,
     path = metricOpt.path,
     wordCount = metricOpt.wordCount,
-    commissionedWordCount = metricOpt.commissionedWordCount
+    commissionedWordCount = metricOpt.commissionedWordCount,
+    headline = metricOpt.headline
   )
 
   private val datePattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
@@ -82,7 +84,8 @@ object Metric {
       Option[String],
       Option[String],
       Option[Int],
-      Option[Int])
+      Option[Int],
+      Option[String])
    ): Metric =
     Metric(
       id = tuple._1,
@@ -104,7 +107,8 @@ object Metric {
       newspaperBookSection = tuple._17,
       path = tuple._18,
       wordCount = tuple._19,
-      commissionedWordCount = tuple._20
+      commissionedWordCount = tuple._20,
+      headline = tuple._21
     )
 
   implicit val timeEncoder = new Encoder[DateTime] {

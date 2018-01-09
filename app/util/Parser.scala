@@ -7,7 +7,7 @@ import io.circe.generic.auto._
 import io.circe.{Decoder, Json, parser}
 import models.db.Metric
 import models.db.Metric._
-import models.{CommissioningDesks, InvalidJsonError, ProductionMetricsError}
+import models.{CommissioningDesks, ProductionMetricsError}
 import play.api.Logger
 import util.Utils._
 

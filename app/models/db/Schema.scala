@@ -33,6 +33,7 @@ object Schema {
     def path                  = column[Option[String]]("path")
     def wordCount             = column[Option[Int]]("word_count")
     def commissionedWordCount = column[Option[Int]]("commissioned_word_count")
+    def headline              = column[Option[String]]("headline")
     def * = (
       id,
       originatingSystem,
@@ -53,7 +54,8 @@ object Schema {
       newspaperBookSection,
       path,
       wordCount,
-      commissionedWordCount) <> (Metric.customApply _, Metric.unapply _)
+      commissionedWordCount,
+      headline) <> (Metric.customApply _, Metric.unapply _)
   }
 
   class DBFork(tag: Tag) extends Table[Fork](tag, "forks") {

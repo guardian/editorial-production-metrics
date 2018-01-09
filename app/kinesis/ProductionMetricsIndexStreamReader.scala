@@ -84,7 +84,8 @@ object ProductionMetricsStreamReader {
           productionOffice = capiData.productionOffice,
           commissionedWordCount = capiData.commissionedWordCount,
           path = Some(capiData.path),
-          wordCount = capiData.wordCount)
+          wordCount = capiData.wordCount,
+          headline = capiData.headline)
       } yield db.updateOrInsert(existingMetric, metric)).getOrElse(Left(UnexpectedExceptionError))
   }
 }
