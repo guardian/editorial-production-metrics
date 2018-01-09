@@ -91,4 +91,14 @@ class Application(implicit val wsClient: WSClient, val db: MetricsDB) extends Co
   }
 
   def getNewspaperBookList = APIAuthAction(APIResponse(db.getDistinctNewspaperBooks))
+
+  def getArticlesWithWordCounts() = APIAuthAction { req =>
+    APIResponse {
+      for {
+        articlesWithoutCommissionedLength <- db.getArticlesWithWordCounts(false)(MetricsFilters(req.queryString))
+        articlesWithCommissionedLength <- db.getArticlesWithWordCounts(true)(MetricsFilters(req.queryString))
+      } yield List(articlesWithoutCommissionedLength, articlesWithCommissionedLength)
+    }
+
+  }
 }

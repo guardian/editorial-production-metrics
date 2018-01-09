@@ -71,9 +71,21 @@ object MetricsFilters {
 
   def metricFilters(implicit filters: MetricsFilters): DBMetric => Rep[Option[Boolean]] = metric => checkMetricsFilters(metric)
 
+  def withoutCommissionedWordCountFilters(implicit filters: MetricsFilters): DBMetric => Rep[Option[Boolean]] =
+    metric => checkCommissionedWordCountFilters(metric, false)
+
+  def withCommissionedWordCountFilters(implicit filters: MetricsFilters): DBMetric => Rep[Option[Boolean]] =
+    metric => checkCommissionedWordCountFilters(metric, true)
+
   def forkFilters(implicit filters: MetricsFilters): ((ForkFilterColumns, DBMetric)) => Rep[Option[Boolean]] = forkAndMetric =>
     checkMetricsForkFilters(forkAndMetric)
 
+  private def checkCommissionedWordCountFilters(metric: Schema.DBMetric, withCommissionedWordCount: Boolean)(implicit filters: MetricsFilters): Rep[Option[Boolean]] = {
+
+
+    Some(withCommissionedWordCount).fold(TrueOptCol)(booleanValue => metric.commissionedWordCount.isDefined === booleanValue) &&
+    checkMetricsFilters(metric)
+  }
   private def checkMetricsForkFilters(data: (ForkFilterColumns, Schema.DBMetric))(implicit filters: MetricsFilters): Rep[Option[Boolean]] = {
     val (fork, metric) = data
     filters.dateRange.fold(TrueOptCol)(dr => fork._3.? >= dr.from && fork._3.? <= dr.to) &&
@@ -116,3 +128,6 @@ object ForkResponse {
     timeToPublicationOpt.map(timeToPublication => ForkResponse(forkTime, timeToPublication))
   }
 }
+
+case class WordCountResponse(path: Option[String], wordCount: Option[Int], commissionedWordLength: Option[Int])
+

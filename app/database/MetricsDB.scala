@@ -57,4 +57,17 @@ class MetricsDB(implicit val db: Database) {
 
   def getDistinctNewspaperBooks: Either[ProductionMetricsError, Seq[Option[String]]] =
     await(db.run(metricsTable.filter(!_.newspaperBook.isEmpty).map(_.newspaperBook).distinct.result))
+
+  def getArticlesWithWordCounts(withCommissionedLength: Boolean)(implicit filters: MetricsFilters): Either[ProductionMetricsError, List[WordCountResponse]] = {
+    val filterFunction = if (withCommissionedLength)
+      MetricsFilters.withCommissionedWordCountFilters
+    else MetricsFilters.withoutCommissionedWordCountFilters
+
+    awaitWithTransformation(db.run(metricsTable.filter(filterFunction)
+      .sortBy((metric) => metric.wordCount - metric.commissionedWordCount)
+      .map { case (metric) => (metric.path, metric.wordCount, metric.commissionedWordCount) }
+      .result)) { dbResult: Seq[(Option[String], Option[Int], Option[Int])] =>
+      dbResult.map(result => WordCountResponse(result._1, result._2, result._3)).toList
+    }
+  }
 }
