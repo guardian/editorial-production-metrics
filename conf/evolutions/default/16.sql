@@ -4,4 +4,4 @@ ALTER TABLE metrics ADD COLUMN headline varchar;
 
 # --- !Downs
 
-ALTER TABLE metrics ADD COLUMN headline;
+ALTER TABLE metrics DROP COLUMN headline;
