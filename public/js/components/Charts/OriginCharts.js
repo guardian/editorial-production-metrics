@@ -1,5 +1,4 @@
 import React from 'react';
-import { Themes } from 'formidable-charts';
 import { Row, Col } from 'react-flexbox-grid';
 import AreaChartWrap from './AreaChartWrap';
 

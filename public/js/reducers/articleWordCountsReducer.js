@@ -46,7 +46,6 @@ const articleWordCounts = (state = initialState, action) => {
                     ...action.payload.articles
                 }
             };
-            break;
     
         case "UPDATE_WORD_COUNT_AGGREGATES":
             return {
@@ -56,7 +55,6 @@ const articleWordCounts = (state = initialState, action) => {
                     ...action.payload.aggregates
                 }
             };
-            break;
         default:
             return state;
     }
