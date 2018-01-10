@@ -4,8 +4,8 @@ import { bindActionCreators } from "redux";
 import actions from "actions";
 import Page from "components/Page";
 import Filters from "components/Filters/Filters";
-import { getFilters } from "../selectors";
 import OriginData from "./OriginData";
+import { getFilterVals, getFilterStatuses } from "../selectors";
 import CommissionedLengthData from "./CommissionedLengthData";
 import ForkTimeData from "./ForkTimeData";
 import ForkTime from "../components/Tabs/ForkTime";
@@ -86,11 +86,9 @@ const mapDispatchToProps = dispatch => ({
 const mapStateToProps = state => {
     const { isUpdating, commissioningDesks, newspaperBooks } = state;
 
-    const filters = getFilters(state);
-
     return {
-        filterVals: filters.values,
-        filterStatuses: filters.statuses,
+        filterVals: getFilterVals(state),
+        filterStatuses: getFilterStatuses(state),
         isUpdating,
         commissioningDesks,
         newspaperBooks

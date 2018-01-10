@@ -1,39 +1,62 @@
 import moment from "moment";
-import memoize from "lodash/memoize";
-
-// If the state object is the same then just return the same obj
-export const getFilters = memoize(({ filters }) => ({
-    ...filters,
-    values: {
-        ...filters.values,
-        startDate: moment(filters.values.startDate),
-        endDate: moment(filters.values.endDate)
-    }
-}));
+import { createSelector } from "reselect";
 
 export const getIsUpdating = ({ isUpdating }) => isUpdating;
 
-export const getFilterVals = state => getFilters(state).values;
+/* Filters */
+
+const getFilters = ({ filters }) => filters;
+
+export const getFilterVals = createSelector(getFilters, ({ values }) => ({
+    ...values,
+    startDate: moment(values.startDate),
+    endDate: moment(values.endDate)
+}));
+
+export const getFilterStatuses = createSelector(
+    getFilters,
+    ({ statuses }) => statuses
+);
+
+/* Commissioned length */
 
 const getArticleWordCounts = ({ articleWordCounts }) => articleWordCounts;
 
-export const getWordCountArticles = state =>
-    getArticleWordCounts(state).articles;
+export const getWordCountArticles = createSelector(
+    getArticleWordCounts,
+    ({ articles }) => articles
+);
 
-export const getWordCountAggregates = state =>
-    getArticleWordCounts(state).aggregates;
+export const getWordCountAggregates = createSelector(
+    getArticleWordCounts,
+    ({ aggregates }) => aggregates
+);
 
-export const getWordCountBands = state =>
-    getWordCountAggregates(state).wordCountBands;
+export const getWordCountBands = createSelector(
+    getWordCountAggregates,
+    ({ wordCountBands }) => wordCountBands
+);
 
-export const getCommissionedLengthBands = state =>
-    getWordCountAggregates(state).commissionedLengthBands;
+export const getCommissionedLengthBands = createSelector(
+    getWordCountAggregates,
+    ({ commissionedLengthBands }) => commissionedLengthBands
+);
 
 const sumCounts = arr => arr.reduce((sum, { count }) => sum + count, 0);
 
-export const getArticleCount = state => sumCounts(getWordCountBands(state));
-export const withCommissionedLengthCount = state =>
-    sumCounts(getCommissionedLengthBands(state));
+export const getArticleCount = createSelector(
+    getWordCountBands,
+    wordCountBands => sumCounts(wordCountBands)
+);
 
-export const getWithoutCommissionedLengthCount = state =>
-    getArticleCount(state) - withCommissionedLengthCount(state);
+export const getWithCommissionedLengthCount = createSelector(
+    getCommissionedLengthBands,
+    commissionedLengthBands => sumCounts(commissionedLengthBands)
+);
+
+export const getWithoutCommissionedLengthCount = createSelector(
+    getArticleCount,
+    getWithCommissionedLengthCount,
+    (articleCount, commissionedLengthCount) =>
+        articleCount - commissionedLengthCount
+);
