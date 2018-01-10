@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { withRouter } from "react-router";
 import { bindActionCreators } from "redux";
 import actions from "actions";
 import Page from "components/Page";
@@ -95,4 +96,4 @@ const mapStateToProps = state => {
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
