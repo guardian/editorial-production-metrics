@@ -59,17 +59,22 @@ class MetricsDB(implicit val db: Database) {
   def getDistinctNewspaperBooks: Either[ProductionMetricsError, Seq[Option[String]]] =
     await(db.run(metricsTable.filter(!_.newspaperBook.isEmpty).map(_.newspaperBook).distinct.result))
 
-  def getGroupedWordCounts(implicit filters: MetricsFilters): Either[ProductionMetricsError, Seq[Option[Int]]] = {
-    await(db.run(metricsTable
+  def getGroupedWordCounts(implicit filters: MetricsFilters): Either[ProductionMetricsError, List[GroupedWordCount]] = {
+    awaitWithTransformation(db.run(metricsTable
       .filter(MetricsFilters.metricFilters)
+      .filter(!_.wordCount.isEmpty)
       .map( metric =>
         Case
-          If(metric.wordCount === Some(100)) Then 100
-          If(metric.wordCount === Some(200))Then 200
-    ).result))
-
-
-
+          If(metric.wordCount between(0, 350)) Then 0
+          If(metric.wordCount between(351, 650)) Then 351
+          If(metric.wordCount between(651, 900)) Then 651
+          Else 901
+      )
+      .groupBy(identity)
+      .map{case (lowerBound, metric) => (lowerBound, metric.size)}
+      .result))(dbResult =>
+       dbResult.map(pair => GroupedWordCount(pair._1, pair._2)).toList
+    )
   }
 
   def getArticlesWithWordCounts(withCommissionedLength: Boolean)(implicit filters: MetricsFilters):
