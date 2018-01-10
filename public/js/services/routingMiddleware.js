@@ -29,10 +29,10 @@ export const updateUrlFromStateChangeMiddleware = ({ dispatch, getState }) => (n
 };
 
 export const updateStateFromUrlChangeMiddleware = ({ dispatch, getState }) => (next) => (action) => {
-    next(action);
+    const results = next(action);
     const newState = getState();
 
-    if (action.type === '@@router/LOCATION_CHANGE' && !newState.filtersloaded) {
+    if (action.type === '@@router/LOCATION_CHANGE') {
         const filterObj = paramStringToObject(newState.routing.location.search);
 
         const nextFilterVals = {
@@ -40,6 +40,10 @@ export const updateStateFromUrlChangeMiddleware = ({ dispatch, getState }) => (n
             ...filterObj
         };
 
-        dispatch(runFilter(nextFilterVals));
+        if (!_isEqual(newState.filters.values, nextFilterVals) || !newState.filters.loaded) {
+            dispatch(runFilter(nextFilterVals));
+        }
     }
+
+    return results;
 };
