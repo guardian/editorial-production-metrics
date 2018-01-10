@@ -5,7 +5,7 @@ import com.gu.editorialproductionmetricsmodels.models.{ForkData, MetricOpt}
 import config.Config._
 import database.MetricsDB
 import io.circe.generic.auto._
-import models.APIResponse
+import models.{WordCountAPIResponse, APIResponse}
 import models.db.{Fork, MetricsFilters}
 import play.api.Logger
 import play.api.libs.ws.WSClient
@@ -97,7 +97,11 @@ class Application(implicit val wsClient: WSClient, val db: MetricsDB) extends Co
       for {
         articlesWithoutCommissionedLength <- db.getArticlesWithWordCounts(false)(MetricsFilters(req.queryString))
         articlesWithCommissionedLength <- db.getArticlesWithWordCounts(true)(MetricsFilters(req.queryString))
-      } yield List(articlesWithoutCommissionedLength, articlesWithCommissionedLength)
+      } yield {
+        val resultsOmitted: Boolean = (articlesWithCommissionedLength.length == maxNumberOfArtcilesToReturn ||
+          articlesWithoutCommissionedLength.length == maxNumberOfArtcilesToReturn)
+        WordCountAPIResponse(articlesWithoutCommissionedLength, articlesWithCommissionedLength, resultsOmitted)
+      }
     }
 
   }
