@@ -130,4 +130,7 @@ object ForkResponse {
 }
 
 case class WordCountResponse(path: Option[String], wordCount: Option[Int], commissionedWordLength: Option[Int])
+object WordCountResponse {
+  implicit val wordCountResponseEncoder: Encoder[WordCountResponse] = deriveEncoder[WordCountResponse]
+}
 

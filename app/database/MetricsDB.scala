@@ -10,6 +10,7 @@ import play.api.Logger
 import slick.jdbc.PostgresProfile.api._
 import util.AsyncHelpers._
 import util.PostgresOpsImport._
+import config.Config._
 
 class MetricsDB(implicit val db: Database) {
 
@@ -58,13 +59,21 @@ class MetricsDB(implicit val db: Database) {
   def getDistinctNewspaperBooks: Either[ProductionMetricsError, Seq[Option[String]]] =
     await(db.run(metricsTable.filter(!_.newspaperBook.isEmpty).map(_.newspaperBook).distinct.result))
 
-  def getArticlesWithWordCounts(withCommissionedLength: Boolean)(implicit filters: MetricsFilters): Either[ProductionMetricsError, List[WordCountResponse]] = {
+  def getArticlesWithWordCounts(withCommissionedLength: Boolean)(implicit filters: MetricsFilters):
+    Either[ProductionMetricsError, List[WordCountResponse]] = {
+
     val filterFunction = if (withCommissionedLength)
       MetricsFilters.withCommissionedWordCountFilters
     else MetricsFilters.withoutCommissionedWordCountFilters
 
     awaitWithTransformation(db.run(metricsTable.filter(filterFunction)
-      .sortBy((metric) => metric.wordCount - metric.commissionedWordCount)
+      .take(maxNumberOfArtcilesToReturn)
+      .sortBy((metric) => {
+        for {
+          wordCount <- metric.wordCount
+          commissionedWordCount <- metric.commissionedWordCount
+        } yield (wordCount - commissionedWordCount)
+      })
       .map { case (metric) => (metric.path, metric.wordCount, metric.commissionedWordCount) }
       .result)) { dbResult: Seq[(Option[String], Option[Int], Option[Int])] =>
       dbResult.map(result => WordCountResponse(result._1, result._2, result._3)).toList
