@@ -7,7 +7,8 @@ import models.db.WordCountResponse
 import play.api.Logger
 import play.api.mvc._
 
-case class WordCountAPIResponse(artcilesWithoutCommissionedLength: List[WordCountResponse],
+
+case class WordCountAPIResponse(articlesWithoutCommissionedLength: List[WordCountResponse],
                                 articlesWithWordCountResponse: List[WordCountResponse],
                                 resultsOmitted: Boolean)
 

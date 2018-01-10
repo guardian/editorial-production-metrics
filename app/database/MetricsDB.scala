@@ -50,7 +50,12 @@ class MetricsDB(implicit val db: Database) {
   // to "import" the date_trunc function from postgresql
   def getGroupedByDayMetrics(implicit filters: MetricsFilters): Either[ProductionMetricsError, List[CountResponse]] =
     awaitWithTransformation(db.run(metricsTable.filter(MetricsFilters.metricFilters).map(m => (m.id, m.creationTime.toDayDateTrunc))
-      .groupBy(_._2).map {
+      .groupBy((res) => {
+        val result: (Rep[String], Rep[DateTime]) = res
+        res._2
+      })
+
+      .map {
         case (date, metric) => (date, metric.size)
       }.result)){ dbResult: Seq[(DateTime, Int)] =>
         dbResult.map(pair => CountResponse(new DateTime(pair._1), pair._2)).toList
@@ -58,6 +63,32 @@ class MetricsDB(implicit val db: Database) {
 
   def getDistinctNewspaperBooks: Either[ProductionMetricsError, Seq[Option[String]]] =
     await(db.run(metricsTable.filter(!_.newspaperBook.isEmpty).map(_.newspaperBook).distinct.result))
+
+  //TO DO : ignore null word counts??
+  def getGroupedWordCounts(implicit filters: MetricsFilters) = {
+    await(db.run(metricsTable
+      .filter(MetricsFilters.metricFilters)
+      .map( metric =>
+        Case
+          If(metric.wordCount between(0, 99)) Then 100
+          If(metric.wordCount between(100, 200)) Then 200
+          If(metric.wordCount between(201, 400)) Then 400
+          If(metric.wordCount > 600) Then 600
+      )
+      .map((result) => {
+        val res: Rep[Option[Int]] = result
+        res
+      }
+      )
+      .groupBy(result => {
+        val res: Rep[Option[Int]] = result
+        res
+      })
+      .map{
+        case (count) => (count)
+      }
+      .result))
+  }
 
   def getArticlesWithWordCounts(withCommissionedLength: Boolean)(implicit filters: MetricsFilters):
     Either[ProductionMetricsError, List[WordCountResponse]] = {
@@ -68,7 +99,7 @@ class MetricsDB(implicit val db: Database) {
 
     awaitWithTransformation(db.run(metricsTable.filter(filterFunction)
       .take(maxNumberOfArtcilesToReturn)
-      .sortBy((metric) => {
+          .sortBy((metric) => {
         for {
           wordCount <- metric.wordCount
           commissionedWordCount <- metric.commissionedWordCount
