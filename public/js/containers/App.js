@@ -9,7 +9,6 @@ import OriginData from "./OriginData";
 import { getFilterVals, getFilterStatuses } from "../selectors/filters";
 import CommissionedLengthData from "./CommissionedLengthData";
 import ForkTimeData from "./ForkTimeData";
-import ForkTime from "../components/Tabs/ForkTime";
 import {
     TabLink,
     TabRoute,

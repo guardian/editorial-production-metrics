@@ -20,18 +20,17 @@ module.exports = {
                     }
                 }
             },
-            /* TODO: turn this on */
-            // {
-            //     enforce: "pre",
-            //     test: /\.js$/,
-            //     exclude: /node_modules/,
-            //     loaders: {
-            //         loader: 'eslint-loader',
-            //         options: {
-            //             quiet: true
-            //         }
-            //     }
-            // },
+            {
+                enforce: "pre",
+                test: /\.js$/,
+                exclude: /node_modules/,
+                loaders: {
+                    loader: 'eslint-loader',
+                    options: {
+                        quiet: true
+                    }
+                }
+            },
             {
                 test: /\.js$/,
                 include: [path.resolve(__dirname, '../node_modules/panda-session')],

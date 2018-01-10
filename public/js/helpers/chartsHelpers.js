@@ -94,6 +94,7 @@ const downloadCSV = (data, chartType, filterVals) => {
         const fileName = `${chartType}_office=${filterVals.productionOffice}_desk=${tagToName(filterVals.desk)}_dateRange=${dateRangeString}.csv`;
         saveAs(blob, fileName);
     } catch(e) {
+        // eslint-disable-next-line no-console
         console.log(`Could not download csv due to this error: ${e.message}`);
     }
 };

@@ -1,7 +1,6 @@
 import { push } from 'react-router-redux';
 import { runFilter } from 'actions';
 import _isEqual from 'lodash/isEqual';
-import moment from 'moment';
 import { objectToParamString, paramStringToObject } from 'helpers/routingHelpers';
 export const updateUrlFromStateChangeMiddleware = ({ dispatch, getState }) => (next) => (action) => {
     const prevState = getState();
