@@ -35,5 +35,14 @@ module.exports = {
         "no-duplicate-imports": "error",
         "react/jsx-uses-react": "error",
         "react/jsx-uses-vars": "error",
-    }
+    },
+    "overrides": [
+        {
+            "files": ["**/__test__/*.spec.js"],
+            "env": {
+                "browser": false,
+                "jest": true,
+            }
+        }
+    ]
 };
