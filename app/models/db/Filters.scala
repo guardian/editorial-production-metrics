@@ -78,7 +78,8 @@ object Filters {
   private def combineFiltersForWordCount(metric: Schema.DBMetric)
                                                (implicit filters: Filters): Rep[Option[Boolean]] = {
     filters.hasCommissionedLength.fold(TrueOptCol)(booleanValue => metric.commissionedWordCount.isDefined.? === booleanValue) &&
-      combineFiltersForOrigin(metric)
+      filters.dateRange.fold(TrueOptCol)(dr => metric.firstPublicationTime >= dr.from && metric.firstPublicationTime <= dr.to) &&
+      checkCommonFilters(metric)
   }
   private def combineFiltersForFork(data: (ForkFilterColumns, Schema.DBMetric))(implicit filters: Filters): Rep[Option[Boolean]] = {
     val (fork, metric) = data
