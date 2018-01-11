@@ -92,7 +92,7 @@ class MetricsDB(implicit val db: Database) {
   }
 
   def getArticlesWithWordCounts(withCommissionedLength: Boolean)(implicit filters: MetricsFilters):
-    Either[ProductionMetricsError, List[WordCountResponse]] = {
+    Either[ProductionMetricsError, List[ArticleWordCountResponse]] = {
 
     val filterFunction = if (withCommissionedLength)
       MetricsFilters.withCommissionedWordCountFilters
@@ -108,7 +108,7 @@ class MetricsDB(implicit val db: Database) {
       })
       .map { case (metric) => (metric.headline, metric.path, metric.wordCount, metric.commissionedWordCount) }
       .result)) { dbResult: Seq[(Option[String], Option[String], Option[Int], Option[Int])] =>
-      dbResult.map(result => WordCountResponse(result._1, result._2, result._3, result._4)).toList
+      dbResult.map(result => ArticleWordCountResponse(result._1, result._2, result._3, result._4)).toList
     }
   }
 }

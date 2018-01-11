@@ -3,13 +3,13 @@ package models
 import io.circe._
 import io.circe.generic.semiauto._
 import io.circe.syntax._
-import models.db.WordCountResponse
+import models.db.ArticleWordCountResponse
 import play.api.Logger
 import play.api.mvc._
 
 
-case class WordCountAPIResponse(articlesWithoutCommissionedLength: List[WordCountResponse],
-                                articlesWithWordCountResponse: List[WordCountResponse],
+case class WordCountAPIResponse(articlesWithoutCommissionedLength: List[ArticleWordCountResponse],
+                                articlesWithWordCountResponse: List[ArticleWordCountResponse],
                                 resultsOmitted: Boolean)
 
 object WordCountAPIResponse {

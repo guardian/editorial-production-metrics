@@ -5,9 +5,9 @@ import io.circe.generic.semiauto.deriveEncoder
 import io.circe.syntax._
 import org.joda.time.{DateTimeZone, DateTime}
 
-case class WordCountResponse(headline: Option[String], path: Option[String], wordCount: Option[Int], commissionedWordLength: Option[Int])
-object WordCountResponse {
-  implicit val wordCountResponseEncoder: Encoder[WordCountResponse] = deriveEncoder[WordCountResponse]
+case class ArticleWordCountResponse(headline: Option[String], path: Option[String], wordCount: Option[Int], commissionedWordLength: Option[Int])
+object ArticleWordCountResponse {
+  implicit val articleWordCountResponseEncoder: Encoder[ArticleWordCountResponse] = deriveEncoder[ArticleWordCountResponse]
 }
 
 case class GroupedWordCount(countRange: (Int, Option[Int]), count: Int)
