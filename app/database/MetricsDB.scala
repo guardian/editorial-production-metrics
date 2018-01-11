@@ -56,5 +56,5 @@ class MetricsDB(implicit val db: Database) {
       }
 
   def getDistinctNewspaperBooks: Either[ProductionMetricsError, Seq[Option[String]]] =
-    await(db.run(metricsTable.filter(!_.newspaperBook.isEmpty).map(_.newspaperBook).distinct.result))
+    await(db.run(metricsTable.filter(book => !book.newspaperBook.isEmpty && book.newspaperBook =!= "").map(_.newspaperBook).distinct.result))
 }
