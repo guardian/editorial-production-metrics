@@ -45,7 +45,7 @@ object Config extends AwsInstanceTags {
 
   val hmacSecret: String = config.getString("hmacSecret")
 
-  val maxNumberOfArtcilesToReturn: Int = 1000
+  val maxNumberOfArticlesToReturn: Int = 1000
 
   private def getPropertyWithDefault[T](path: String, getVal: String => T, default: T): T = {
     if (config.hasPath(path)) getVal(path)

@@ -85,8 +85,8 @@ class MetricsDB(implicit val db: Database) {
     else MetricsFilters.withoutCommissionedWordCountFilters
 
     awaitWithTransformation(db.run(metricsTable.filter(filterFunction)
-      .take(maxNumberOfArtcilesToReturn)
-          .sortBy((metric) => {
+      .take(maxNumberOfArticlesToReturn)
+      .sortBy((metric) => {
         for {
           wordCount <- metric.wordCount
           commissionedWordCount <- metric.commissionedWordCount

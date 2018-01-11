@@ -98,8 +98,8 @@ class Application(implicit val wsClient: WSClient, val db: MetricsDB) extends Co
         articlesWithoutCommissionedLength <- db.getArticlesWithWordCounts(false)(MetricsFilters(req.queryString))
         articlesWithCommissionedLength <- db.getArticlesWithWordCounts(true)(MetricsFilters(req.queryString))
       } yield {
-        val resultsOmitted: Boolean = (articlesWithCommissionedLength.length == maxNumberOfArtcilesToReturn ||
-          articlesWithoutCommissionedLength.length == maxNumberOfArtcilesToReturn)
+        val resultsOmitted: Boolean = (articlesWithCommissionedLength.length == maxNumberOfArticlesToReturn ||
+          articlesWithoutCommissionedLength.length == maxNumberOfArticlesToReturn)
         WordCountAPIResponse(articlesWithoutCommissionedLength, articlesWithCommissionedLength, resultsOmitted)
       }
     }
