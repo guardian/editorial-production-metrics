@@ -29,7 +29,7 @@ export const updateUrlFromStateChangeMiddleware = ({ dispatch, getState }) => (n
 };
 
 export const updateStateFromUrlChangeMiddleware = ({ dispatch, getState }) => (next) => (action) => {
-    next(action);
+    const results = next(action);
     const newState = getState();
 
     if (action.type === '@@router/LOCATION_CHANGE') {
@@ -40,11 +40,10 @@ export const updateStateFromUrlChangeMiddleware = ({ dispatch, getState }) => (n
             ...filterObj
         };
 
-        // In practice this stops react-router running the filters unless it's a
-        // page load as these should never not be equal during this action
-        // TODO: get the router info through other means on page load
-        if (!_isEqual(nextFilterVals, newState.filters.values)) {
+        if (!_isEqual(newState.filters.values, nextFilterVals) || !newState.filters.loaded) {
             dispatch(runFilter(nextFilterVals));
         }
     }
+
+    return results;
 };

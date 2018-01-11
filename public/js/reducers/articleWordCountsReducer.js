@@ -1,11 +1,8 @@
 // TODO: remove this mock data
 import {
-wordCountBands,
-commissionedLengthBands,
-articleCount, // number
-withCommissionedLengthCount, // number
-withoutCommissionedLengthCount, // number
-articles
+    wordCountBands,
+    commissionedLengthBands,
+    articles
 } from "../components/Tabs/_commissionedLengthTestData";
 
 const initialState = {

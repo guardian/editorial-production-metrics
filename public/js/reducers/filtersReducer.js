@@ -19,6 +19,7 @@ const activateAll = filters =>
 const initialState = {
     values,
     statuses: activateAll(Object.keys(values)),
+    loaded: false
 };
 
 const filterVals = (state = initialState, action) => {
@@ -26,6 +27,7 @@ const filterVals = (state = initialState, action) => {
     case 'UPDATE_FILTER':
         return {
             ...state,
+            loaded: true,
             values: {
                 ...state.values,
                 ...action.values
