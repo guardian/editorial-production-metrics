@@ -65,15 +65,27 @@ class MetricsDB(implicit val db: Database) {
       .filter(!_.wordCount.isEmpty)
       .map( metric =>
         Case
-          If(metric.wordCount between(0, 350)) Then 0
-          If(metric.wordCount between(351, 650)) Then 351
-          If(metric.wordCount between(651, 900)) Then 651
-          Else 901
+          If(metric.wordCount between(0, 349)) Then 0
+          If(metric.wordCount between(350, 649)) Then 350
+          If(metric.wordCount between(650, 899)) Then 650
+          Else 900
       )
       .groupBy(identity)
       .map{case (lowerBound, metric) => (lowerBound, metric.size)}
-      .result))(dbResult =>
-       dbResult.map(pair => GroupedWordCount(pair._1, pair._2)).toList
+      .result))(dbResult => {
+        dbResult.zipWithIndex.foldRight(List[GroupedWordCount]())((resultWithIndex: ((Int, Int), Int), wordCounts: List[GroupedWordCount]) => {
+          val (result: (Int, Int), index: Int) = resultWithIndex
+          val (lowerBound: Int, count: Int) = result
+
+          // This is the last element in the list of ranges, it does no t have an upper bound
+          if (index == dbResult.length - 1) wordCounts ::: List(GroupedWordCount((lowerBound, None), count))
+          // We can figure out the upper bound of the range by looking at the lower bound of the next element
+          else {
+            val upperBound = dbResult(index + 1)._1 + 1
+            wordCounts ::: List(GroupedWordCount((lowerBound, Some(upperBound)), count))
+          }
+        })
+      }
     )
   }
 

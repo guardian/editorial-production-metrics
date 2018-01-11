@@ -133,7 +133,7 @@ object WordCountResponse {
   implicit val wordCountResponseEncoder: Encoder[WordCountResponse] = deriveEncoder[WordCountResponse]
 }
 
-case class GroupedWordCount(countBegins: Int, count: Int)
+case class GroupedWordCount(countRange: (Int, Option[Int]), count: Int)
 
 object GroupedWordCount {
   implicit val groupedWordCountApiResponseEncoder: Encoder[GroupedWordCount] =
