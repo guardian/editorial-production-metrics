@@ -95,8 +95,8 @@ class Application(implicit val wsClient: WSClient, val db: MetricsDB) extends Co
   def getArticlesWithWordCounts() = APIAuthAction { req =>
     APIResponse {
       for {
-        articlesWithoutCommissionedLength <- db.getArticlesWithWordCounts(false)(MetricsFilters(req.queryString))
-        articlesWithCommissionedLength <- db.getArticlesWithWordCounts(true)(MetricsFilters(req.queryString))
+        articlesWithoutCommissionedLength <- db.getArticlesWithWordCounts(withCommissionedLength=false)(MetricsFilters(req.queryString))
+        articlesWithCommissionedLength <- db.getArticlesWithWordCounts(withCommissionedLength=true)(MetricsFilters(req.queryString))
       } yield {
         WordCountAPIResponse(articlesWithoutCommissionedLength, articlesWithCommissionedLength)
       }
@@ -107,9 +107,7 @@ class Application(implicit val wsClient: WSClient, val db: MetricsDB) extends Co
     APIResponse {
       for {
         groupedWordCounts <- db.getGroupedWordCounts(MetricsFilters(req.queryString))
-      } yield {
-        groupedWordCounts
-      }
+      } yield groupedWordCounts
     }
   }
 }
