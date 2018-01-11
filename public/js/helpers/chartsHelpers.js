@@ -94,17 +94,18 @@ const downloadCSV = (data, chartType, filterVals) => {
         const fileName = `${chartType}_office=${filterVals.productionOffice}_desk=${tagToName(filterVals.desk)}_dateRange=${dateRangeString}.csv`;
         saveAs(blob, fileName);
     } catch(e) {
+        // eslint-disable-next-line no-console
         console.log(`Could not download csv due to this error: ${e.message}`);
     }
 };
 
 const fillAndSortTimeSeries = (data, startDate, endDate) => {
     const range = endDate.diff(startDate, "days");
-    const data =
+    const filledData =
         data.length <= range
             ? fillMissingDates(startDate, endDate, data)
             : data;
-    return data.sort(compareDates);
+    return filledData.sort(compareDates);
 };
 
 const getComparisonTimeSeriesFromResponses = (

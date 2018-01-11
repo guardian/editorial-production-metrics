@@ -9,7 +9,6 @@ import OriginData from "./OriginData";
 import { getFilterVals, getFilterStatuses } from "../selectors/filters";
 import CommissionedLengthData from "./CommissionedLengthData";
 import ForkTimeData from "./ForkTimeData";
-import ForkTime from "../components/Tabs/ForkTime";
 import {
     TabLink,
     TabRoute,
@@ -17,8 +16,7 @@ import {
     TabsNav,
     TabsContainer
 } from "../components/Tabs";
-import { Route } from "react-router-dom";
-import { Redirect } from "react-router-dom";
+import { Route, Redirect } from "react-router-dom";
 
 class App extends Component {
     componentDidMount() {

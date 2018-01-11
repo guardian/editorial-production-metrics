@@ -112,8 +112,6 @@ const createForkTimeData = chart => {
         };
     }
 
-    const { startDate, endDate } = getMoments(chart);
-
     const forkTimeData = chartData.data.sort(compareIssueDates);
     const forkTimeSeries = [{ data: forkTimeData }];
     return {

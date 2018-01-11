@@ -19,9 +19,7 @@ const primary = '#fff';
 // * Typography
 // *
 const sansSerif = '"Guardian Agate Sans", Arial, sans-serif", Georgia, serif';
-const serif = '"Guardian Egyptian Text", Georgia, serif';
 const letterSpacing = 'normal';
-const fontSize = 14;
 // *
 // * Layout
 // *
