@@ -4,7 +4,7 @@ import com.gu.editorialproductionmetricsmodels.models.{MetricOpt, ProductionOffi
 import database.MetricsDB
 import helpers.{PostgresHelpers, TestData}
 import models.ProductionMetricsError
-import models.db.{ForkResponse, Metric, MetricsFilters}
+import models.db.{ForkResponse, Metric, Filters}
 import org.joda.time.DateTime
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{FunSuite, Matchers}
@@ -60,7 +60,7 @@ class MetricsDBSpec extends FunSuite with MockitoSugar with Matchers with Result
   }
 
   test("Get forks with filter") {
-    val getInitialForks = metricsDb.getForks(MetricsFilters())
+    val getInitialForks = metricsDb.getForks(Filters())
     getInitialForks shouldBe a [Right[_,_]]
 
     TestData.addMetric(TestData.randomMetricWith("composerId_fork1", "storyBundleId_fork1").copy(commissioningDesk = Some("testFilters")))
@@ -69,7 +69,7 @@ class MetricsDBSpec extends FunSuite with MockitoSugar with Matchers with Result
     TestData.addMetric(TestData.randomMetricWith("composerId_fork2", "storyBundleId_fork2").copy(commissioningDesk = Some("testFilters")))
     TestData.addFork(TestData.randomForkWith("composerId_fork2", new DateTime("2017-11-11")).copy(timeToPublication = Some(4321)))
 
-    val getFilteredForks = metricsDb.getForks(MetricsFilters(desk = Some("testFilters")))
+    val getFilteredForks = metricsDb.getForks(Filters(desk = Some("testFilters")))
     getFilteredForks shouldBe a [Right[_,_]]
 
     val filteredResult = getFilteredForks.right.get
