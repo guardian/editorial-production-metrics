@@ -101,11 +101,11 @@ const downloadCSV = (data, chartType, filterVals) => {
 
 const fillAndSortTimeSeries = (data, startDate, endDate) => {
     const range = endDate.diff(startDate, "days");
-    const data =
+    const filledData =
         data.length <= range
             ? fillMissingDates(startDate, endDate, data)
             : data;
-    return data.sort(compareDates);
+    return filledData.sort(compareDates);
 };
 
 const getComparisonTimeSeriesFromResponses = (
