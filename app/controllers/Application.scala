@@ -109,7 +109,7 @@ class Application(implicit val wsClient: WSClient, val db: MetricsDB) extends Co
     APIResponse {
       for {
         groupedWordCounts <- db.getGroupedWordCounts(MetricsFilters(req.queryString))
-      } yield{
+      } yield {
         groupedWordCounts
       }
     }

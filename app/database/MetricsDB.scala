@@ -90,7 +90,7 @@ class MetricsDB(implicit val db: Database) {
         for {
           wordCount <- metric.wordCount
           commissionedWordCount <- metric.commissionedWordCount
-        } yield (wordCount - commissionedWordCount)
+        } yield (commissionedWordCount - wordCount)
       })
       .map { case (metric) => (metric.path, metric.wordCount, metric.commissionedWordCount) }
       .result)) { dbResult: Seq[(Option[String], Option[Int], Option[Int])] =>
