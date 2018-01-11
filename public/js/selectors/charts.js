@@ -41,7 +41,7 @@ const getComposerVsIncopyData = createSelector(
             inCopyResponse,
             startDate,
             endDate,
-            "Created in composer",
+            "Created in Composer",
             "Created in InCopy"
         );
     }
@@ -101,6 +101,8 @@ export const getInWorkflowVsNotInWorkflow = createSelector(
         isStacked
     })
 );
+
+/* Fork Time */
 
 const createForkTimeData = chart => {
     const { chartData, pending } = chart;
