@@ -10,6 +10,7 @@ import play.api.Logger
 import slick.jdbc.PostgresProfile.api._
 import util.AsyncHelpers._
 import util.PostgresOpsImport._
+import config.Config._
 
 class MetricsDB(implicit val db: Database) {
 
@@ -57,4 +58,63 @@ class MetricsDB(implicit val db: Database) {
 
   def getDistinctNewspaperBooks: Either[ProductionMetricsError, Seq[Option[String]]] =
     await(db.run(metricsTable.filter(book => !book.newspaperBook.isEmpty && book.newspaperBook =!= "").map(_.newspaperBook).distinct.result))
+
+  def getGroupedWordCounts(implicit filters: MetricsFilters): Either[ProductionMetricsError, List[GroupedWordCount]] = {
+
+    val lowerBoundsToUpperBounds: Map[Int, Int] = Map(
+      0 -> 349,
+      350 -> 649,
+      650 -> 899
+    )
+
+    awaitWithTransformation(db.run(metricsTable
+      .filter(MetricsFilters.metricFilters)
+      .map( metric =>
+        Case
+          If(metric.wordCount between(0, lowerBoundsToUpperBounds.get(0).get)) Then 0
+          If(metric.wordCount between(350, lowerBoundsToUpperBounds.get(350).get)) Then 350
+          If(metric.wordCount between(650, lowerBoundsToUpperBounds.get(650).get)) Then 650
+          If(metric.wordCount >= 900) Then 900
+      )
+      .groupBy(identity)
+      .map{case (lowerBound, metric) => (lowerBound, metric.size)}
+      .result))(dbResult => {
+
+      dbResult.foldRight(List[GroupedWordCount]())((result: (Option[Int], Int), wordCounts: List[GroupedWordCount]) => {
+        result match {
+          case (None, _) => wordCounts
+          case (Some(lowerBound), count) => {
+            wordCounts ::: List(GroupedWordCount((lowerBound, lowerBoundsToUpperBounds.get(lowerBound)), count))
+          }
+        }
+      }).sortWith(_.countRange._1 < _.countRange._1)
+    })
+  }
+
+  def getArticlesWithWordCounts(withCommissionedLength: Boolean)(implicit filters: MetricsFilters):
+    Either[ProductionMetricsError, ArticleWordCountResponseList] = {
+
+    val filterFunction = if (withCommissionedLength)
+      MetricsFilters.withCommissionedWordCountFilters
+    else MetricsFilters.withoutCommissionedWordCountFilters
+
+    awaitWithTransformation(db.run(metricsTable.filter(filterFunction)
+      .sortBy((metric) => {
+        for {
+          wordCount <- metric.wordCount
+          commissionedWordCount <- metric.commissionedWordCount
+        } yield (commissionedWordCount - wordCount)
+      })
+      .map { case (metric) => (metric.headline, metric.path, metric.wordCount, metric.commissionedWordCount)}
+      .result)) {
+        dbResult: Seq[(Option[String], Option[String], Option[Int], Option[Int])] => {
+          val numberOfResults = dbResult.length
+
+          val finalResults = dbResult.map(result => ArticleWordCountResponse(result._1, result._2, result._3, result._4))
+            .toList
+            .take(maxNumberOfArticlesToReturn)
+          ArticleWordCountResponseList(finalResults, math.max(numberOfResults - maxNumberOfArticlesToReturn, 0))
+        }
+    }
+  }
 }

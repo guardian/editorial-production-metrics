@@ -5,7 +5,7 @@ import com.gu.editorialproductionmetricsmodels.models.{ForkData, MetricOpt}
 import config.Config._
 import database.MetricsDB
 import io.circe.generic.auto._
-import models.APIResponse
+import models.{WordCountAPIResponse, APIResponse}
 import models.db.{Fork, MetricsFilters}
 import play.api.Logger
 import play.api.libs.ws.WSClient
@@ -91,4 +91,23 @@ class Application(implicit val wsClient: WSClient, val db: MetricsDB) extends Co
   }
 
   def getNewspaperBookList = APIAuthAction(APIResponse(db.getDistinctNewspaperBooks))
+
+  def getArticlesWithWordCounts() = APIAuthAction { req =>
+    APIResponse {
+      for {
+        articlesWithoutCommissionedLength <- db.getArticlesWithWordCounts(withCommissionedLength=false)(MetricsFilters(req.queryString))
+        articlesWithCommissionedLength <- db.getArticlesWithWordCounts(withCommissionedLength=true)(MetricsFilters(req.queryString))
+      } yield {
+        WordCountAPIResponse(articlesWithoutCommissionedLength, articlesWithCommissionedLength)
+      }
+    }
+  }
+
+  def getGroupedWordCounts() = APIAuthAction { req =>
+    APIResponse {
+      for {
+        groupedWordCounts <- db.getGroupedWordCounts(MetricsFilters(req.queryString))
+      } yield groupedWordCounts
+    }
+  }
 }
