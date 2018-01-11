@@ -14,12 +14,12 @@ const getMoments = ({ startDate, endDate }) => ({
 
 /* Composer vs Incopy */
 
-const getRawComposerVsIncopy = createSelector(
+export const getRawComposerVsIncopy = createSelector(
     getCharts,
     ({ composerVsInCopy }) => composerVsInCopy
 );
 
-const getComposerVsIncopyData = createSelector(
+export const getComposerVsIncopyData = createSelector(
     getRawComposerVsIncopy,
     composerVsInCopy => {
         const {

@@ -5,7 +5,8 @@
   "main": "public/index.html",
   "scripts": {
     "build-dev": "webpack ./public/js/index.js ./public/build/app.js --config ./conf/webpack.conf.js --watch",
-    "build": "webpack -p ./public/js/index.js ./public/build/app.js --config ./conf/webpack.conf.js"
+    "build": "webpack -p ./public/js/index.js ./public/build/app.js --config ./conf/webpack.conf.js",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -18,6 +19,7 @@
   "homepage": "https://github.com/guardian/editorial-production-metrics",
   "devDependencies": {
     "babel-core": "^6.21.0",
+    "babel-jest": "^22.0.6",
     "babel-loader": "^6.2.10",
     "babel-plugin-transform-object-assign": "^6.8.0",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
@@ -29,6 +31,7 @@
     "eslint-plugin-react": "^7.5.1",
     "extract-text-webpack-plugin": "beta",
     "file-loader": "^0.9.0",
+    "jest": "^22.0.6",
     "node-sass": "3.8.0",
     "sass-loader": "^4.1.1",
     "style-loader": "^0.13.1",
