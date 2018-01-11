@@ -106,9 +106,9 @@ class MetricsDB(implicit val db: Database) {
           commissionedWordCount <- metric.commissionedWordCount
         } yield (commissionedWordCount - wordCount)
       })
-      .map { case (metric) => (metric.path, metric.wordCount, metric.commissionedWordCount) }
-      .result)) { dbResult: Seq[(Option[String], Option[Int], Option[Int])] =>
-      dbResult.map(result => WordCountResponse(result._1, result._2, result._3)).toList
+      .map { case (metric) => (metric.headline, metric.path, metric.wordCount, metric.commissionedWordCount) }
+      .result)) { dbResult: Seq[(Option[String], Option[String], Option[Int], Option[Int])] =>
+      dbResult.map(result => WordCountResponse(result._1, result._2, result._3, result._4)).toList
     }
   }
 }
