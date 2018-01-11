@@ -97,9 +97,7 @@ class Application(implicit val wsClient: WSClient, val db: MetricsDB) extends Co
       for {
         articlesWithoutCommissionedLength <- db.getArticlesWithWordCounts(withCommissionedLength=false)(Filters(req.queryString))
         articlesWithCommissionedLength <- db.getArticlesWithWordCounts(withCommissionedLength=true)(Filters(req.queryString))
-      } yield {
-        WordCountAPIResponse(articlesWithoutCommissionedLength, articlesWithCommissionedLength)
-      }
+      } yield WordCountAPIResponse(articlesWithoutCommissionedLength, articlesWithCommissionedLength)
     }
   }
 
