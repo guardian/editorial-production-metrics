@@ -95,8 +95,8 @@ class Application(implicit val wsClient: WSClient, val db: MetricsDB) extends Co
   def getArticlesWithWordCounts() = APIAuthAction { req =>
     APIResponse {
       for {
-        articlesWithoutCommissionedLength <- db.getArticlesWithWordCounts(withCommissionedLength=false)(Filters(req.queryString))
-        articlesWithCommissionedLength <- db.getArticlesWithWordCounts(withCommissionedLength=true)(Filters(req.queryString))
+        articlesWithoutCommissionedLength <- db.getArticlesWithWordCounts(Filters(req.queryString).copy(hasCommissionedLength = Some(false)))
+        articlesWithCommissionedLength <- db.getArticlesWithWordCounts(Filters(req.queryString).copy(hasCommissionedLength = Some(true)))
       } yield WordCountAPIResponse(articlesWithoutCommissionedLength, articlesWithCommissionedLength)
     }
   }

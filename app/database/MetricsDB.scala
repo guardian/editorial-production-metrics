@@ -91,14 +91,10 @@ class MetricsDB(implicit val db: Database) {
     })
   }
 
-  def getArticlesWithWordCounts(withCommissionedLength: Boolean)(implicit filters: Filters):
+  def getArticlesWithWordCounts(implicit filters: Filters):
     Either[ProductionMetricsError, ArticleWordCountResponseList] = {
 
-    val filterFunction = if (withCommissionedLength)
-      Filters.withCommissionedWordCountFilters
-    else Filters.withoutCommissionedWordCountFilters
-
-    awaitWithTransformation(db.run(metricsTable.filter(filterFunction)
+    awaitWithTransformation(db.run(metricsTable.filter(Filters.wordCountFilters)
       .sortBy((metric) => {
         for {
           wordCount <- metric.wordCount

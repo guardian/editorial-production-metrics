@@ -18,7 +18,8 @@ case class Filters(
   originatingSystem: Option[OriginatingSystem] = None,
   productionOffice: Option[ProductionOffice] = None,
   inWorkflow: Option[Boolean] = None,
-  newspaperBook: Option[String] = None
+  newspaperBook: Option[String] = None,
+  hasCommissionedLength: Option[Boolean] = None
 )
 
 object Filters {
@@ -68,19 +69,16 @@ object Filters {
 
   def originFilters(implicit filters: Filters): DBMetric => Rep[Option[Boolean]] = metric => combineFiltersForOrigin(metric)
 
-  def withoutCommissionedWordCountFilters(implicit filters: Filters): DBMetric => Rep[Option[Boolean]] =
-    metric => checkCommissionedWordCountFilters(metric, false)
-
-  def withCommissionedWordCountFilters(implicit filters: Filters): DBMetric => Rep[Option[Boolean]] =
-    metric => checkCommissionedWordCountFilters(metric, true)
+  def wordCountFilters(implicit filters: Filters): DBMetric => Rep[Option[Boolean]] =
+    metric => combineFiltersForWordCount(metric)
 
   def forkFilters(implicit filters: Filters): ((ForkFilterColumns, DBMetric)) => Rep[Option[Boolean]] = forkAndMetric =>
     combineFiltersForFork(forkAndMetric)
 
-  private def checkCommissionedWordCountFilters(metric: Schema.DBMetric, withCommissionedWordCount: Boolean)
+  private def combineFiltersForWordCount(metric: Schema.DBMetric)
                                                (implicit filters: Filters): Rep[Option[Boolean]] = {
-    Some(withCommissionedWordCount).fold(TrueOptCol)(booleanValue => metric.commissionedWordCount.isDefined.? === booleanValue) &&
-    combineFiltersForOrigin(metric)
+    filters.hasCommissionedLength.fold(TrueOptCol)(booleanValue => metric.commissionedWordCount.isDefined.? === booleanValue) &&
+      combineFiltersForOrigin(metric)
   }
   private def combineFiltersForFork(data: (ForkFilterColumns, Schema.DBMetric))(implicit filters: Filters): Rep[Option[Boolean]] = {
     val (fork, metric) = data
