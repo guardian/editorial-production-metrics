@@ -92,23 +92,29 @@ class MetricsDB(implicit val db: Database) {
   }
 
   def getArticlesWithWordCounts(withCommissionedLength: Boolean)(implicit filters: MetricsFilters):
-    Either[ProductionMetricsError, List[ArticleWordCountResponse]] = {
+    Either[ProductionMetricsError, ArticleWordCountResponseList] = {
 
     val filterFunction = if (withCommissionedLength)
       MetricsFilters.withCommissionedWordCountFilters
     else MetricsFilters.withoutCommissionedWordCountFilters
 
     awaitWithTransformation(db.run(metricsTable.filter(filterFunction)
-      .take(maxNumberOfArticlesToReturn)
       .sortBy((metric) => {
         for {
           wordCount <- metric.wordCount
           commissionedWordCount <- metric.commissionedWordCount
         } yield (commissionedWordCount - wordCount)
       })
-      .map { case (metric) => (metric.headline, metric.path, metric.wordCount, metric.commissionedWordCount) }
-      .result)) { dbResult: Seq[(Option[String], Option[String], Option[Int], Option[Int])] =>
-      dbResult.map(result => ArticleWordCountResponse(result._1, result._2, result._3, result._4)).toList
+      .map { case (metric) => (metric.headline, metric.path, metric.wordCount, metric.commissionedWordCount)}
+      .result)) {
+        dbResult: Seq[(Option[String], Option[String], Option[Int], Option[Int])] => {
+          val numberOfResults = dbResult.length
+
+          val finalResults = dbResult.map(result => ArticleWordCountResponse(result._1, result._2, result._3, result._4))
+            .toList
+            .take(maxNumberOfArticlesToReturn)
+          ArticleWordCountResponseList(finalResults, math.max(numberOfResults - maxNumberOfArticlesToReturn, 0))
+        }
     }
   }
 }

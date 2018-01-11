@@ -10,6 +10,11 @@ object ArticleWordCountResponse {
   implicit val articleWordCountResponseEncoder: Encoder[ArticleWordCountResponse] = deriveEncoder[ArticleWordCountResponse]
 }
 
+case class ArticleWordCountResponseList(articles: List[ArticleWordCountResponse], articlesOmitted: Int)
+object ArticleWordCountResponseList {
+  implicit val articleWordCountResponseListEncoder: Encoder[ArticleWordCountResponseList] = deriveEncoder[ArticleWordCountResponseList]
+}
+
 case class GroupedWordCount(countRange: (Int, Option[Int]), count: Int)
 
 object GroupedWordCount {

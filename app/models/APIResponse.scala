@@ -3,14 +3,13 @@ package models
 import io.circe._
 import io.circe.generic.semiauto._
 import io.circe.syntax._
-import models.db.ArticleWordCountResponse
+import models.db.ArticleWordCountResponseList
 import play.api.Logger
 import play.api.mvc._
 
 
-case class WordCountAPIResponse(articlesWithoutCommissionedLength: List[ArticleWordCountResponse],
-                                articlesWithWordCountResponse: List[ArticleWordCountResponse],
-                                resultsOmitted: Boolean)
+case class WordCountAPIResponse(articlesWithoutCommissionedLength: ArticleWordCountResponseList,
+                                articlesWithWordCountResponse: ArticleWordCountResponseList)
 
 object WordCountAPIResponse {
   implicit val wordCountApiResponseEncoder: Encoder[WordCountAPIResponse] = deriveEncoder[WordCountAPIResponse]
