@@ -91,13 +91,8 @@ class MetricsDB(implicit val db: Database) {
     })
   }
 
-<<<<<<< HEAD
-  def getArticlesWithWordCounts(withCommissionedLength: Boolean)(implicit filters: MetricsFilters):
-    Either[ProductionMetricsError, ArticleWordCountResponseList] = {
-=======
   def getArticlesWithWordCounts(withCommissionedLength: Boolean)(implicit filters: Filters):
-    Either[ProductionMetricsError, List[ArticleWordCountResponse]] = {
->>>>>>> Rename MetricsFilters to Filters to reflect their more general use.
+    Either[ProductionMetricsError, ArticleWordCountResponseList] = {
 
     val filterFunction = if (withCommissionedLength)
       Filters.withCommissionedWordCountFilters
