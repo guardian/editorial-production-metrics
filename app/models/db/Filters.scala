@@ -66,7 +66,7 @@ object Filters {
 
   private def getOptionFromQS(key: String, qs: Map[String, Seq[String]]): Option[String] = qs.get(key).flatMap(_.headOption)
 
-  def metricFilters(implicit filters: Filters): DBMetric => Rep[Option[Boolean]] = metric => checkMetricsFilters(metric)
+  def originFilters(implicit filters: Filters): DBMetric => Rep[Option[Boolean]] = metric => combineFiltersForOrigin(metric)
 
   def withoutCommissionedWordCountFilters(implicit filters: Filters): DBMetric => Rep[Option[Boolean]] =
     metric => checkCommissionedWordCountFilters(metric, false)
@@ -80,7 +80,7 @@ object Filters {
   private def checkCommissionedWordCountFilters(metric: Schema.DBMetric, withCommissionedWordCount: Boolean)
                                                (implicit filters: Filters): Rep[Option[Boolean]] = {
     Some(withCommissionedWordCount).fold(TrueOptCol)(booleanValue => metric.commissionedWordCount.isDefined.? === booleanValue) &&
-    checkMetricsFilters(metric)
+    combineFiltersForOrigin(metric)
   }
   private def checkMetricsForkFilters(data: (ForkFilterColumns, Schema.DBMetric))(implicit filters: Filters): Rep[Option[Boolean]] = {
     val (fork, metric) = data
@@ -88,17 +88,18 @@ object Filters {
       checkCommonFilters(metric)
   }
 
-  private def checkMetricsFilters(metric: Schema.DBMetric)(implicit filters: Filters): Rep[Option[Boolean]] = {
+  private def combineFiltersForOrigin(metric: Schema.DBMetric)(implicit filters: Filters): Rep[Option[Boolean]] = {
+    import MetricHelpers._
     filters.dateRange.fold(TrueOptCol)(dr => metric.creationTime.? >= dr.from && metric.creationTime.? <= dr.to) &&
+      filters.inWorkflow.fold(TrueOptCol)(inWf => metric.inWorkflow.? === inWf) &&
+      filters.originatingSystem.fold(TrueOptCol)(os => metric.originatingSystem.? === os) &&
       checkCommonFilters(metric)
   }
 
   private def checkCommonFilters(metric: Schema.DBMetric)(implicit filters: Filters): Rep[Option[Boolean]] = {
     import MetricHelpers._
     filters.desk.fold(TrueOptCol)(d => metric.commissioningDesk.toLowerCase === d.toLowerCase) &&
-      filters.originatingSystem.fold(TrueOptCol)(os => metric.originatingSystem.? === os) &&
       filters.productionOffice.fold(TrueOptCol)(po => metric.productionOffice === po) &&
-      filters.inWorkflow.fold(TrueOptCol)(inWf => metric.inWorkflow.? === inWf) &&
       filters.newspaperBook.fold(TrueOptCol)(nb => metric.newspaperBook.toLowerCase === nb.toLowerCase)
   }
 }
