@@ -9,7 +9,7 @@ import play.api.mvc._
 
 
 case class WordCountAPIResponse(articlesWithoutCommissionedLength: ArticleWordCountResponseList,
-                                articlesWithWordCountResponse: ArticleWordCountResponseList)
+                                articlesWithWordCount: ArticleWordCountResponseList)
 
 object WordCountAPIResponse {
   implicit val wordCountApiResponseEncoder: Encoder[WordCountAPIResponse] = deriveEncoder[WordCountAPIResponse]
