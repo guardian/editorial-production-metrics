@@ -32,6 +32,7 @@ module.exports = {
             "warn",
             "always"
         ],
+        "no-duplicate-imports": "error",
         "react/jsx-uses-react": "error",
         "react/jsx-uses-vars": "error",
     }
