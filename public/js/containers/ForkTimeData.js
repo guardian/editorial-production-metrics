@@ -1,7 +1,8 @@
 import { connect } from "react-redux";
 import { getForkTime } from "../selectors/charts";
-import { getFilterVals, getIsUpdating } from "../selectors";
 import { toggleStackChart } from "../actions";
+import { getFilterVals } from "../selectors/filters";
+import { getIsUpdating } from "../selectors/isUpdating";
 import ForkTime from "../components/Tabs/ForkTime";
 
 const mapStateToProps = state => ({

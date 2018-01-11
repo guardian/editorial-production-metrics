@@ -6,7 +6,7 @@ import actions from "actions";
 import Page from "components/Page";
 import Filters from "components/Filters/Filters";
 import OriginData from "./OriginData";
-import { getFilterVals, getFilterStatuses } from "../selectors";
+import { getFilterVals, getFilterStatuses } from "../selectors/filters";
 import CommissionedLengthData from "./CommissionedLengthData";
 import ForkTimeData from "./ForkTimeData";
 import ForkTime from "../components/Tabs/ForkTime";

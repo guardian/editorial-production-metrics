@@ -98,11 +98,13 @@ const downloadCSV = (data, chartType, filterVals) => {
     }
 };
 
-const tidyData = (data, startDate, endDate) => {
+const fillAndSortTimeSeries = (data, startDate, endDate) => {
     const range = endDate.diff(startDate, "days");
-    return data.length <= range
-        ? fillMissingDates(startDate, endDate, data).sort(compareDates)
-        : data.sort(compareDates);
+    const data =
+        data.length <= range
+            ? fillMissingDates(startDate, endDate, data)
+            : data;
+    return data.sort(compareDates);
 };
 
 const getComparisonTimeSeriesFromResponses = (
@@ -113,8 +115,8 @@ const getComparisonTimeSeriesFromResponses = (
     countLabel1,
     countLabel2
 ) => {
-    const data1 = tidyData(res1.data, startDate, endDate);
-    const data2 = tidyData(res2.data, startDate, endDate);
+    const data1 = fillAndSortTimeSeries(res1.data, startDate, endDate);
+    const data2 = fillAndSortTimeSeries(res2.data, startDate, endDate);
     const series = [{ data: data1 }, { data: data2 }];
 
     const absolute = series.map(({ data }) => {

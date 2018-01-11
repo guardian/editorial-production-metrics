@@ -4,7 +4,7 @@ import {
     getCommissionedLengthBands,
     getWordCountBands,
     getWordCountArticles
-} from "../selectors/index";
+} from "../selectors/commissionedLength";
 import CommissionedLength from "../components/Tabs/CommissionedLength";
 
 const mapStateToProps = state => ({
