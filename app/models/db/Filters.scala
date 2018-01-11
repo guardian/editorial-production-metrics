@@ -75,16 +75,17 @@ object Filters {
     metric => checkCommissionedWordCountFilters(metric, true)
 
   def forkFilters(implicit filters: Filters): ((ForkFilterColumns, DBMetric)) => Rep[Option[Boolean]] = forkAndMetric =>
-    checkMetricsForkFilters(forkAndMetric)
+    combineFiltersForFork(forkAndMetric)
 
   private def checkCommissionedWordCountFilters(metric: Schema.DBMetric, withCommissionedWordCount: Boolean)
                                                (implicit filters: Filters): Rep[Option[Boolean]] = {
     Some(withCommissionedWordCount).fold(TrueOptCol)(booleanValue => metric.commissionedWordCount.isDefined.? === booleanValue) &&
     combineFiltersForOrigin(metric)
   }
-  private def checkMetricsForkFilters(data: (ForkFilterColumns, Schema.DBMetric))(implicit filters: Filters): Rep[Option[Boolean]] = {
+  private def combineFiltersForFork(data: (ForkFilterColumns, Schema.DBMetric))(implicit filters: Filters): Rep[Option[Boolean]] = {
     val (fork, metric) = data
     filters.dateRange.fold(TrueOptCol)(dr => fork._3.? >= dr.from && fork._3.? <= dr.to) &&
+      filters.newspaperBook.fold(TrueOptCol)(nb => metric.newspaperBook.toLowerCase === nb.toLowerCase) &&
       checkCommonFilters(metric)
   }
 
@@ -99,7 +100,6 @@ object Filters {
   private def checkCommonFilters(metric: Schema.DBMetric)(implicit filters: Filters): Rep[Option[Boolean]] = {
     import MetricHelpers._
     filters.desk.fold(TrueOptCol)(d => metric.commissioningDesk.toLowerCase === d.toLowerCase) &&
-      filters.productionOffice.fold(TrueOptCol)(po => metric.productionOffice === po) &&
-      filters.newspaperBook.fold(TrueOptCol)(nb => metric.newspaperBook.toLowerCase === nb.toLowerCase)
+      filters.productionOffice.fold(TrueOptCol)(po => metric.productionOffice === po)
   }
 }
