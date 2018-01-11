@@ -16,8 +16,7 @@ import {
     TabsNav,
     TabsContainer
 } from "../components/Tabs";
-import { Route } from "react-router-dom";
-import { Redirect } from "react-router-dom";
+import { Route, Redirect } from "react-router-dom";
 
 class App extends Component {
     componentDidMount() {
