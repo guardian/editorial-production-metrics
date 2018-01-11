@@ -79,7 +79,7 @@ object MetricsFilters {
 
   private def checkCommissionedWordCountFilters(metric: Schema.DBMetric, withCommissionedWordCount: Boolean)
                                                (implicit filters: MetricsFilters): Rep[Option[Boolean]] = {
-    Some(withCommissionedWordCount).fold(TrueOptCol)(booleanValue => metric.commissionedWordCount.isDefined === booleanValue) &&
+    Some(withCommissionedWordCount).fold(TrueOptCol)(booleanValue => metric.commissionedWordCount.isDefined.? === booleanValue) &&
     checkMetricsFilters(metric)
   }
   private def checkMetricsForkFilters(data: (ForkFilterColumns, Schema.DBMetric))(implicit filters: MetricsFilters): Rep[Option[Boolean]] = {
