@@ -1,12 +1,13 @@
-GET     /                                 controllers.Application.index
+GET     /                                          controllers.Application.index
 
-GET     /api/originatingSystem/:system    controllers.Application.getStartedIn(system: String)
-GET     /api/commissioningDesks           controllers.Application.getCommissioningDeskList
-GET     /api/inWorkflow/:inWorkflow       controllers.Application.getWorkflowData(inWorkflow: Boolean)
-GET     /api/fork/*newspaperBook          controllers.Application.getForks(newspaperBook: String)
-GET     /api/newspaperBooks               controllers.Application.getNewspaperBookList
-GET     /api/wordCount/articles           controllers.Application.getArticlesWithWordCounts
-GET     /api/wordCount/groupedWordCounts  controllers.Application.getGroupedWordCounts
+GET     /api/originatingSystem/:system             controllers.Application.getStartedIn(system: String)
+GET     /api/commissioningDesks                    controllers.Application.getCommissioningDeskList
+GET     /api/inWorkflow/:inWorkflow                controllers.Application.getWorkflowData(inWorkflow: Boolean)
+GET     /api/fork/*newspaperBook                   controllers.Application.getForks(newspaperBook: String)
+GET     /api/newspaperBooks                        controllers.Application.getNewspaperBookList
+GET     /api/wordCount/articles                    controllers.Application.getArticlesWithWordCounts
+GET     /api/wordCount/grouped/articleLengths      controllers.Application.getGroupedArticleLengths
+GET     /api/wordCount/grouped/commissionedLengths controllers.Application.getGroupedCommissionedLengths
 
 # endpoints for posting data from other apps
 OPTIONS /api/metric/*url                  controllers.Application.allowCORSAccess(methods = "PUT, POST, DELETE", url: String)

@@ -59,7 +59,7 @@ class MetricsDB(implicit val db: Database) {
   def getDistinctNewspaperBooks: Either[ProductionMetricsError, Seq[Option[String]]] =
     await(db.run(metricsTable.filter(book => !book.newspaperBook.isEmpty && book.newspaperBook =!= "").map(_.newspaperBook).distinct.result))
 
-  def getGroupedWordCounts(implicit filters: Filters): Either[ProductionMetricsError, List[GroupedWordCount]] = {
+  def getGroupedArticleLengths(implicit filters: Filters): Either[ProductionMetricsError, List[ArticleLengthGroup]] = {
 
     val lowerBoundsToUpperBounds: Map[Int, Int] = Map(
       0 -> 349,
@@ -80,14 +80,46 @@ class MetricsDB(implicit val db: Database) {
       .map{case (lowerBound, metric) => (lowerBound, metric.size)}
       .result))(dbResult => {
 
-      dbResult.foldRight(List[GroupedWordCount]())((result: (Option[Int], Int), wordCounts: List[GroupedWordCount]) => {
+      dbResult.foldRight(List[ArticleLengthGroup]())((result: (Option[Int], Int), wordCounts: List[ArticleLengthGroup]) => {
         result match {
           case (None, _) => wordCounts
           case (Some(lowerBound), count) => {
-            wordCounts ::: List(GroupedWordCount((lowerBound, lowerBoundsToUpperBounds.get(lowerBound)), count))
+            wordCounts ::: List(ArticleLengthGroup((lowerBound, lowerBoundsToUpperBounds.get(lowerBound)), count))
           }
         }
-      }).sortWith(_.countRange._1 < _.countRange._1)
+      }).sortWith(_.range._1 < _.range._1)
+    })
+  }
+
+  def getGroupedCommissionedLengths(implicit filters: Filters): Either[ProductionMetricsError, List[ArticleLengthGroup]] = {
+
+    val lowerBoundsToUpperBounds: Map[Int, Int] = Map(
+      0 -> 349,
+      350 -> 649,
+      650 -> 899
+    )
+
+    awaitWithTransformation(db.run(metricsTable
+      .filter(Filters.originFilters)
+      .map( metric =>
+        Case
+          If(metric.commissionedWordCount between(0, lowerBoundsToUpperBounds.get(0).get)) Then 0
+          If(metric.commissionedWordCount between(350, lowerBoundsToUpperBounds.get(350).get)) Then 350
+          If(metric.commissionedWordCount between(650, lowerBoundsToUpperBounds.get(650).get)) Then 650
+          If(metric.commissionedWordCount >= 900) Then 900
+      )
+      .groupBy(identity)
+      .map{case (lowerBound, metric) => (lowerBound, metric.size)}
+      .result))(dbResult => {
+
+      dbResult.foldRight(List[ArticleLengthGroup]())((result: (Option[Int], Int), wordCounts: List[ArticleLengthGroup]) => {
+        result match {
+          case (None, _) => wordCounts
+          case (Some(lowerBound), count) => {
+            wordCounts ::: List(ArticleLengthGroup((lowerBound, lowerBoundsToUpperBounds.get(lowerBound)), count))
+          }
+        }
+      }).sortWith(_.range._1 < _.range._1)
     })
   }
 

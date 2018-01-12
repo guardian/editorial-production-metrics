@@ -101,11 +101,19 @@ class Application(implicit val wsClient: WSClient, val db: MetricsDB) extends Co
     }
   }
 
-  def getGroupedWordCounts() = APIAuthAction { req =>
+  def getGroupedArticleLengths() = APIAuthAction { req =>
     APIResponse {
       for {
-        groupedWordCounts <- db.getGroupedWordCounts(Filters(req.queryString))
-      } yield groupedWordCounts
+        groupedArticleLengths <- db.getGroupedArticleLengths(Filters(req.queryString))
+      } yield groupedArticleLengths
+    }
+  }
+
+  def getGroupedCommissionedLengths() = APIAuthAction { req =>
+    APIResponse {
+      for {
+        groupedCommissionedLengths <- db.getGroupedCommissionedLengths(Filters(req.queryString))
+      } yield groupedCommissionedLengths
     }
   }
 }
