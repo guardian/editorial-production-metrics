@@ -1,5 +1,5 @@
 import React from 'react';
-import {Table, Tr, Th, Td} from './Table';
+import {PaginatedTable, Tr, Th, Td} from './Table';
 
 const ArticleCommissionedLengthTable = ({ articles }) => {
     articles.sort(
@@ -8,7 +8,7 @@ const ArticleCommissionedLengthTable = ({ articles }) => {
     return(
         <div>
             <h3>Articles with a Commissioned Length</h3>
-            <Table alternate head={
+            <PaginatedTable pageSize={10} pagesAround={0} alternate head={
                 <Tr>
                     <Th>Headline</Th>
                     <Th></Th>
@@ -26,7 +26,7 @@ const ArticleCommissionedLengthTable = ({ articles }) => {
                         <Td>{x.wordCount - x.commissionedWordLength}</Td>
                     </Tr>
                 )}
-            </Table>
+            </PaginatedTable>
         </div>
     );
 };

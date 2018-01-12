@@ -1,5 +1,5 @@
 import React from 'react';
-import {Table, Tr, Th, Td} from './Table';
+import {PaginatedTable, Tr, Th, Td} from './Table';
 
 const ArticleCommissionedLengthTable = ({ articles }) => {
     articles.sort(
@@ -8,21 +8,21 @@ const ArticleCommissionedLengthTable = ({ articles }) => {
     return(
         <div>
             <h3>Articles without a Commissioned Length</h3>
-            <Table alternate head={
+            <PaginatedTable pageSize={10} pagesAround={0} alternate head={
                 <Tr>
                     <Th>Headline</Th>
                     <Th></Th>
                     <Th>Word Count</Th>
                 </Tr>
             }>
-                {articles.map(x => 
-                    <Tr key={x.path}>
+                {articles.map((x, i) => 
+                    <Tr key={x.path || i}>
                         <Td><a href={`https://www.theguardian.com/${x.path}`} target="_blank" rel="noopener noreferrer">{x.headline}</a></Td>
                         <Td><a href={`https://dashboard.ophan.co.uk/info?path=/${x.path}`} target="_blank" rel="noopener noreferrer">Ophan</a></Td>
                         <Td>{x.wordCount}</Td>
                     </Tr>
                 )}
-            </Table>
+            </PaginatedTable>
         </div>
     );
 };

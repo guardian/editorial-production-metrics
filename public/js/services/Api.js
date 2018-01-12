@@ -44,13 +44,13 @@ const getInWorkflowVsNotInWorkflow = (startDate, endDate, desk, productionOffice
 
 const getWordCount = (startDate, endDate, desk, productionOffice) =>
     pandaFetch(
-        "api/wordCount/groupedWordCounts",
+        "api/wordCount/grouped/finalLength",
         buildQueryParams(startDate, endDate, desk, productionOffice)
     );
 
 const getCommissionedLength = (startDate, endDate, desk, productionOffice) =>
     pandaFetch(
-        "api/wordCount/groupedWordCounts", // TODO: change
+        "api/wordCount/grouped/commissionedLength",
         buildQueryParams(startDate, endDate, desk, productionOffice)
     );
 

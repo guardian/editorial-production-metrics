@@ -14,7 +14,6 @@ const initialState = {
 const articleWordCounts = (state = initialState, action) => {
     switch (action.type) {
         case "UPDATE_WORD_COUNT_ARTICLES":
-        console.log(action.payload);
             return {
                 ...state,
                 // articles keyed by id

@@ -142,7 +142,7 @@ export const getForkTime = state => {
     };
 };
 
-const responseToBands = data => data.map(({ countRange: [min, max], count }) => ({
+const responseToBands = data => data.map(({ range: [min, max], count }) => ({
     label: bandName(min, max),
     count
 }));

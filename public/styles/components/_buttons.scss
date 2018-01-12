@@ -12,14 +12,14 @@ button {
 }
 
 .btn {
-  display: block;
+  display: inline-block;
   padding: 10px;
-  background: $darkBrandColor;
-  color: $cWhite;
+  background: $cYellow;
+  color: black;
   font-size: 12px;
   font-weight: bold;
 
   &:hover {
-    background: $brandColor;
+    background: $slightDangerColor;
   }
 }

@@ -2,7 +2,7 @@ import { createSelector } from "reselect";
 
 /* Word Count */
 
-const getArticleWordCounts = ({ articleWordCounts }) => console.log(articleWordCounts) || articleWordCounts;
+const getArticleWordCounts = ({ articleWordCounts }) => articleWordCounts;
 
 const getWordCountArticles = createSelector(
     getArticleWordCounts,
@@ -21,7 +21,7 @@ export const getWordCountArticlesWithCommissionedLength = createSelector(
 
 const getWordCountArticlesWithoutCommissionedLengthData = createSelector(
     getWordCountArticles,
-    ({ articlesWithoutCommissionedLength }) => console.log(articlesWithoutCommissionedLength) ||
+    ({ articlesWithoutCommissionedLength }) =>
         articlesWithoutCommissionedLength || {}
 );
 
