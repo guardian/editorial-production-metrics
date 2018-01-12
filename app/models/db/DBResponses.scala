@@ -15,11 +15,11 @@ object ArticleWordCountResponseList {
   implicit val articleWordCountResponseListEncoder: Encoder[ArticleWordCountResponseList] = deriveEncoder[ArticleWordCountResponseList]
 }
 
-case class GroupedWordCount(countRange: (Int, Option[Int]), count: Int)
+case class ArticleLengthGroup(range: (Int, Option[Int]), count: Int)
 
-object GroupedWordCount {
-  implicit val groupedWordCountApiResponseEncoder: Encoder[GroupedWordCount] =
-    deriveEncoder[GroupedWordCount]
+object ArticleLengthGroup {
+  implicit val articleLengthGroupResponseEncoder: Encoder[ArticleLengthGroup] =
+    deriveEncoder[ArticleLengthGroup]
 }
 
 case class ForkResponse(issueDate: DateTime, timeToPublication: Int)
@@ -44,3 +44,6 @@ object CountResponse {
   implicit val metricEncoder: Encoder[Metric] = deriveEncoder
 }
 
+sealed trait ArticleLength
+case object FinalLength extends ArticleLength
+case object CommissionedLength extends ArticleLength
