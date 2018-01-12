@@ -1,5 +1,5 @@
 import { CHART_LIST, CHART_FILTERS_MAP } from 'utils/chartList';
-import * as ChartsActions from './ChartsActions';
+import * as ChartsActions from './chartsActions';
 import { toggleIsUpdatingCharts } from './uiActions';
 import {
   updateFilter,
