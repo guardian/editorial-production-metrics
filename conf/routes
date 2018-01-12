@@ -6,8 +6,8 @@ GET     /api/inWorkflow/:inWorkflow                controllers.Application.getWo
 GET     /api/fork/*newspaperBook                   controllers.Application.getForks(newspaperBook: String)
 GET     /api/newspaperBooks                        controllers.Application.getNewspaperBookList
 GET     /api/wordCount/articles                    controllers.Application.getArticlesWithWordCounts
-GET     /api/wordCount/grouped/articleLengths      controllers.Application.getGroupedArticleLengths
-GET     /api/wordCount/grouped/commissionedLengths controllers.Application.getGroupedCommissionedLengths
+GET     /api/wordCount/grouped/articleLengths      controllers.Application.getArticlesGroupedByLength
+GET     /api/wordCount/grouped/commissionedLengths controllers.Application.getArticlesGroupedByCommissionedLength
 
 # endpoints for posting data from other apps
 OPTIONS /api/metric/*url                  controllers.Application.allowCORSAccess(methods = "PUT, POST, DELETE", url: String)
