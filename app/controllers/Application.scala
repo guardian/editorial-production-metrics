@@ -104,7 +104,7 @@ class Application(implicit val wsClient: WSClient, val db: MetricsDB) extends Co
   def getGroupedArticleLengths() = APIAuthAction { req =>
     APIResponse {
       for {
-        groupedArticleLengths <- db.getGroupedArticleLengths(Filters(req.queryString))
+        groupedArticleLengths <- db.getArticlesGroupedByLengthBounds()(Filters(req.queryString))
       } yield groupedArticleLengths
     }
   }
@@ -112,7 +112,7 @@ class Application(implicit val wsClient: WSClient, val db: MetricsDB) extends Co
   def getGroupedCommissionedLengths() = APIAuthAction { req =>
     APIResponse {
       for {
-        groupedCommissionedLengths <- db.getGroupedCommissionedLengths(Filters(req.queryString))
+        groupedCommissionedLengths <- db.getArticlesGroupedByLengthBounds(groupByCommissionedLength = true)(Filters(req.queryString))
       } yield groupedCommissionedLengths
     }
   }
