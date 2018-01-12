@@ -18,6 +18,18 @@ const initialState = {
         startDate: null,
         pending: true,
         endDate: null,
+    },
+    wordCount: {
+        chartData: {},
+        startDate: null,
+        pending: true,
+        endDate: null,
+    },
+    commissionedLength: {
+        chartData: {},
+        startDate: null,
+        pending: true,
+        endDate: null,
     }
 };
 
@@ -69,6 +81,18 @@ const charts = (state = initialState, action) => {
 
     case 'GET_FORK_TIME_FAILED':
         return chartError("forkTime", state, payload);
+
+    case "UPDATE_WORD_COUNT":
+        return chartUpdate("wordCount", state, payload);
+
+    case "GET_WORD_COUNT_FAILED":
+        return chartError("wordCount", state, payload);
+
+    case "UPDATE_COMMISSIONED_LENGTH":
+        return chartUpdate("commissionedLength", state, payload);
+
+    case "GET_COMMISSIONED_LENGTH_FAILED":
+        return chartError("commissionedLength", state, payload);
 
     default:
         return state;

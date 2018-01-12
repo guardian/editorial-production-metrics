@@ -4,6 +4,7 @@ import {
     getComparisonTimeSeriesFromResponses
 } from "../helpers/chartsHelpers";
 import { createSelector } from "reselect";
+import { bandName } from "../utils/BandUtils";
 
 const getCharts = ({ charts }) => charts;
 
@@ -140,3 +141,56 @@ export const getForkTime = state => {
         isStacked
     };
 };
+
+const responseToBands = data => data.map(({ countRange: [min, max], count }) => ({
+    label: bandName(min, max),
+    count
+}));
+
+/* Word Count */
+
+const getWordCountData = createSelector(
+    getCharts,
+    ({ wordCount: { pending, chartData: { data } } }) => pending ? [] : data
+);
+
+export const getWordCountBands = createSelector(
+    getWordCountData,
+    responseToBands
+);
+
+/* Commissioned Length */
+
+const getCommissionedLengthData = createSelector(
+    getCharts,
+    ({ commissionedLength: { pending, chartData: { data } } }) =>
+        pending ? [] : data
+);
+
+const sumCounts = arr => arr.reduce((sum, { count }) => sum + count, 0);
+
+const getArticleCount = createSelector(
+    getWordCountData,
+    data => sumCounts(data)
+);
+
+export const getWithCommissionedLengthCount = createSelector(
+    getCommissionedLengthData,
+    data => sumCounts(data)
+);
+
+export const getWithoutCommissionedLengthCount = createSelector(
+    getArticleCount,
+    getWithCommissionedLengthCount,
+    (articleCount, commissionedLengthCount) =>
+        articleCount - commissionedLengthCount
+);
+
+export const getCommissionedLengthBands = createSelector(
+    getCommissionedLengthData,
+    getWithoutCommissionedLengthCount,
+    (data, count) => responseToBands(data).concat({
+        label: "None",
+        count, 
+    })
+);

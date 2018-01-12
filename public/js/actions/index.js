@@ -1,13 +1,5 @@
 import { CHART_LIST, CHART_FILTERS_MAP } from 'utils/chartList';
-import {
-    updateComposerVsIncopy, 
-    getComposerVsIncopyFailed, 
-    updateInWorkflowVsNotInWorkflow,
-    getInWorkflowVsNotInWorkflowFailed,
-    updateForkTime,
-    getForkTimeFailed
-
-} from './chartsActions';
+import * as ChartsActions from './ChartsActions';
 import { toggleIsUpdatingCharts } from './uiActions';
 import {
   updateFilter,
@@ -18,25 +10,16 @@ import {
 } from "./filtersActions";
 import api from 'services/Api';
 
-const chartsActions = { 
-    updateComposerVsIncopy,
-    getComposerVsIncopyFailed,
-    updateInWorkflowVsNotInWorkflow,
-    getInWorkflowVsNotInWorkflowFailed,
-    updateForkTime,
-    getForkTimeFailed
-};
-
 /*-------- HELPERS --------*/
 
 const updateAttemptActions = (chartData, chart, startDate, endDate, dispatch) => {
     dispatch(toggleIsUpdatingCharts(false));
-    dispatch(chartsActions[`update${chart}`](chartData, startDate, endDate));
+    dispatch(ChartsActions[`update${chart}`](chartData, startDate, endDate));
 };
 
 const responseFailActions = (chart, error, dispatch) => {
     dispatch(toggleIsUpdatingCharts(false));
-    dispatch(chartsActions[`get${chart}Failed`](error));
+    dispatch(ChartsActions[`get${chart}Failed`](error));
 };
 
 /*-------- DISPATCHABLE --------*/

@@ -42,10 +42,31 @@ const getInWorkflowVsNotInWorkflow = (startDate, endDate, desk, productionOffice
         })
     );
 
+const getWordCount = (startDate, endDate, desk, productionOffice) =>
+    pandaFetch(
+        "api/wordCount/groupedWordCounts",
+        buildQueryParams(startDate, endDate, desk, productionOffice)
+    );
+
+const getCommissionedLength = (startDate, endDate, desk, productionOffice) =>
+    pandaFetch(
+        "api/wordCount/groupedWordCounts", // TODO: change
+        buildQueryParams(startDate, endDate, desk, productionOffice)
+    );
+
+const getWordCountArticles = (startDate, endDate, desk, productionOffice) =>
+    pandaFetch(
+        "api/wordCount/articles",
+        buildQueryParams(startDate, endDate, desk, productionOffice)
+    );
+
 export default {
     getComposerVsIncopy,
     getInWorkflowVsNotInWorkflow,
     getCommissioningDesks,
     getNewspaperBooks,
-    getForkTime
+    getForkTime,
+    getWordCount,
+    getCommissionedLength,
+    getWordCountArticles
 };
