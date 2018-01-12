@@ -6,7 +6,7 @@ import config.Config._
 import database.MetricsDB
 import io.circe.generic.auto._
 import models.{WordCountAPIResponse, APIResponse}
-import models.db.{Fork, MetricsFilters}
+import models.db.{Fork, Filters}
 import play.api.Logger
 import play.api.libs.ws.WSClient
 import play.api.mvc._
@@ -44,7 +44,7 @@ class Application(implicit val wsClient: WSClient, val db: MetricsDB) extends Co
     APIResponse {
       for {
         originatingSystem <- extractOriginatingSystem(system)
-        filters = MetricsFilters(req.queryString).copy(originatingSystem = Some(originatingSystem))
+        filters = Filters(req.queryString).copy(originatingSystem = Some(originatingSystem))
         metric <- db.getGroupedByDayMetrics(filters)
       } yield metric
     }
@@ -53,7 +53,7 @@ class Application(implicit val wsClient: WSClient, val db: MetricsDB) extends Co
   def getWorkflowData(inWorkflow: Boolean) = APIAuthAction { req =>
     APIResponse {
       for {
-        metric <- db.getGroupedByDayMetrics(MetricsFilters(req.queryString).copy(inWorkflow = Some(inWorkflow)))
+        metric <- db.getGroupedByDayMetrics(Filters(req.queryString).copy(inWorkflow = Some(inWorkflow)))
       } yield metric
     }
   }
@@ -86,7 +86,7 @@ class Application(implicit val wsClient: WSClient, val db: MetricsDB) extends Co
 
   def getForks(newspaperBook: String) = APIAuthAction { req =>
     APIResponse {
-      db.getForks(MetricsFilters(req.queryString).copy(newspaperBook = Some(newspaperBook)))
+      db.getForks(Filters(req.queryString).copy(newspaperBook = Some(newspaperBook)))
     }
   }
 
@@ -95,18 +95,16 @@ class Application(implicit val wsClient: WSClient, val db: MetricsDB) extends Co
   def getArticlesWithWordCounts() = APIAuthAction { req =>
     APIResponse {
       for {
-        articlesWithoutCommissionedLength <- db.getArticlesWithWordCounts(withCommissionedLength=false)(MetricsFilters(req.queryString))
-        articlesWithCommissionedLength <- db.getArticlesWithWordCounts(withCommissionedLength=true)(MetricsFilters(req.queryString))
-      } yield {
-        WordCountAPIResponse(articlesWithoutCommissionedLength, articlesWithCommissionedLength)
-      }
+        articlesWithoutCommissionedLength <- db.getArticlesWithWordCounts(Filters(req.queryString).copy(hasCommissionedLength = Some(false)))
+        articlesWithCommissionedLength <- db.getArticlesWithWordCounts(Filters(req.queryString).copy(hasCommissionedLength = Some(true)))
+      } yield WordCountAPIResponse(articlesWithoutCommissionedLength, articlesWithCommissionedLength)
     }
   }
 
   def getGroupedWordCounts() = APIAuthAction { req =>
     APIResponse {
       for {
-        groupedWordCounts <- db.getGroupedWordCounts(MetricsFilters(req.queryString))
+        groupedWordCounts <- db.getGroupedWordCounts(Filters(req.queryString))
       } yield groupedWordCounts
     }
   }

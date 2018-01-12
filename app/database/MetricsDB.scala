@@ -35,11 +35,11 @@ class MetricsDB(implicit val db: Database) {
       upsertPublishingMetric(Metric(metricOpt))
   }
 
-  def getForks(implicit filters: MetricsFilters): Either[ProductionMetricsError, List[ForkResponse]] =
+  def getForks(implicit filters: Filters): Either[ProductionMetricsError, List[ForkResponse]] =
     awaitWithTransformation(db.run(
       forksTable.map(f => (f.composerId, f.timeToPublication, f.time))
         .join(metricsTable).on(_._1 === _.composerId)
-        .filter(MetricsFilters.forkFilters)
+        .filter(Filters.forkFilters)
         .map { case ((_, timeToPublication, forkTime), _) => (timeToPublication, forkTime.toDayDateTrunc) }
         .result)
     )(_.flatMap(ForkResponse.convertToForkResponse).toList)
@@ -48,8 +48,8 @@ class MetricsDB(implicit val db: Database) {
 
   // This needs to return the data grouped by day. For this we've defined dateTrunc to tell Slick
   // to "import" the date_trunc function from postgresql
-  def getGroupedByDayMetrics(implicit filters: MetricsFilters): Either[ProductionMetricsError, List[CountResponse]] =
-    awaitWithTransformation(db.run(metricsTable.filter(MetricsFilters.metricFilters).map(m => (m.id, m.creationTime.toDayDateTrunc))
+  def getGroupedByDayMetrics(implicit filters: Filters): Either[ProductionMetricsError, List[CountResponse]] =
+    awaitWithTransformation(db.run(metricsTable.filter(Filters.originFilters).map(m => (m.id, m.creationTime.toDayDateTrunc))
       .groupBy(_._2).map {
         case (date, metric) => (date, metric.size)
       }.result)){ dbResult: Seq[(DateTime, Int)] =>
@@ -59,7 +59,7 @@ class MetricsDB(implicit val db: Database) {
   def getDistinctNewspaperBooks: Either[ProductionMetricsError, Seq[Option[String]]] =
     await(db.run(metricsTable.filter(book => !book.newspaperBook.isEmpty && book.newspaperBook =!= "").map(_.newspaperBook).distinct.result))
 
-  def getGroupedWordCounts(implicit filters: MetricsFilters): Either[ProductionMetricsError, List[GroupedWordCount]] = {
+  def getGroupedWordCounts(implicit filters: Filters): Either[ProductionMetricsError, List[GroupedWordCount]] = {
 
     val lowerBoundsToUpperBounds: Map[Int, Int] = Map(
       0 -> 349,
@@ -68,7 +68,7 @@ class MetricsDB(implicit val db: Database) {
     )
 
     awaitWithTransformation(db.run(metricsTable
-      .filter(MetricsFilters.metricFilters)
+      .filter(Filters.originFilters)
       .map( metric =>
         Case
           If(metric.wordCount between(0, lowerBoundsToUpperBounds.get(0).get)) Then 0
@@ -91,14 +91,10 @@ class MetricsDB(implicit val db: Database) {
     })
   }
 
-  def getArticlesWithWordCounts(withCommissionedLength: Boolean)(implicit filters: MetricsFilters):
+  def getArticlesWithWordCounts(implicit filters: Filters):
     Either[ProductionMetricsError, ArticleWordCountResponseList] = {
 
-    val filterFunction = if (withCommissionedLength)
-      MetricsFilters.withCommissionedWordCountFilters
-    else MetricsFilters.withoutCommissionedWordCountFilters
-
-    awaitWithTransformation(db.run(metricsTable.filter(filterFunction)
+    awaitWithTransformation(db.run(metricsTable.filter(Filters.wordCountFilters)
       .sortBy((metric) => {
         for {
           wordCount <- metric.wordCount

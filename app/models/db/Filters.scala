@@ -12,23 +12,24 @@ import scala.util.control.NonFatal
 
 case class DateRange (from: DateTime, to: DateTime)
 
-case class MetricsFilters(
+case class Filters(
   dateRange: Option[DateRange] = None,
   desk: Option[String] = None,
   originatingSystem: Option[OriginatingSystem] = None,
   productionOffice: Option[ProductionOffice] = None,
   inWorkflow: Option[Boolean] = None,
-  newspaperBook: Option[String] = None
+  newspaperBook: Option[String] = None,
+  hasCommissionedLength: Option[Boolean] = None
 )
 
-object MetricsFilters {
+object Filters {
 
   type ForkFilterColumns = (Rep[String], Rep[Option[Int]], Rep[DateTime])
 
   private val TrueOptCol: Rep[Option[Boolean]] = LiteralColumn(Some(true))
 
-  def apply(queryString: Map[String, Seq[String]]): MetricsFilters =
-    MetricsFilters(
+  def apply(queryString: Map[String, Seq[String]]): Filters =
+    Filters(
       dateRange = extractDateRange(queryString),
       desk = getOptionFromQS("desk", queryString),
       originatingSystem = OriginatingSystem.withNameOption(getOptionFromQS("originatingSystem", queryString).getOrElse("")),
@@ -66,39 +67,38 @@ object MetricsFilters {
 
   private def getOptionFromQS(key: String, qs: Map[String, Seq[String]]): Option[String] = qs.get(key).flatMap(_.headOption)
 
-  def metricFilters(implicit filters: MetricsFilters): DBMetric => Rep[Option[Boolean]] = metric => checkMetricsFilters(metric)
+  def originFilters(implicit filters: Filters): DBMetric => Rep[Option[Boolean]] = metric => combineFiltersForOrigin(metric)
 
-  def withoutCommissionedWordCountFilters(implicit filters: MetricsFilters): DBMetric => Rep[Option[Boolean]] =
-    metric => checkCommissionedWordCountFilters(metric, false)
+  def wordCountFilters(implicit filters: Filters): DBMetric => Rep[Option[Boolean]] =
+    metric => combineFiltersForWordCount(metric)
 
-  def withCommissionedWordCountFilters(implicit filters: MetricsFilters): DBMetric => Rep[Option[Boolean]] =
-    metric => checkCommissionedWordCountFilters(metric, true)
+  def forkFilters(implicit filters: Filters): ((ForkFilterColumns, DBMetric)) => Rep[Option[Boolean]] = forkAndMetric =>
+    combineFiltersForFork(forkAndMetric)
 
-  def forkFilters(implicit filters: MetricsFilters): ((ForkFilterColumns, DBMetric)) => Rep[Option[Boolean]] = forkAndMetric =>
-    checkMetricsForkFilters(forkAndMetric)
-
-  private def checkCommissionedWordCountFilters(metric: Schema.DBMetric, withCommissionedWordCount: Boolean)
-                                               (implicit filters: MetricsFilters): Rep[Option[Boolean]] = {
-    Some(withCommissionedWordCount).fold(TrueOptCol)(booleanValue => metric.commissionedWordCount.isDefined === booleanValue) &&
-    checkMetricsFilters(metric)
+  private def combineFiltersForWordCount(metric: Schema.DBMetric)
+                                               (implicit filters: Filters): Rep[Option[Boolean]] = {
+    filters.hasCommissionedLength.fold(TrueOptCol)(booleanValue => metric.commissionedWordCount.isDefined.? === booleanValue) &&
+      filters.dateRange.fold(TrueOptCol)(dr => metric.firstPublicationTime >= dr.from && metric.firstPublicationTime <= dr.to) &&
+      commonFilters(metric)
   }
-  private def checkMetricsForkFilters(data: (ForkFilterColumns, Schema.DBMetric))(implicit filters: MetricsFilters): Rep[Option[Boolean]] = {
+  private def combineFiltersForFork(data: (ForkFilterColumns, Schema.DBMetric))(implicit filters: Filters): Rep[Option[Boolean]] = {
     val (fork, metric) = data
     filters.dateRange.fold(TrueOptCol)(dr => fork._3.? >= dr.from && fork._3.? <= dr.to) &&
-      checkCommonFilters(metric)
+      filters.newspaperBook.fold(TrueOptCol)(nb => metric.newspaperBook.toLowerCase === nb.toLowerCase) &&
+      commonFilters(metric)
   }
 
-  private def checkMetricsFilters(metric: Schema.DBMetric)(implicit filters: MetricsFilters): Rep[Option[Boolean]] = {
+  private def combineFiltersForOrigin(metric: Schema.DBMetric)(implicit filters: Filters): Rep[Option[Boolean]] = {
+    import MetricHelpers._
     filters.dateRange.fold(TrueOptCol)(dr => metric.creationTime.? >= dr.from && metric.creationTime.? <= dr.to) &&
-      checkCommonFilters(metric)
+      filters.inWorkflow.fold(TrueOptCol)(inWf => metric.inWorkflow.? === inWf) &&
+      filters.originatingSystem.fold(TrueOptCol)(os => metric.originatingSystem.? === os) &&
+      commonFilters(metric)
   }
 
-  private def checkCommonFilters(metric: Schema.DBMetric)(implicit filters: MetricsFilters): Rep[Option[Boolean]] = {
+  private def commonFilters(metric: Schema.DBMetric)(implicit filters: Filters): Rep[Option[Boolean]] = {
     import MetricHelpers._
     filters.desk.fold(TrueOptCol)(d => metric.commissioningDesk.toLowerCase === d.toLowerCase) &&
-      filters.originatingSystem.fold(TrueOptCol)(os => metric.originatingSystem.? === os) &&
-      filters.productionOffice.fold(TrueOptCol)(po => metric.productionOffice === po) &&
-      filters.inWorkflow.fold(TrueOptCol)(inWf => metric.inWorkflow.? === inWf) &&
-      filters.newspaperBook.fold(TrueOptCol)(nb => metric.newspaperBook.toLowerCase === nb.toLowerCase)
+      filters.productionOffice.fold(TrueOptCol)(po => metric.productionOffice === po)
   }
 }
