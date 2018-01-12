@@ -15,7 +15,11 @@ const tagsToOptions = tags =>
   );
 
 export default class Filters extends Component {
-    state = { focusedInput: null };
+    state = {
+      focusedInput: null,
+      startDate: this.props.filterVals.startDate,
+      endDate: this.props.filterVals.endDate
+    };
 
     render() {
         const { filterVals, isUpdating, desks, newspaperBooks, runFilter } = this.props;
@@ -66,17 +70,17 @@ export default class Filters extends Component {
                                             orientation={window.innerWidth > 640 ? 'horizontal' : 'vertical'}
                                             displayFormat='DD/MM/YYYY'
                                             disabled={isUpdating}
-                                            startDate={filterVals.startDate}
-                                            endDate={filterVals.endDate}
-                                            onDatesChange={
-                                                ({ startDate, endDate }) =>
-                                                    endDate > startDate ?
-                                                        runFilter({
-                                                            startDate: startDate.utc().startOf('day').format(),
-                                                            endDate: endDate.utc().endOf('day').format()
-                                                        }) :
-                                                        false
-                                            }
+                                            startDate={this.state.startDate}
+                                            endDate={this.state.endDate}
+                                            onDatesChange={ ({ startDate, endDate }) => {
+                                              this.setState({ startDate, endDate });
+                                              if (startDate && endDate) {
+                                                runFilter({
+                                                  startDate: startDate.utc().startOf('day').format(),
+                                                  endDate: endDate.utc().endOf('day').format()
+                                                })
+                                              }
+                                            }}
                                             focusedInput={this.state.focusedInput}
                                             onFocusChange={focusedInput => this.setState({ focusedInput })}
                                             isOutsideRange={(day) => day.isAfter(moment())}
