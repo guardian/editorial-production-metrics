@@ -5,8 +5,8 @@ import com.gu.editorialproductionmetricsmodels.models.{ForkData, MetricOpt}
 import config.Config._
 import database.MetricsDB
 import io.circe.generic.auto._
-import models.{WordCountAPIResponse, APIResponse}
-import models.db.{Fork, Filters}
+import models.{APIResponse, WordCountAPIResponse}
+import models.db.{CommissionedLength, Filters, FinalLength, Fork}
 import play.api.Logger
 import play.api.libs.ws.WSClient
 import play.api.mvc._
@@ -101,18 +101,18 @@ class Application(implicit val wsClient: WSClient, val db: MetricsDB) extends Co
     }
   }
 
-  def getArticlesGroupedByLength() = APIAuthAction { req =>
+  def getArticlesGroupedByFinalLength() = APIAuthAction { req =>
     APIResponse {
       for {
-        groupedByArticleLength <- db.getArticlesGroupedByLengthBounds()(Filters(req.queryString))
-      } yield groupedByArticleLength
+        groupedByFinalLength <- db.getArticlesGroupedByLengthBounds(FinalLength)(Filters(req.queryString))
+      } yield groupedByFinalLength
     }
   }
 
   def getArticlesGroupedByCommissionedLength() = APIAuthAction { req =>
     APIResponse {
       for {
-        groupedByCommissionedLength <- db.getArticlesGroupedByLengthBounds(groupByCommissionedLength = true)(Filters(req.queryString))
+        groupedByCommissionedLength <- db.getArticlesGroupedByLengthBounds(CommissionedLength)(Filters(req.queryString))
       } yield groupedByCommissionedLength
     }
   }

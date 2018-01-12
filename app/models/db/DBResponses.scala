@@ -44,3 +44,6 @@ object CountResponse {
   implicit val metricEncoder: Encoder[Metric] = deriveEncoder
 }
 
+sealed trait ArticleLength
+case object FinalLength extends ArticleLength
+case object CommissionedLength extends ArticleLength

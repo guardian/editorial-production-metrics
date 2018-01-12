@@ -59,7 +59,7 @@ class MetricsDB(implicit val db: Database) {
   def getDistinctNewspaperBooks: Either[ProductionMetricsError, Seq[Option[String]]] =
     await(db.run(metricsTable.filter(book => !book.newspaperBook.isEmpty && book.newspaperBook =!= "").map(_.newspaperBook).distinct.result))
 
-  def getArticlesGroupedByLengthBounds(groupByCommissionedLength: Boolean = false)(implicit filters: Filters): Either[ProductionMetricsError, List[ArticleLengthGroup]] = {
+  def getArticlesGroupedByLengthBounds(articleLength: ArticleLength)(implicit filters: Filters): Either[ProductionMetricsError, List[ArticleLengthGroup]] = {
 
     val lowerBoundsToUpperBounds: Map[Int, Int] = Map(
       0 -> 349,
@@ -76,7 +76,10 @@ class MetricsDB(implicit val db: Database) {
 
     awaitWithTransformation(db.run(metricsTable
       .filter(Filters.originFilters)
-      .map( metric => if(groupByCommissionedLength) assignLowerBound(metric.commissionedWordCount) else assignLowerBound(metric.wordCount))
+      .map( metric => articleLength match {
+        case FinalLength => assignLowerBound(metric.wordCount)
+        case CommissionedLength => assignLowerBound(metric.commissionedWordCount)
+      })
       .groupBy(identity)
       .map{case (lowerBound, metric) => (lowerBound, metric.size)}
       .result))(dbResult => {
