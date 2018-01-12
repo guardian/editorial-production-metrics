@@ -1,6 +1,5 @@
 import React from "react";
 import Table from "./Table";
-import cx from "classnames";
 import TablePagination from "./TablePagination";
 
 class PaginatedTable extends React.Component {

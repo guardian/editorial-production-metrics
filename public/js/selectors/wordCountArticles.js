@@ -1,4 +1,5 @@
 import { createSelector } from "reselect";
+import { wordCountOver } from "../utils/WordCountUtils";
 
 /* Word Count */
 
@@ -14,9 +15,12 @@ const getWordCountArticlesWithCommissionedLengthData = createSelector(
     ({ articlesWithWordCount }) => articlesWithWordCount || {}
 );
 
+const byWordCountOver = (a, b) => wordCountOver(b) - wordCountOver(a);
+const byWordCount = (a, b) => b.wordCount - a.wordCount;
+
 export const getWordCountArticlesWithCommissionedLength = createSelector(
     getWordCountArticlesWithCommissionedLengthData,
-    ({ articles }) => articles || []
+    ({ articles }) => (articles || []).slice(0).sort(byWordCountOver)
 );
 
 const getWordCountArticlesWithoutCommissionedLengthData = createSelector(
@@ -27,5 +31,8 @@ const getWordCountArticlesWithoutCommissionedLengthData = createSelector(
 
 export const getWordCountArticlesWithoutCommissionedLength = createSelector(
     getWordCountArticlesWithoutCommissionedLengthData,
-    ({ articles }) => articles || []
+    ({ articles }) =>
+        (articles || [])
+            .slice(0)
+            .sort(byWordCount)
 );
