@@ -77,7 +77,9 @@ object Filters {
 
   private def combineFiltersForWordCount(metric: Schema.DBMetric)
                                                (implicit filters: Filters): Rep[Option[Boolean]] = {
-    filters.hasCommissionedLength.fold(TrueOptCol)(booleanValue => metric.commissionedWordCount.isDefined.? === booleanValue) &&
+    // Filtering on headline as all content without a headline predates the collection of wordcount metrics so does not make sense to return
+    metric.headline =!= "" &&
+      filters.hasCommissionedLength.fold(TrueOptCol)(booleanValue => metric.commissionedWordCount.isDefined.? === booleanValue) &&
       filters.dateRange.fold(TrueOptCol)(dr => metric.firstPublicationTime >= dr.from && metric.firstPublicationTime <= dr.to) &&
       commonFilters(metric)
   }
