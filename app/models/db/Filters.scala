@@ -79,13 +79,13 @@ object Filters {
                                                (implicit filters: Filters): Rep[Option[Boolean]] = {
     filters.hasCommissionedLength.fold(TrueOptCol)(booleanValue => metric.commissionedWordCount.isDefined.? === booleanValue) &&
       filters.dateRange.fold(TrueOptCol)(dr => metric.firstPublicationTime >= dr.from && metric.firstPublicationTime <= dr.to) &&
-      checkCommonFilters(metric)
+      commonFilters(metric)
   }
   private def combineFiltersForFork(data: (ForkFilterColumns, Schema.DBMetric))(implicit filters: Filters): Rep[Option[Boolean]] = {
     val (fork, metric) = data
     filters.dateRange.fold(TrueOptCol)(dr => fork._3.? >= dr.from && fork._3.? <= dr.to) &&
       filters.newspaperBook.fold(TrueOptCol)(nb => metric.newspaperBook.toLowerCase === nb.toLowerCase) &&
-      checkCommonFilters(metric)
+      commonFilters(metric)
   }
 
   private def combineFiltersForOrigin(metric: Schema.DBMetric)(implicit filters: Filters): Rep[Option[Boolean]] = {
@@ -93,10 +93,10 @@ object Filters {
     filters.dateRange.fold(TrueOptCol)(dr => metric.creationTime.? >= dr.from && metric.creationTime.? <= dr.to) &&
       filters.inWorkflow.fold(TrueOptCol)(inWf => metric.inWorkflow.? === inWf) &&
       filters.originatingSystem.fold(TrueOptCol)(os => metric.originatingSystem.? === os) &&
-      checkCommonFilters(metric)
+      commonFilters(metric)
   }
 
-  private def checkCommonFilters(metric: Schema.DBMetric)(implicit filters: Filters): Rep[Option[Boolean]] = {
+  private def commonFilters(metric: Schema.DBMetric)(implicit filters: Filters): Rep[Option[Boolean]] = {
     import MetricHelpers._
     filters.desk.fold(TrueOptCol)(d => metric.commissioningDesk.toLowerCase === d.toLowerCase) &&
       filters.productionOffice.fold(TrueOptCol)(po => metric.productionOffice === po)
