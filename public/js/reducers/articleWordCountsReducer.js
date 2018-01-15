@@ -1,25 +1,4 @@
-// TODO: remove this mock data
-import {
-    wordCountBands,
-    commissionedLengthBands,
-    articles
-} from "../components/Tabs/_commissionedLengthTestData";
-
 const initialState = {
-    // This data comes from the server as in some extreme cases we may not
-    // return all the articles for a large date range but will return the stats
-    // for all articles in that range
-    /*
-    bands currently have the shape:
-    {
-        label: string,
-        count: number,
-    }
-    */
-    aggregates: {
-        wordCountBands,
-        commissionedLengthBands,
-    },
     /*
     articles currently have the shape:
     {
@@ -29,10 +8,7 @@ const initialState = {
         commissionedLength: number,
     }
     */
-    articles,
-    // This flag from the server will allow us to show if we capped the amount
-    // of returned articles
-    articlesOmitted: false
+    articles: {},
 };
 
 const articleWordCounts = (state = initialState, action) => {
@@ -43,16 +19,7 @@ const articleWordCounts = (state = initialState, action) => {
                 // articles keyed by id
                 articles: {
                     ...state.articles,
-                    ...action.payload.articles
-                }
-            };
-    
-        case "UPDATE_WORD_COUNT_AGGREGATES":
-            return {
-                ...state,
-                aggregates: {
-                    ...state.aggregates,
-                    ...action.payload.aggregates
+                    ...action.payload.chartData.data
                 }
             };
         default:

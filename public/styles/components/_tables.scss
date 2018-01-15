@@ -69,4 +69,39 @@
       }
     }
   }
+
+  &__pagination {
+    display: flex;
+    justify-content: center;
+    padding: 1rem 0; 
+  }
+
+  &__pagination-btn {
+    @extend .btn;
+    background-color: transparent;
+    border: 1px solid $cYellow;
+    color: $cWhite;
+
+    margin: 0 5px;
+
+    &--disabled {
+      border-color: $color500Grey;
+      color: $color500Grey;
+      font-style: italic;
+
+      &:hover {
+        background: transparent;
+      }
+    }
+
+    &--selected {
+      background-color: $cYellow;
+      border-color: $cYellow;
+      color: black;
+
+      &:hover {
+        background: $cYellow;
+      }
+    }
+  }
 }

@@ -1,42 +1,39 @@
-import React from 'react';
-import BandedCount from "../BandedCount";
+import React from "react";
+import CountTable from "../CountTable";
 import PieChartWrap from "../Charts/PieChartWrap";
-import { bandName } from "../../utils/BandUtils";
-import { Row, Col } from 'react-flexbox-grid';
-import ArticleCommissionedLengthTable from '../ArticleCommissionedLengthTable';
+import { Row, Col } from "react-flexbox-grid";
+import ArticleWithCommissionedLengthTable from "../ArticleWithCommissionedLengthTable";
+import ArticleWithoutCommissionedLengthTable from "../ArticleWithoutCommissionedLengthTable";
 
 const CommissionedLength = ({
     commissionedLengthBands,
-    withoutCommissionedLengthCount,
     wordCountBands,
-    articles
+    articlesWithCommissionedLength,
+    articlesWithoutCommissionedLength
 }) => (
     <div>
-        <BandedCount
+        <CountTable
             title="Commissioned Lengths"
             bands={commissionedLengthBands}
-            noBandCount={withoutCommissionedLengthCount}
         />
-        <Row around='xs'>
+        <Row around="xs">
             <Col xs={12} md={6}>
                 <PieChartWrap
                     title="Commissioned Length Count"
-                    data={commissionedLengthBands
-                        .map(({ count, ...band }) => ({
-                            x: bandName(band),
-                            y: count
-                        }))
-                        .concat([
-                            {
-                                x: "None",
-                                y: withoutCommissionedLengthCount
-                            }
-                        ])}
+                    data={commissionedLengthBands.map(({ count, label }) => ({
+                        x: label,
+                        y: count
+                    }))}
                 />
             </Col>
         </Row>
-        <BandedCount title="Word Counts" bands={wordCountBands} />
-        <ArticleCommissionedLengthTable articles={articles} />
+        <CountTable title="Word Counts" bands={wordCountBands} />
+        <ArticleWithCommissionedLengthTable
+            articles={articlesWithCommissionedLength}
+        />
+        <ArticleWithoutCommissionedLengthTable
+            articles={articlesWithoutCommissionedLength}
+        />
     </div>
 );
 
