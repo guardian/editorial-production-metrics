@@ -1,5 +1,6 @@
 import React from 'react';
 import {PaginatedTable, Tr, Th, Td} from './Table';
+import { articleURL, ophanURL } from "../utils/GuRoutes";
 
 const ArticleCommissionedLengthTable = ({ articles }) => (
     <div>
@@ -11,13 +12,13 @@ const ArticleCommissionedLengthTable = ({ articles }) => (
                 <Th>Word Count</Th>
             </Tr>
         }>
-            {articles.map((x, i) => 
-                <Tr key={x.path || i}>
-                    <Td><a href={`https://www.theguardian.com/${x.path}`} target="_blank" rel="noopener noreferrer">{x.headline}</a></Td>
-                    <Td><a href={`https://dashboard.ophan.co.uk/info?path=/${x.path}`} target="_blank" rel="noopener noreferrer">Ophan</a></Td>
-                    <Td>{x.wordCount}</Td>
+            {articles.map((article, i) => (
+                <Tr key={article.path || i}>
+                    <Td><a href={articleURL(article.path)} target="_blank" rel="noopener noreferrer">{article.headline}</a></Td>
+                    <Td><a href={ophanURL(article.path)} target="_blank" rel="noopener noreferrer">Ophan</a></Td>
+                    <Td>{article.wordCount}</Td>
                 </Tr>
-            )}
+            ))}
         </PaginatedTable>
     </div>
 );

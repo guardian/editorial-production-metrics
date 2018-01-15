@@ -1,6 +1,7 @@
 import React from 'react';
 import {PaginatedTable, Tr, Th, Td} from './Table';
 import { wordCountOver } from "../utils/WordCountUtils";
+import { articleURL, ophanURL } from "../utils/GuRoutes";
 
 const ArticleCommissionedLengthTable = ({ articles }) => (
     <div>
@@ -14,15 +15,15 @@ const ArticleCommissionedLengthTable = ({ articles }) => (
                 <Th>Number of words over</Th>
             </Tr>
         }>
-            {articles.map(x => 
-                <Tr key={x.path}>
-                    <Td><a href={`https://www.theguardian.com/${x.path}`} target="_blank" rel="noopener noreferrer">{x.headline}</a></Td>
-                    <Td><a href={`https://dashboard.ophan.co.uk/info?path=/${x.path}`} target="_blank" rel="noopener noreferrer">Ophan</a></Td>
-                    <Td>{x.wordCount}</Td>
-                    <Td>{x.commissionedWordLength}</Td>
-                    <Td>{wordCountOver(x)}</Td>
+            {articles.map(article => (
+                <Tr key={article.path}>
+                    <Td><a href={articleURL(article.path)} target="_blank" rel="noopener noreferrer">{article.headline}</a></Td>
+                    <Td><a href={ophanURL(article.path)} target="_blank" rel="noopener noreferrer">Ophan</a></Td>
+                    <Td>{article.wordCount}</Td>
+                    <Td>{article.commissionedWordLength}</Td>
+                    <Td>{wordCountOver(article)}</Td>
                 </Tr>
-            )}
+            ))}
         </PaginatedTable>
     </div>
 );
