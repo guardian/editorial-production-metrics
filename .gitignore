@@ -6,3 +6,5 @@ node_modules/
 .eslintrc.json
 public/build
 
+.vscode/settings.json
+.DS_Store

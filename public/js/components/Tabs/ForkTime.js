@@ -1,5 +1,4 @@
 import React from 'react';
-import Filters from '../Filters/Filters';
 import ForkTimeCharts from '../Charts/ForkTimeCharts';
 
 const ForkTime = ({filterVals, isUpdating, charts}) => {

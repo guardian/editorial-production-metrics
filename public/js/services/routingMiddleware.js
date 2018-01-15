@@ -1,7 +1,6 @@
-import { replace } from 'react-router-redux';
+import { push } from 'react-router-redux';
 import { runFilter } from 'actions';
 import _isEqual from 'lodash/isEqual';
-import moment from 'moment';
 import { objectToParamString, paramStringToObject } from 'helpers/routingHelpers';
 export const updateUrlFromStateChangeMiddleware = ({ dispatch, getState }) => (next) => (action) => {
     const prevState = getState();
@@ -9,18 +8,18 @@ export const updateUrlFromStateChangeMiddleware = ({ dispatch, getState }) => (n
     const newState = getState();
     // this formatting is needed as the dates in the state are moment objects, but need to be strings in the url
     const newStateFormattedFilters = {
-        ...newState.filterVals,
-        startDate: newState.filterVals.startDate,
-        endDate: newState.filterVals.endDate
+        ...newState.filters.values,
+        startDate: newState.filters.values.startDate,
+        endDate: newState.filters.values.endDate
     };
 
-    if (!_isEqual(prevState.filterVals, newState.filterVals)) {
+    if (!_isEqual(prevState.filters.values, newState.filters.values)) {
         const location = newState.routing.location;
         const paramString = `?${objectToParamString(newStateFormattedFilters)}`;
 
         if (location && paramString !== location.search) {
             const newLocation = { ...location, search: paramString || ''};
-            const updateAction = replace(newLocation);
+            const updateAction = push(newLocation);
             dispatch(updateAction);
         }
     }
@@ -29,19 +28,21 @@ export const updateUrlFromStateChangeMiddleware = ({ dispatch, getState }) => (n
 };
 
 export const updateStateFromUrlChangeMiddleware = ({ dispatch, getState }) => (next) => (action) => {
-    next(action);
+    const results = next(action);
     const newState = getState();
 
     if (action.type === '@@router/LOCATION_CHANGE') {
         const filterObj = paramStringToObject(newState.routing.location.search);
 
         const nextFilterVals = {
-            ...newState.filterVals,
+            ...newState.filters.values,
             ...filterObj
-        }
+        };
 
-        if (!_isEqual(filterObj, newState.filterVals)) {
+        if (!_isEqual(newState.filters.values, nextFilterVals) || !newState.filters.loaded) {
             dispatch(runFilter(nextFilterVals));
         }
     }
+
+    return results;
 };

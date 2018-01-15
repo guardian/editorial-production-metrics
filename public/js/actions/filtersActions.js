@@ -1,6 +1,6 @@
-export const updateFilter = (filterObj) => ({
+export const updateFilter = (values) => ({
     type: 'UPDATE_FILTER',
-    filterObj
+    values
 });
 
 export const updateCommissioningDesks = (desksList) => ({

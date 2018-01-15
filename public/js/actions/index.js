@@ -1,13 +1,5 @@
 import { CHART_LIST, CHART_FILTERS_MAP } from 'utils/chartList';
-import {
-    updateComposerVsIncopy, 
-    getComposerVsIncopyFailed, 
-    updateInWorkflowVsNotInWorkflow,
-    getInWorkflowVsNotInWorkflowFailed,
-    updateForkTime,
-    getForkTimeFailed
-
-} from './chartsActions';
+import * as ChartsActions from './chartsActions';
 import { toggleIsUpdatingCharts } from './uiActions';
 import {
   updateFilter,
@@ -17,27 +9,17 @@ import {
   getNewspaperBooksFailed
 } from "./filtersActions";
 import api from 'services/Api';
-import moment from "moment";
-
-const chartsActions = { 
-    updateComposerVsIncopy,
-    getComposerVsIncopyFailed,
-    updateInWorkflowVsNotInWorkflow,
-    getInWorkflowVsNotInWorkflowFailed,
-    updateForkTime,
-    getForkTimeFailed
-};
 
 /*-------- HELPERS --------*/
 
 const updateAttemptActions = (chartData, chart, startDate, endDate, dispatch) => {
     dispatch(toggleIsUpdatingCharts(false));
-    dispatch(chartsActions[`update${chart}`]({ chartData, startDate, endDate }));
+    dispatch(ChartsActions[`update${chart}`](chartData, startDate, endDate));
 };
 
 const responseFailActions = (chart, error, dispatch) => {
     dispatch(toggleIsUpdatingCharts(false));
-    dispatch(chartsActions[`get${chart}Failed`](error));
+    dispatch(ChartsActions[`get${chart}Failed`](error));
 };
 
 /*-------- DISPATCHABLE --------*/
@@ -56,13 +38,12 @@ const chartNeedsUpdate = (chart, filterChangeset = {}) => {
 
 export const runFilter = (filterChangeset = {}) => {
     return (dispatch, getState) => {
-        const { filterVals } = getState();
-        const updatedFilters = { ...filterVals, ...filterChangeset };
+        const { filters: { values } } = getState();
+        const updatedFilters = { ...values, ...filterChangeset };
         dispatch(updateFilter(updatedFilters));
         dispatch(toggleIsUpdatingCharts(true));
         
-        const startDate = moment(updatedFilters.startDate);
-        const endDate = moment(updatedFilters.endDate);
+        const { startDate, endDate } = updatedFilters;
         CHART_LIST
             .filter(chart => chartNeedsUpdate(chart, filterChangeset))
             .map(chart => {
@@ -98,9 +79,16 @@ export const fetchNewspaperBooks = () => {
 
 export const toggleStackChart = (isStacked) => ({
     type: 'TOGGLE_STACK_CHART',
-    isStacked
+    payload: {
+        isStacked
+    }
 });
 
-const actions = { runFilter, fetchCommissioningDesks, fetchNewspaperBooks, toggleStackChart };
+export const updateFilterStatuses = statuses => ({
+    type: "UPDATE_FILTER_STATUSES",
+    statuses
+});
+
+const actions = { runFilter, updateFilterStatuses, fetchCommissioningDesks, fetchNewspaperBooks, toggleStackChart };
 
 export default actions;

@@ -79,13 +79,17 @@ All chart components are stored in `public/js/componets/Charts`. Just add a new 
 
 #### Adding a new filter
 
-There is a unique reducer for all filters, in `updateFilterReducer.js`: just update the inital state, then in `Filters.js` add your filter and update the object by launching the `runFilter()` action with the updated `filterVals` when your filter changes. Example: 
+There is a unique reducer for all filters, in `filterReducer.js`: just update the inital state, then in `Filters.js` add your filter and update the object by launching the `runFilter()` action with the updated `values` when your filter changes. Example: 
 ```
 <select onChange={event => runFilter({ theFilterBeingUpdated: event.target.value })}> ... </select>
 ```
 You can add the new query param in `Api.js` by simply adding a key to the `params` object built by the `buildQueryParams` function. 
 
 `runFilter` will update the filter object with the new value and proceed to call the api again with the updated values.
+
+#### Hiding a filter
+
+Filters are on a per-route basis. There is a component `TabRoute`  - a wrapper for a `<Route />` component from react-router - on which you can specify the filters to disable for a given route using `disabledFilters`. This internally runs `updateFilterStatuses` with the new statuses. In future a `"hidden"` we could also use a `hiddenFilters` prop for this to hide rather than simply disable a filter.
 
 #### Routing
 

@@ -94,8 +94,67 @@ const downloadCSV = (data, chartType, filterVals) => {
         const fileName = `${chartType}_office=${filterVals.productionOffice}_desk=${tagToName(filterVals.desk)}_dateRange=${dateRangeString}.csv`;
         saveAs(blob, fileName);
     } catch(e) {
+        // eslint-disable-next-line no-console
         console.log(`Could not download csv due to this error: ${e.message}`);
     }
 };
 
-export { createPartialsList, formattedSeries, createYTotalsList, compareDates, compareIssueDates, fillMissingDates, downloadCSV, tagToName };
+const fillAndSortTimeSeries = (data, startDate, endDate) => {
+    const range = endDate.diff(startDate, "days");
+    const filledData =
+        data.length <= range
+            ? fillMissingDates(startDate, endDate, data)
+            : data;
+    return filledData.sort(compareDates);
+};
+
+const getComparisonTimeSeriesFromResponses = (
+    res1,
+    res2,
+    startDate,
+    endDate,
+    countLabel1,
+    countLabel2
+) => {
+    const data1 = fillAndSortTimeSeries(res1.data, startDate, endDate);
+    const data2 = fillAndSortTimeSeries(res2.data, startDate, endDate);
+    const series = [{ data: data1 }, { data: data2 }];
+
+    const absolute = series.map(({ data }) => {
+        return {
+            data: data.map((dataPoint, i) => {
+                const date = moment(dataPoint["date"]).utc();
+                const formattedDate = date.format("ddd, Do MMMM YYYY");
+                return {
+                    x: date.valueOf(),
+                    y: dataPoint["count"],
+                    label: `
+                        Date: ${formattedDate}\n
+                        ${countLabel1}: ${series[0].data[i].count}\n
+                        ${countLabel2}: ${series[1].data[i].count}
+                    `
+                };
+            })
+        };
+    });
+
+    const totals = createYTotalsList(createPartialsList(absolute));
+    const percent = formattedSeries(absolute, totals);
+
+    return {
+        absolute,
+        percent
+    };
+};
+
+export {
+    createPartialsList,
+    formattedSeries,
+    createYTotalsList,
+    compareDates,
+    compareIssueDates,
+    fillMissingDates,
+    downloadCSV,
+    tagToName,
+    getComparisonTimeSeriesFromResponses
+};

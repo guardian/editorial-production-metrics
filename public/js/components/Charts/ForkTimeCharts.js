@@ -1,5 +1,4 @@
 import React from 'react';
-import { Themes } from 'formidable-charts';
 import { Row, Col } from 'react-flexbox-grid';
 import ScatterChartWrap from './ScatterChartWrap';
 import { CHART_FILTERS_MAP } from "../../utils/chartList";
@@ -13,7 +12,7 @@ const NoDataMessage = ({ filters }) =>
 const ForkTimeCharts = ({ charts, isUpdating, filterVals }) => {
 
     return (
-        <Row>
+        <Row around="xs">
             <Col xs={12} md={8}>
                 <ScatterChartWrap
                     hasToggle={false}

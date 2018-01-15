@@ -19,9 +19,7 @@ const primary = '#fff';
 // * Typography
 // *
 const sansSerif = '"Guardian Agate Sans", Arial, sans-serif", Georgia, serif';
-const serif = '"Guardian Egyptian Text", Georgia, serif';
 const letterSpacing = 'normal';
-const fontSize = 14;
 // *
 // * Layout
 // *
@@ -127,7 +125,8 @@ export default {
         chart: {
             style: {
                 parent: {
-                    background: '#393939'
+                    background: '#393939',
+                    width: "100%"
                 }
             },
             ...baseProps
@@ -173,7 +172,8 @@ export default {
                 },
                 labels: {
                     ...baseLabelStyles,
-                    padding: 20
+                    padding: 20,
+                    fontSize: 20
                 }
             },
             colorScale: colors,

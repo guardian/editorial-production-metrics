@@ -1,0 +1,28 @@
+.tabs {
+  &__link {
+    background-color: $color750Grey;
+    border-top: 1px solid $color550Grey;
+    color: $cWhite;
+    display: inline-block;
+    padding: 1rem 0;
+    text-align: center;
+    width: 100%;
+
+    &--selected {
+      background-color: $color700Grey;
+      border-top: 1px solid $cYellow;
+      color: $cYellow;
+    }
+
+    &:hover,
+    &:focus {
+      color: $cYellow;
+      text-decoration: none;
+    }
+  }
+
+  &__tab {
+    background-color: $color700Grey;
+    padding-bottom: 2rem;
+  }
+}

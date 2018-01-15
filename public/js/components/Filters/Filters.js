@@ -22,7 +22,7 @@ export default class Filters extends Component {
     };
 
     render() {
-        const { filterVals, isUpdating, desks, newspaperBooks, runFilter } = this.props;
+        const { filterVals, filterStatuses, isUpdating, desks, newspaperBooks, runFilter } = this.props;
         return (
             <form className="form">
                 <Grid fluid>
@@ -33,16 +33,7 @@ export default class Filters extends Component {
                                 options={tagsToOptions(desks)}
                                 onChange={({ target }) => runFilter({ desk: target.value })}
                                 value={filterVals.desk}
-                                disabled={isUpdating}
-                            />
-                        </Col>
-                        <Col xs={12} md={2}>
-                            <SelectFilter
-                                label="Filter by Newspaper:"
-                                options={tagsToOptions(newspaperBooks)}
-                                onChange={({ target }) => runFilter({ newspaperBook: target.value })}
-                                value={filterVals.newspaperBook}
-                                disabled={isUpdating}
+                                disabled={isUpdating || filterStatuses.desk === "disabled"}
                             />
                         </Col>
                         <Col xs={12} md={2}>
@@ -56,7 +47,16 @@ export default class Filters extends Component {
                                 }}
                                 onChange={({ target }) => runFilter({ productionOffice: target.value })}
                                 value={filterVals.productionOffice}
-                                disabled={isUpdating}
+                                disabled={isUpdating || filterStatuses.productionOffice === "disabled"}
+                            />
+                        </Col>
+                        <Col xs={12} md={4}>
+                            <SelectFilter
+                                label="Filter by Newspaper:"
+                                options={tagsToOptions(newspaperBooks)}
+                                onChange={({ target }) => runFilter({ newspaperBook: target.value })}
+                                value={filterVals.newspaperBook}
+                                disabled={isUpdating || filterStatuses.newspaperBook === "disabled"}
                             />
                         </Col>
                         <Col xs={12} md={4}>
@@ -69,17 +69,17 @@ export default class Filters extends Component {
                                             initialVisibleMonth={() => moment().subtract(1, 'months')}
                                             orientation={window.innerWidth > 640 ? 'horizontal' : 'vertical'}
                                             displayFormat='DD/MM/YYYY'
-                                            disabled={isUpdating}
+                                            disabled={isUpdating || filterStatuses.startDate === "disabled" && filterStatuses.endDate === "disabled"}
                                             startDate={this.state.startDate}
                                             endDate={this.state.endDate}
                                             onDatesChange={ ({ startDate, endDate }) => {
-                                              this.setState({ startDate, endDate });
-                                              if (startDate && endDate) {
-                                                runFilter({
-                                                  startDate: startDate.utc().startOf('day').format(),
-                                                  endDate: endDate.utc().endOf('day').format()
-                                                })
-                                              }
+                                                this.setState({ startDate, endDate });
+                                                if (startDate && endDate) {
+                                                    runFilter({
+                                                        startDate: startDate.utc().startOf('day').format(),
+                                                        endDate: endDate.utc().endOf('day').format()
+                                                    });
+                                                }
                                             }}
                                             focusedInput={this.state.focusedInput}
                                             onFocusChange={focusedInput => this.setState({ focusedInput })}

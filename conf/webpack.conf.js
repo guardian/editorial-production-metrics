@@ -8,7 +8,7 @@ module.exports = {
             {
                 test: /\.js$/,
                 exclude: /node_modules/,
-                use: {
+                loaders: {
                     loader: 'babel-loader',
                     options: {
                         presets: ['es2015', 'react'],
@@ -17,6 +17,17 @@ module.exports = {
                             'transform-object-rest-spread',
                             'transform-class-properties'
                         ]
+                    }
+                }
+            },
+            {
+                enforce: "pre",
+                test: /\.js$/,
+                exclude: /node_modules/,
+                loaders: {
+                    loader: 'eslint-loader',
+                    options: {
+                        quiet: true
                     }
                 }
             },
