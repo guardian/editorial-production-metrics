@@ -7,7 +7,7 @@ const values = {
     newspaperBook: 'theguardian/mainsection', // TODO: set this programatically
     productionOffice: 'all',
     startDate: getYesterday().startOf('day').subtract(7,'d').format(),
-    endDate: getYesterday().endOf('day').format()
+    endDate: getYesterday().startOf('day').format()
 };
 
 const activateAll = filters =>
