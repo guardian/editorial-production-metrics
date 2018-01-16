@@ -158,3 +158,28 @@ export {
     tagToName,
     getComparisonTimeSeriesFromResponses
 };
+
+export const uniqDates = series => [
+    ...new Set(
+        series.reduce(
+            (out, { data }) => [...out, ...data.map(({ x }) => x)],
+            []
+        )
+    )
+];
+
+export const xDomain = series => {
+    const dates = uniqDates(series);
+    if (!dates.length) {
+        const now = Date.now();
+        return [now, now];
+    } else if (dates.length > 1) {
+        return [Math.min(...dates), Math.max(...dates)];
+    }
+    const dayBefore = moment(dates[0]).subtract(1, "days").valueOf();
+    const dayAfter = moment(dates[0]).add(1, "days").valueOf();
+
+    return [dayBefore, dayAfter];
+};
+
+export const dateCount = series => new Set(uniqDates(series)).size;

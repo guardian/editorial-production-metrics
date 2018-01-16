@@ -69,6 +69,7 @@ export default class Filters extends Component {
                                             initialVisibleMonth={() => moment().subtract(1, 'months')}
                                             orientation={window.innerWidth > 640 ? 'horizontal' : 'vertical'}
                                             displayFormat='DD/MM/YYYY'
+                                            minimumNights={0}
                                             disabled={isUpdating || filterStatuses.startDate === "disabled" && filterStatuses.endDate === "disabled"}
                                             startDate={this.state.startDate}
                                             endDate={this.state.endDate}

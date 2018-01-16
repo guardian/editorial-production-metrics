@@ -121,7 +121,7 @@ const createForkTimeData = chart => {
                 const date = moment(dataPoint['issueDate']).utc();
                 const hours = dataPoint.timeToPublication / 3600 / 1000;
                 return {
-                    x: date,
+                    x: date.valueOf(),
                     y: hours,
                     label: `${hours.toFixed(1)} hours`,
                     size: 2.5
