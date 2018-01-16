@@ -1,9 +1,9 @@
-
 import React from 'react';
 import { ScatterChart , Themes } from 'formidable-charts';
 import ChartTheme from '../ChartTheme/theme';
 import ChartsToggles  from '../ChartsToggles';
 import Chart from './Chart';
+import { xDomain } from '../../helpers/chartsHelpers';
 
 const customisedTheme = Object.assign({}, Themes.simple, ChartTheme);
 
@@ -24,6 +24,9 @@ const ScatterChartWrap = ({ scale, error, noDataMessage, height, titleHeader, yL
                     yAxis={{
                         label: yLabel,
                         tickFormat: (datum) => `${datum}h`
+                    }}
+                    domain={{
+                        x: xDomain(data.absolute)
                     }}
                 />
                 <ChartsToggles

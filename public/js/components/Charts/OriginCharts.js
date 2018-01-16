@@ -25,7 +25,7 @@ const OriginCharts = ({ charts, isUpdating, toggleStackChart, filterVals }) => {
                     toggleStackChart={toggleStackChart}
                     chartType={'ComposerVsIncopy'}
                     titleHeader={renderTitle('originatingSystem')}
-                    scale='time'
+                    scale={{ x: "time" }}
                     data={charts.composerVsInCopy.data}
                     isStacked={charts.composerVsInCopy.isStacked}
                     error={charts.composerVsInCopy.error}
