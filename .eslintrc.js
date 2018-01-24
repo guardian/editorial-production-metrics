@@ -38,9 +38,10 @@ module.exports = {
     },
     "overrides": [
         {
-            "files": ["**/__test__/*.spec.js"],
+            "files": ["**/__tests__/*.spec.js"],
             "env": {
                 "browser": false,
+                "node": true,
                 "jest": true,
             }
         }

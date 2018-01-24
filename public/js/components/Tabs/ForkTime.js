@@ -3,7 +3,7 @@ import ForkTimeCharts from '../Charts/ForkTimeCharts';
 
 const ForkTime = ({filterVals, isUpdating, charts}) => {
     return (
-        <div>
+        <div id="fork-time">
             <ForkTimeCharts
                 charts={charts}
                 filterVals={filterVals}

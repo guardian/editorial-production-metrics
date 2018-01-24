@@ -39,14 +39,14 @@ module.exports = {
             {
                 test: /\.scss$/,
                 loader: ExtractTextPlugin.extract({
-                    fallbackLoader: 'style-loader',
-                    loader: 'css-loader?sourceMap!sass-loader?sourceMap'
+                    fallback: 'style-loader',
+                    use: 'css-use?sourceMap!sass-loader?sourceMap'
                 })
             },
             {
                 test: /\.css$/,
                 loader: ExtractTextPlugin.extract({
-                    fallbackLoader: 'style-loader',
+                    fallback: 'style-loader',
                     loader: 'css-loader?sourceMap'
                 }),
                 exclude: /flexboxgrid/

@@ -3,7 +3,7 @@ import OriginCharts from '../Charts/OriginCharts';
 
 const Origin = ({filterVals, isUpdating, charts, toggleStackChart}) => {
     return (
-        <div>
+        <div id="origin">
             <OriginCharts
                 charts={charts}
                 filterVals={filterVals}

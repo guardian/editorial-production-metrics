@@ -6,7 +6,8 @@
   "scripts": {
     "build-dev": "webpack ./public/js/index.js ./public/build/app.js --config ./conf/webpack.conf.js --watch",
     "build": "webpack -p ./public/js/index.js ./public/build/app.js --config ./conf/webpack.conf.js",
-    "test": "jest"
+    "test": "jest --config ./jest.config.js",
+    "test-integration": "jest --config ./client-integration/jest.config.js"
   },
   "repository": {
     "type": "git",
@@ -29,10 +30,12 @@
     "eslint": "^4.15.0",
     "eslint-loader": "^1.9.0",
     "eslint-plugin-react": "^7.5.1",
-    "extract-text-webpack-plugin": "beta",
+    "extract-text-webpack-plugin": "^2.1.2",
     "file-loader": "^0.9.0",
     "jest": "^22.0.6",
     "node-sass": "3.8.0",
+    "puppeteer": "^0.13.0",
+    "rimraf": "^2.6.2",
     "sass-loader": "^4.1.1",
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.7",

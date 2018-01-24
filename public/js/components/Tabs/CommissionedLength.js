@@ -11,7 +11,7 @@ const CommissionedLength = ({
     articlesWithCommissionedLength,
     articlesWithoutCommissionedLength
 }) => (
-    <div>
+    <div id="commissioned-length">
         <CountTable
             title="Commissioned Lengths"
             bands={commissionedLengthBands}
