@@ -40,7 +40,7 @@ module.exports = {
                 test: /\.scss$/,
                 loader: ExtractTextPlugin.extract({
                     fallback: 'style-loader',
-                    use: 'css-use?sourceMap!sass-loader?sourceMap'
+                    use: 'css-loader?sourceMap!sass-loader?sourceMap'
                 })
             },
             {
