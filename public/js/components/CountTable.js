@@ -24,10 +24,6 @@ const CountTable = ({ bands, title }) => (
     </div>
 );
 
-function calculateTotal(bands) {
-    let total = 0;
-    bands.map(item => total = total + item.count);
-    return total;
-}
+const calculateTotal = (bands) => bands.reduce((acc, band) => acc + band.count, 0);
 
 export default CountTable;
