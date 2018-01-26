@@ -53,7 +53,7 @@ Make sure Docker is running on your machine and then:
 
 The client tests are run using jest. To run them use `yarn test`. To add new tests just add them to a `__tests__` directory with a `.spec.js` suffix (anything without this suffix is skipped and deemed to be a helper for the tests).
 
-Before running the integration tests the server needs to be running with access to all the client side dependences (i.e. webpack needs to be running unless there are built bundled js files available) and you need to be authed to access the app. To set your credentials for the test environment run `node ./client-integration/helpers/setCredential.js`. This will open a browser to log into. Once you're logged in just quit the browser and run the tests.
+Before running the integration tests the server needs to be running with access to all the client side dependences (i.e. webpack needs to be running unless there are built bundled js files available) and you need to be authed to access the app. To set your credentials for the test environment run `node ./client-integration/helpers/setCredentials.js`. This will open a browser to log into. Once you're logged in just quit the browser and run the tests.
 
 Then run the integration tests run `yarn test-integration`.
 
