@@ -12,14 +12,18 @@ const CountTable = ({ bands, title }) => (
             head={
                 <Tr>
                     {bands.map(({ label }) => <Th key={label}>{label}</Th>)}
+                    <Th>Total</Th>
                 </Tr>
             }
         >
             <Tr>
                 {bands.map(({ label, count }) => <Td key={label}>{count}</Td>)}
+                <Td>{calculateTotal(bands)}</Td>
             </Tr>
         </Table>
     </div>
 );
+
+const calculateTotal = (bands) => bands.reduce((acc, band) => acc + band.count, 0);
 
 export default CountTable;
