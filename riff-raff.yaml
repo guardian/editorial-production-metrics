@@ -13,6 +13,8 @@ deployments:
     app: editorial-production-metrics
     parameters:
       amiTags:
-        Recipe: editorial-tools-basic
+        BuiltBy: amigo
+        Recipe: editorial-tools-xenial-java8
         AmigoStage: PROD
+      amiEncrypted: true
       amiParameter: ImageId
