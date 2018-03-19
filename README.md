@@ -14,10 +14,10 @@ You'll need:
 Setting up your local config:
  * Get some [local config](#local-config)
 
- Connecting to the database:
- * The database you use must match the config you have: use the DEV database with the DEV config and CODE database with CODE config.
+ Connecting to the CODE database:
+ * The database you use must match the config you have: use the DEV docker database with the DEV config and CODE database with CODE config.
  * Set up the Postgres database: We use a RDS Posgres database running in the composer account in AWS.
- * To connect to it locally run `./setup-ssh-tunnel.sh -t <Endpoint of of database without the port number>`. For this to work you need to be in the 'Editorial Tools SSHAccess' github team. If you're not already in it you'll need to wait for the cron to run on the box  which pulls over these keys (runs every 30 mins).
+ * To connect to it locally run `./setup-ssh-tunnel.sh -t <Endpoint of of database without the port number>`. For this to work you need to be in the 'Editorial Tools SSHAccess' github team. If you're not already in it you'll need to wait for the cron to run on the box which pulls over these keys (runs every 30 mins).
  * Get the endpoint by looking in the Composer AWS account.
  * If you want to connect to a different database, you must kill the process running on port 5902 first.
 
@@ -26,8 +26,10 @@ Setting up your local config:
  * Install Client Side Dependencies with `./scripts/setup.sh`
 
  Running the App:
- * Run Client and Server: `./scripts/start.sh`
- * Run using sbt: `sbt "run 9051"`. (For quick restart you should run `sbt` and then `run 9051`, so that you can exit the application without exiting sbt.)
+ * Run Client and Server: `./scripts/start.sh`. This spins up a docker container running postgres and then runs sbt.
+ * To get some data in the docker db you can run the [metrics lambda](https://github.com/guardian/production-metrics-lambdas) locally.
+ * If you need to spin up the db manually run: `docker-compose up -d`
+ * Run using sbt: `sbt "run 9051"`. (For quick restart you should run `sbt` and then `run 9051`, so that you can exit the application without exiting sbt).
 
 ### Compiling Client Side Dependencies
 

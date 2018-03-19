@@ -1,0 +1,11 @@
+version: '3'
+services:
+  metrics-db:
+    container_name: metrics-db
+    image: postgres:9.6-alpine
+    ports:
+      - 5902:5432
+    environment:
+      - POSTGRES_USER=metrics
+      - POSTGRES_PASSWORD=metrics
+      - POSTGRES_DB=metrics
