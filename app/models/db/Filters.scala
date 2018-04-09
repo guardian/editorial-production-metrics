@@ -19,11 +19,13 @@ case class Filters(
   productionOffice: Option[ProductionOffice] = None,
   inWorkflow: Option[Boolean] = None,
   newspaperBook: Option[String] = None,
-  hasCommissionedLength: Option[Boolean] = None
+  hasCommissionedLength: Option[Boolean] = None,
+  maxForkTimeInMilliseconds: Option[Int] = None
 )
 
 object Filters {
 
+  //Represents composer id, time to publication and time of fork
   type ForkFilterColumns = (Rep[String], Rep[Option[Int]], Rep[DateTime])
 
   private val TrueOptCol: Rep[Option[Boolean]] = LiteralColumn(Some(true))
@@ -87,6 +89,7 @@ object Filters {
     val (fork, metric) = data
     filters.dateRange.fold(TrueOptCol)(dr => fork._3.? >= dr.from && fork._3.? <= dr.to) &&
       filters.newspaperBook.fold(TrueOptCol)(nb => metric.newspaperBook.toLowerCase === nb.toLowerCase) &&
+      filters.maxForkTimeInMilliseconds.fold(TrueOptCol)(timeToPublication => fork._2 <= timeToPublication) &&
       commonFilters(metric)
   }
 
