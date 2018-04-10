@@ -8,6 +8,7 @@ import org.joda.time.format.ISODateTimeFormat
 import slick.jdbc.PostgresProfile.api._
 import slick.lifted.Rep
 
+import scala.util.Try
 import scala.util.control.NonFatal
 
 case class DateRange (from: DateTime, to: DateTime)
@@ -33,19 +34,20 @@ object Filters {
   def apply(queryString: Map[String, Seq[String]]): Filters =
     Filters(
       dateRange = extractDateRange(queryString),
-      desk = getOptionFromQS("desk", queryString),
-      originatingSystem = OriginatingSystem.withNameOption(getOptionFromQS("originatingSystem", queryString).getOrElse("")),
-      productionOffice = ProductionOffice.withNameOption(getOptionFromQS("productionOffice", queryString).getOrElse(""))
+      desk = getOptionStringFromQS("desk", queryString),
+      originatingSystem = OriginatingSystem.withNameOption(getOptionStringFromQS("originatingSystem", queryString).getOrElse("")),
+      productionOffice = ProductionOffice.withNameOption(getOptionStringFromQS("productionOffice", queryString).getOrElse("")),
+      maxForkTimeInMilliseconds = getOptionIntFromQs("maxForkTimeInMilliseconds", queryString)
     )
 
   private def extractDateRange(qs: Map[String, Seq[String]]): Option[DateRange] = {
-    val date: Option[String] = getOptionFromQS("date", qs)
+    val date: Option[String] = getOptionStringFromQS("date", qs)
     val dateRange: Option[DateRange] = date.fold(None: Option[DateRange])(getDateRangeFromDateString)
 
     dateRange match {
       case None => Some(DateRange(
-        from = getOptionFromQS("startDate", qs).flatMap(parseDate).getOrElse(new DateTime(0)),
-        to = getOptionFromQS("endDate", qs).flatMap(parseDate).getOrElse(DateTime.now())))
+        from = getOptionStringFromQS("startDate", qs).flatMap(parseDate).getOrElse(new DateTime(0)),
+        to = getOptionStringFromQS("endDate", qs).flatMap(parseDate).getOrElse(DateTime.now())))
       case Some(range) => Some(range)
     }
   }
@@ -67,7 +69,10 @@ object Filters {
     case "" => None
   }
 
-  private def getOptionFromQS(key: String, qs: Map[String, Seq[String]]): Option[String] = qs.get(key).flatMap(_.headOption)
+  private def getOptionStringFromQS(key: String, qs: Map[String, Seq[String]]): Option[String] = qs.get(key).flatMap(_.headOption)
+
+  private def getOptionIntFromQs(key: String, qs: Map[String, Seq[String]]): Option[Int] = getOptionStringFromQS(key, qs).flatMap(value => Try(value.toInt).toOption)
+
 
   def originFilters(implicit filters: Filters): DBMetric => Rep[Option[Boolean]] = metric => combineFiltersForOrigin(metric)
 

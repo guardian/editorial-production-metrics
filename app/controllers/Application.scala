@@ -86,7 +86,7 @@ class Application(implicit val wsClient: WSClient, val db: MetricsDB) extends Co
 
   def getForks(newspaperBook: String) = APIAuthAction { req =>
     APIResponse {
-      db.getForks(Filters(req.queryString).copy(newspaperBook = Some(newspaperBook)).copy(maxForkTimeInMilliseconds = Some(86400000)))
+      db.getForks(Filters(req.queryString).copy(newspaperBook = Some(newspaperBook)))
     }
   }
 
