@@ -20,13 +20,13 @@ const ForkTimeCharts = ({ charts, isUpdating, filterVals }) => {
                     chartType={'ForkTime'}
                     isUpdating={isUpdating}
                     filterVals={filterVals}
-                    titleHeader={<h3>Fork Time</h3>}
+                    titleHeader={<h3>Fork Time (Excluding data points over 24 hours)</h3>}
                     hasCsvButton={true}
                     scale='time'
                     data={charts.forkTime.data}
                     noDataMessage={<NoDataMessage filters={CHART_FILTERS_MAP["ForkTime"]} />}
                     height={250}
-                    yLabel='Time to Publication'
+                    yLabel='Time between fork and last edition'
                 />
             </Col>
         </Row>
