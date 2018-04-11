@@ -1,26 +1,27 @@
 import axios from 'axios';
 import { pandaFetch } from './pandaFetch';
 
-const buildQueryParams = (startDate, endDate, desk, productionOffice) => ({
+const buildQueryParams = ({startDate, endDate, desk, productionOffice, maxForkTimeInMilliseconds}) => ({
     params: {
         startDate: startDate,
         endDate: endDate,
         desk: desk !== 'tracking/commissioningdesk/all' && desk || null,
-        productionOffice: productionOffice !== 'all' && productionOffice || null
+        productionOffice: productionOffice !== 'all' && productionOffice || null,
+        maxForkTimeInMilliseconds: maxForkTimeInMilliseconds
     }
 });
 
 const getOriginatingSystem = (system, startDate, endDate, desk, productionOffice) => 
-    pandaFetch(`api/originatingSystem/${system}`, buildQueryParams(startDate, endDate, desk, productionOffice));
+    pandaFetch(`api/originatingSystem/${system}`, buildQueryParams({startDate, endDate, desk, productionOffice}));
 
 const getWorkflowCount = (isInWorkflow, startDate, endDate, desk, productionOffice) =>
-    pandaFetch(`api/inWorkflow/${isInWorkflow}`, buildQueryParams(startDate, endDate, desk, productionOffice));
+    pandaFetch(`api/inWorkflow/${isInWorkflow}`, buildQueryParams({startDate, endDate, desk, productionOffice}));
 
 const getCommissioningDesks = () => pandaFetch('api/commissioningDesks', null);
 
 const getNewspaperBooks = () => pandaFetch('api/newspaperBooks', null);
 
-const getForkTime = (startDate, endDate, newspaperBook) => pandaFetch(`api/fork/${newspaperBook}`, buildQueryParams(startDate, endDate));
+const getForkTime = (startDate, endDate, newspaperBook, maxForkTimeInMilliseconds) => pandaFetch(`api/fork/${newspaperBook}`, buildQueryParams({startDate, endDate, maxForkTimeInMilliseconds}));
 
 const getComposerVsIncopy = (startDate, endDate, desk, productionOffice) =>
     axios.all([
@@ -45,19 +46,19 @@ const getInWorkflowVsNotInWorkflow = (startDate, endDate, desk, productionOffice
 const getWordCount = (startDate, endDate, desk, productionOffice) =>
     pandaFetch(
         "api/wordCount/grouped/finalLength",
-        buildQueryParams(startDate, endDate, desk, productionOffice)
+        buildQueryParams({startDate, endDate, desk, productionOffice})
     );
 
-const getCommissionedLength = (startDate, endDate, desk, productionOffice) =>
+const getCommissionedLength = ({startDate, endDate, desk, productionOffice}) =>
     pandaFetch(
         "api/wordCount/grouped/commissionedLength",
-        buildQueryParams(startDate, endDate, desk, productionOffice)
+        buildQueryParams({startDate, endDate, desk, productionOffice})
     );
 
-const getWordCountArticles = (startDate, endDate, desk, productionOffice) =>
+const getWordCountArticles = ({startDate, endDate, desk, productionOffice}) =>
     pandaFetch(
         "api/wordCount/articles",
-        buildQueryParams(startDate, endDate, desk, productionOffice)
+        buildQueryParams({startDate, endDate, desk, productionOffice})
     );
 
 export default {

@@ -1,7 +1,7 @@
 export const CHART_FILTERS_MAP = {
   "InWorkflowVsNotInWorkflow": ["startDate", "endDate", "desk", "productionOffice"],
   "ComposerVsIncopy": ["startDate", "endDate", "desk", "productionOffice"],
-  "ForkTime": ["startDate", "endDate", "newspaperBook"],
+  "ForkTime": ["startDate", "endDate", "newspaperBook", "maxForkTimeInMilliseconds"],
   "WordCount": ["startDate", "endDate", "desk", "productionOffice"],
   "CommissionedLength": ["startDate", "endDate", "desk", "productionOffice"],
   "WordCountArticles": ["startDate", "endDate", "desk", "productionOffice"],
