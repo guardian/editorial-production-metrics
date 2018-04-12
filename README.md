@@ -93,3 +93,7 @@ A diagram of the metrics architecture and where metrics come from is in the [doc
 ## Adding a new metric
 
 Documentation on how to add a new metric is in the [docs](/docs) directory
+
+## Glossary
+
+A glossary of domain specific terms is available [here](/docs/glossary.md)
