@@ -26,7 +26,7 @@ const ForkTimeCharts = ({ charts, isUpdating, filterVals }) => {
                     data={charts.forkTime.data}
                     noDataMessage={<NoDataMessage filters={CHART_FILTERS_MAP["ForkTime"]} />}
                     height={250}
-                    yLabel='Time between fork and last edition'
+                    yLabel='Time between fork and last edition (5am)'
                 />
             </Col>
         </Row>
