@@ -21,7 +21,7 @@ trait PostgresHelpers extends Suite with BeforeAndAfterAll with BeforeAndAfterEa
   private[this] val database = Databases(
     driver = "org.postgresql.Driver",
     url = s"jdbc:postgresql://localhost:5902/$testDbName",
-    name = testDbName,
+    name = "default",
     config = Map(
       "user" -> testDbUser,
       "password" -> testDbPassword
@@ -30,6 +30,8 @@ trait PostgresHelpers extends Suite with BeforeAndAfterAll with BeforeAndAfterEa
   implicit lazy val db: Database = Database.forURL(setupJdbcUrl, driver = driver, user = testDbUser, password = testDbPassword)
 
   override def beforeAll() {
+    Evolutions.applyEvolutions(database)
+
     await(db.run(DBIO.seq(
       sqlu"DROP DATABASE IF EXISTS #$testDbName",
       sqlu"CREATE DATABASE #$testDbName")))

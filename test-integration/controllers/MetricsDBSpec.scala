@@ -1,10 +1,10 @@
 package controllers
 
-import com.gu.editorialproductionmetricsmodels.models.{MetricOpt, ProductionOffice}
+import com.gu.editorialproductionmetricsmodels.models.MetricOpt
 import database.MetricsDB
 import helpers.{PostgresHelpers, TestData}
 import models.ProductionMetricsError
-import models.db.{ForkResponse, Metric, Filters}
+import models.db.{Filters, ForkResponse, Metric}
 import org.joda.time.DateTime
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{FunSuite, Matchers}
