@@ -86,19 +86,10 @@ resourceDirectory in IntegrationTests := baseDirectory.value / "/test-integratio
 scalaSource in IntegrationTests := baseDirectory.value / "/test-integration"
 
 testOptions in IntegrationTests += Tests.Setup(_ => {
-  val dbUser = "postgres"
-  val dbPassword = "postgres"
-  val dbName = "default"
-  val dbPort = 5903
+  println(s"Launching docker container with PostgreSQL")
+  s"docker-compose up -d".!
 
-  ("docker rm -fv metricsdb-postgres" #|| "true").!
-  println(s"Launching docker postgres image on port $dbPort")
-  s"docker run --name metricsdb-postgres -e POSTGRES_USER=$dbUser -e POSTGRES_PASSWORD=$dbPassword -e POSTGRES_DB=$dbName -p $dbPort:5432 -d postgres:9.4-alpine".!
-
-  println("Waiting for Postgres to startup...")
-  while("docker exec metricsdb-postgres pg_isready".! > 0) {
-    Thread.sleep(1000)
-  }
+  // This is needed to ensure docker has had enough time to start up
   Thread.sleep(5000)
 })
 

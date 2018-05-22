@@ -13,23 +13,25 @@ trait PostgresHelpers extends Suite with BeforeAndAfterAll with BeforeAndAfterEa
   TimeZone.setDefault(TimeZone.getTimeZone("UTC"))
 
   private[this] val driver = "slick.jdbc.PostgresProfile"
-  private[this] val testDbName = "default"
-  private[this] val setupJdbcUrl = s"jdbc:postgresql://localhost:5903/$testDbName"
-  private[this] val testDbUser = "postgres"
-  private[this] val testDbPassword = "postgres"
+  private[this] val testDbName = "metrics"
+  private[this] val setupJdbcUrl = s"jdbc:postgresql://localhost:5902/$testDbName"
+  private[this] val testDbUser = "metrics"
+  private[this] val testDbPassword = "metrics"
   //This is needed for applying evolutions.
   private[this] val database = Databases(
     driver = "org.postgresql.Driver",
-    url = s"jdbc:postgresql://localhost:5903/$testDbName",
-    name = testDbName,
+    url = s"jdbc:postgresql://localhost:5902/$testDbName",
+    name = "default",
     config = Map(
-      "user" -> "postgres",
-      "password" -> "postgres"
+      "user" -> testDbUser,
+      "password" -> testDbPassword
     )
   )
   implicit lazy val db: Database = Database.forURL(setupJdbcUrl, driver = driver, user = testDbUser, password = testDbPassword)
 
   override def beforeAll() {
+    Evolutions.applyEvolutions(database)
+
     await(db.run(DBIO.seq(
       sqlu"DROP DATABASE IF EXISTS #$testDbName",
       sqlu"CREATE DATABASE #$testDbName")))
