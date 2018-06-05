@@ -16,6 +16,7 @@ import {
     TabsNav,
     TabsContainer
 } from "../components/Tabs";
+import EditorialShadowing from "../components/Tabs/EditorialShadowing";
 import { Route, Redirect } from "react-router-dom";
 
 class App extends Component {
@@ -53,6 +54,9 @@ class App extends Component {
                         <TabLink to="/commissioned-length">
                             Commissioned Length
                         </TabLink>
+                        <TabLink to="/editorial-shadowing">
+                            Editorial shadowing
+                        </TabLink>
                     </TabsNav>
                     <TabsPanel>
                         <Route exact path="/" render={() => <Redirect to="/origin"/>}/>
@@ -70,6 +74,9 @@ class App extends Component {
                         </TabRoute>
                         <TabRoute path="/commissioned-length">
                             <CommissionedLengthData />
+                        </TabRoute>
+                        <TabRoute path="/editorial-shadowing">
+                            <EditorialShadowing />
                         </TabRoute>
                     </TabsPanel>
                 </TabsContainer>
