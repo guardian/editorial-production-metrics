@@ -1,8 +1,12 @@
 import React from 'react';
 import { Row, Col } from 'react-flexbox-grid';
 
-const devs = [];
-const shadowers = [];
+const devs = [
+    'Akash Askoolum'
+];
+const shadowers = [
+    'Lawrence Wakefield'
+];
 
 const VerticalPadding = ({ children }) => (
   <div style={{ padding: '20px 0' }}>{children}</div>
