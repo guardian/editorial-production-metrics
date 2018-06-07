@@ -1,11 +1,13 @@
+// see https://docs.google.com/document/d/1LdCwxJHTf-QCwhZYH-lzgyN4s7w2W8WDWklK74NZaM4/edit#heading=h.qzqah5xmsb1x for the purpose of this file
 import React from 'react';
 import { Row, Col } from 'react-flexbox-grid';
 
+// suggested format is Forename Surname, Team/Department
 const devs = [
-    'Akash Askoolum'
+    'Akash Askoolum, Editorial Tools/Digital'
 ];
 const shadowers = [
-    'Lawrence Wakefield'
+    'Lawrence Wakefield, Central Production'
 ];
 
 const VerticalPadding = ({ children }) => (
