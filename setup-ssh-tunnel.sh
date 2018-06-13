@@ -41,6 +41,4 @@ fi
 DATASTORE_HOST=$(prism stage=CODE stack=flexible app=editorial-production-metrics -f instanceName | awk '{print $4}' | head -1)
 echo $DATASTORE_HOST
 
-CONNECTION=$(ssm ssh --profile composer -i ${DATASTORE_HOST} --private --raw)
-
-${CONNECTION} -f -N -L 5902:${RDSHOST}:5432
+$(ssm ssh --profile composer -i ${DATASTORE_HOST} --private --raw) -f -N -L 5902:${RDSHOST}:5432
