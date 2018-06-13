@@ -38,8 +38,9 @@ if [ -z "${RDSHOST}" ]; then
     exit 1
 fi
 
-
-DATASTORE_HOST=$(marauder -s stage=CODE app=editorial-production-metrics --short)
+DATASTORE_HOST=$(prism stage=CODE stack=flexible app=editorial-production-metrics -f instanceName | awk '{print $4}' | head -1)
 echo $DATASTORE_HOST
 
-ssh -f ubuntu@${DATASTORE_HOST} -L 5902:${RDSHOST}:5432 -N
+CONNECTION=$(ssm ssh --profile composer -i ${DATASTORE_HOST} --private --raw)
+
+${CONNECTION} -f -N -L 5902:${RDSHOST}:5432
