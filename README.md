@@ -7,6 +7,7 @@ A tool for recording and displaying metrics on how editorial content is produced
 You'll need:
  * [AWS CLI](http://docs.aws.amazon.com/cli/latest/userguide/installing.html) installed. Version `1.11.190` or later.
  * Credentials for the composer AWS account from [janus](https://janus.gutools.co.uk).
+ * [ssm-scala](https://github.com/guardian/ssm-scala) installed. `brew install guardian/devtools/ssm` to install with Homebrew
  * Set up SSL certificates by following the 'Install SSL certificates' step in the [dev-nginx readme](https://github.com/guardian/dev-nginx)
  * Set up config locally using [this guide](#local-config)
  * Setup the nginx mapping by following the instructions in the [dev-nginx readme](https://github.com/guardian/dev-nginx#install-config-for-an-application).
