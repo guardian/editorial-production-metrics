@@ -11,7 +11,8 @@ const devs = [
 const shadowers = [
     'Lawrence Wakefield, Central Production',
     'Huw Prior, Strategy & delivery',
-    'Aisha Riaz, The Guide'
+    'Aisha Riaz, The Guide',
+    'Elli Narewska, NewsWise'
 ];
 
 const VerticalPadding = ({ children }) => (
