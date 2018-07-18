@@ -12,7 +12,8 @@ const shadowers = [
     'Lawrence Wakefield, Central Production',
     'Huw Prior, Strategy & delivery',
     'Aisha Riaz, The Guide',
-    'Elli Narewska, NewsWise'
+    'Elli Narewska, NewsWise',
+    'Dugald Baird, Business'
 ];
 
 const VerticalPadding = ({ children }) => (
