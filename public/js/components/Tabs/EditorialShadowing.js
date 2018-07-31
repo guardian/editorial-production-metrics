@@ -6,14 +6,16 @@ import { Row, Col } from 'react-flexbox-grid';
 const devs = [
     'Akash Askoolum, Editorial Tools/Digital',
     'Jonathon Herbert, Editorial Tools/Digital',
-    'Michael Barton, Editorial Tools/Digital'
+    'Michael Barton, Editorial Tools/Digital',
+    'Richard Beddington, Editorial Tools/Digital'
 ];
 const shadowers = [
     'Lawrence Wakefield, Central Production',
     'Huw Prior, Strategy & delivery',
     'Aisha Riaz, The Guide',
     'Elli Narewska, NewsWise',
-    'Dugald Baird, Business'
+    'Dugald Baird, Business',
+    'Max Walker, Features'
 ];
 
 const VerticalPadding = ({ children }) => (
