@@ -7,7 +7,8 @@ const devs = [
     'Akash Askoolum, Editorial Tools/Digital',
     'Jonathon Herbert, Editorial Tools/Digital',
     'Michael Barton, Editorial Tools/Digital',
-    'Richard Beddington, Editorial Tools/Digital'
+    'Richard Beddington, Editorial Tools/Digital',
+    'Reetta Vaahtoranta, Editorial Tools/Digital'
 ];
 const shadowers = [
     'Lawrence Wakefield, Central Production',
@@ -15,7 +16,8 @@ const shadowers = [
     'Aisha Riaz, The Guide',
     'Elli Narewska, NewsWise',
     'Dugald Baird, Business',
-    'Max Walker, Features'
+    'Max Walker, Features',
+    'Ellie Broughton, Guardian Labs'
 ];
 
 const VerticalPadding = ({ children }) => (
