@@ -19,7 +19,8 @@ const shadowers = [
     'Dugald Baird, Business',
     'Max Walker, Features',
     'Ellie Broughton, Guardian Labs',
-    'Joel Tennant, Marketing'
+    'Joel Tennant, Marketing',
+    'Michael Campbell, Marketing'
 ];
 
 const VerticalPadding = ({ children }) => (
