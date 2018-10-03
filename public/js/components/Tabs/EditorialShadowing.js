@@ -23,7 +23,8 @@ const shadowers = [
     'Michael Campbell, Marketing',
     'Chris Cowley, Marketing',
     'Nick Dastoor, Audience',
-    'Kirstine Foge Jensen, The Guardian Foundation'
+    'Kirstine Foge Jensen, The Guardian Foundation',
+    'Nick Mead, Guardian Cities'
 ];
 
 const VerticalPadding = ({ children }) => (
