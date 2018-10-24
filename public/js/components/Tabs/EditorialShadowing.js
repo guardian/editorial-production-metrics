@@ -24,7 +24,8 @@ const shadowers = [
     'Chris Cowley, Marketing',
     'Nick Dastoor, Audience',
     'Kirstine Foge Jensen, The Guardian Foundation',
-    'Nick Mead, Guardian Cities'
+    'Nick Mead, Guardian Cities',
+    'Karen Plews, International News'
 ];
 
 const VerticalPadding = ({ children }) => (
