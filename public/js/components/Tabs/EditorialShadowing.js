@@ -25,7 +25,8 @@ const shadowers = [
     'Nick Dastoor, Audience',
     'Kirstine Foge Jensen, The Guardian Foundation',
     'Nick Mead, Guardian Cities',
-    'Karen Plews, International News'
+    'Karen Plews, International News',
+    'Marina Pappa, Programmatic Operations',
 ];
 
 const VerticalPadding = ({ children }) => (
