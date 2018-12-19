@@ -27,6 +27,7 @@ const shadowers = [
     'Nick Mead, Guardian Cities',
     'Karen Plews, International News',
     'Marina Pappa, Programmatic Operations',
+    'Erum Salam, Central Production'
 ];
 
 const VerticalPadding = ({ children }) => (
