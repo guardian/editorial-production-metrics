@@ -9,8 +9,7 @@ const devs = [
     'Michael Barton, Editorial Tools/Digital',
     'Richard Beddington, Editorial Tools/Digital',
     'Reetta Vaahtoranta, Editorial Tools/Digital',
-    'Maria Livia Chiorean, Editorial Tools/Digital',
-    'Anna Leach, Editorial Tools/Digital'
+    'Maria Livia Chiorean, Editorial Tools/Digital'
 ];
 const shadowers = [
     'Lawrence Wakefield, Central Production',
@@ -29,8 +28,7 @@ const shadowers = [
     'Karen Plews, International News',
     'Marina Pappa, Programmatic Operations',
     'Erum Salam, Central Production',
-    'Georgia Easteal, Guardian live',
-    'John Stuttle, ESD'
+    'Georgia Easteal, Guardian live'
 ];
 
 const VerticalPadding = ({ children }) => (
