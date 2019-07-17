@@ -30,7 +30,8 @@ const shadowers = [
     'Marina Pappa, Programmatic Operations',
     'Erum Salam, Central Production',
     'Georgia Easteal, Guardian live',
-    'John Stuttle, ESD'
+    'John Stuttle, ESD',
+    'Sarah Bolesworth, Opinion'
 ];
 
 const VerticalPadding = ({ children }) => (
