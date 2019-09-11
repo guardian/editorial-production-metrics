@@ -32,7 +32,8 @@ const shadowers = [
     'Georgia Easteal, Guardian live',
     'John Stuttle, ESD',
     'Sarah Bolesworth, Opinion',
-    'Matthew Holmes, Central Production'
+    'Matthew Holmes, Central Production',
+    'Rory Foster, Letters desk'
 ];
 
 const VerticalPadding = ({ children }) => (
