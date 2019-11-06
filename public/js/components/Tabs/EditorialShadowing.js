@@ -34,7 +34,8 @@ const shadowers = [
     'Sarah Bolesworth, Opinion',
     'Matthew Holmes, Central Production',
     'Rory Foster, Letters desk',
-    'Katherine Purvis, Central Production'
+    'Katherine Purvis, Central Production',
+    'John Ives, News subeditors'
 ];
 
 const VerticalPadding = ({ children }) => (
