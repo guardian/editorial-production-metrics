@@ -46,7 +46,7 @@
     "file-saver": "^1.3.3",
     "formidable-charts": "^0.0.7",
     "history": "^4.7.2",
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.19",
     "moment": "^2.18.1",
     "panda-session": "^0.1.6",
     "react": "^15.6.1",
