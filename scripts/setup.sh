@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+set -e
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
 red='\x1B[0;31m'
 
 
@@ -13,6 +17,16 @@ if [ $? != "0" ]; then
 fi
 
 printf "\n\rSetting up client side dependancies... \n\r\n\r"
+
+NODE_MAJOR_VERSION=$(node -v | cut -d "." -f 1)
+DESIRED_NODE_VERSION=$(cat "${DIR}/../.nvmrc")
+
+if [[ "${NODE_MAJOR_VERSION}" != *"${DESIRED_NODE_VERSION}"  ]]; then
+  echo -e "${red}Your node version ${NODE_MAJOR_VERSION}" does not match "${DESIRED_NODE_VERSION}"
+  echo -e "${red}Please run 'nvm use' to get the desired node version"
+  exit 1
+fi
+
 printf "\n\rInstalling NPM packages via yarn... \n\r\n\r"
 
 yarn
