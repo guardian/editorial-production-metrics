@@ -9,7 +9,8 @@ const devs = [
     'Michael Barton, Editorial Tools/Digital',
     'Richard Beddington, Editorial Tools/Digital',
     'Reetta Vaahtoranta, Editorial Tools/Digital',
-    'Maria Livia Chiorean, Editorial Tools/Digital'
+    'Maria Livia Chiorean, Editorial Tools/Digital',
+    'Anna Leach, Editorial Tools/Digital'
 ];
 const shadowers = [
     'Lawrence Wakefield, Central Production',
@@ -24,7 +25,17 @@ const shadowers = [
     'Chris Cowley, Marketing',
     'Nick Dastoor, Audience',
     'Kirstine Foge Jensen, The Guardian Foundation',
-    'Nick Mead, Guardian Cities'
+    'Nick Mead, Guardian Cities',
+    'Karen Plews, International News',
+    'Marina Pappa, Programmatic Operations',
+    'Erum Salam, Central Production',
+    'Georgia Easteal, Guardian live',
+    'John Stuttle, ESD',
+    'Sarah Bolesworth, Opinion',
+    'Matthew Holmes, Central Production',
+    'Rory Foster, Letters desk',
+    'Katherine Purvis, Central Production',
+    'John Ives, News subeditors'
 ];
 
 const VerticalPadding = ({ children }) => (
