@@ -34,7 +34,7 @@ Setting up your local config:
 
 ### Compiling Client Side Dependencies
 
-- This project requires Node version 6.
+- This project requires Node version 10.
 - To manage different versions of node you can use [node version manager](https://github.com/creationix/nvm) and run `nvm use`.
 - You can compile client side dependencies with `yarn build` or `npm run build`.
 Alternatively to compile client side assets on change run `yarn build-dev` or `npm run build-dev`

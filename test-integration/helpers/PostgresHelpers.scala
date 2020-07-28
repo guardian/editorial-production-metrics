@@ -33,13 +33,17 @@ trait PostgresHelpers extends Suite with BeforeAndAfterAll with BeforeAndAfterEa
     Evolutions.applyEvolutions(database)
 
     await(db.run(DBIO.seq(
-      sqlu"DROP DATABASE IF EXISTS #$testDbName",
+      sqlu"DELETE FROM forks",
+      sqlu"DELETE FROM metrics",
       sqlu"CREATE DATABASE #$testDbName")))
     Evolutions.applyEvolutions(database)
     TestData.setup
   }
 
   override def afterAll() {
-    await(db.run(sqlu"DROP DATABASE #$testDbName"))
+    await(db.run(DBIO.seq(
+      sqlu"DELETE FROM forks",
+      sqlu"DELETE FROM metrics"
+    )))
   }
 }
