@@ -4242,6 +4242,11 @@ lodash@^4.0.0, lodash@^4.1.1, lodash@^4.12.0, lodash@^4.17.14, lodash@^4.17.15, 
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.19.tgz#e48ddedbe30b3321783c5b4301fbd353bc1e4a4b"
   integrity sha512-JNvd8XER9GQX0v2qJgsaN/mzFCNA5BRe/j8JN9d+tWyGLSodKQHKFicdwNYzWwI3wjRnaKPsGj1XkBjx/F96DQ==
 
+lodash@^4.17.5:
+  version "4.17.20"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.20.tgz#b44a9b6297bcb698f1c51a3545a2b3b368d59c52"
+  integrity sha512-PlhdFcillOINfeV7Ni6oF1TAEayyZBoZ8bcshTHqOYJYlrqzRK5hagpagky5o4HfCzzd1TRkXPMFq6cKk9rGmA==
+
 longest@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/longest/-/longest-1.0.1.tgz#30a0b2da38f73770e8294a0d22e6625ed77d0097"
@@ -5550,6 +5555,11 @@ react-dom@^15.6.1:
     loose-envify "^1.1.0"
     object-assign "^4.1.0"
     prop-types "^15.5.10"
+
+react-fast-compare@^2.0.0:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/react-fast-compare/-/react-fast-compare-2.0.4.tgz#e84b4d455b0fec113e0402c329352715196f81f9"
+  integrity sha512-suNP+J1VU1MWFKcyt7RtjiSWUjvidmQSlqu+eHslq+342xCbGTYmC0mEhPCOHxlW0CywylOC1u2DFAT+bv4dBw==
 
 react-flexbox-grid@^1.1.3:
   version "1.1.5"
@@ -6906,14 +6916,15 @@ victory-chart@^14.0.4:
     lodash "^4.12.0"
     victory-core "^10.0.0"
 
-victory-chart@^21.6.1:
-  version "21.6.2"
-  resolved "https://registry.yarnpkg.com/victory-chart/-/victory-chart-21.6.2.tgz#7626f392122ac11386ceb2c6d2ceab19d2895c52"
-  integrity sha1-dibzkhIqwROGzrLG0s6rGdKJXFI=
+victory-chart@^27.1.0:
+  version "27.1.1"
+  resolved "https://registry.yarnpkg.com/victory-chart/-/victory-chart-27.1.1.tgz#db7337c0dba1353d6a08e7116df1988edea785b0"
+  integrity sha512-6QLtfDLQQdtzNfLkFIR5QR9SmWwkre0yLz0auanth9XnBdwKoMf+g+l06tsKvNfHxNw8ZaG0C/J+KwtU/5ChPg==
   dependencies:
     d3-voronoi "^1.1.2"
-    lodash "^4.17.4"
-    victory-core "^17.1.0"
+    lodash "^4.17.5"
+    react-fast-compare "^2.0.0"
+    victory-core "^24.0.0"
 
 victory-core@^10.0.0, victory-core@^10.0.3:
   version "10.0.3"
@@ -6927,26 +6938,27 @@ victory-core@^10.0.0, victory-core@^10.0.3:
     d3-timer "^1.0.0"
     lodash "^4.12.0"
 
-victory-core@^17.0.0, victory-core@^17.1.0, victory-core@^17.2.5:
-  version "17.2.7"
-  resolved "https://registry.yarnpkg.com/victory-core/-/victory-core-17.2.7.tgz#b98b23588ff100283ca892372f8c715cef534751"
-  integrity sha1-uYsjWI/xACg8qJI3L4xxXO9TR1E=
+victory-core@^24.0.0:
+  version "24.0.1"
+  resolved "https://registry.yarnpkg.com/victory-core/-/victory-core-24.0.1.tgz#a0b377821fe62be8dfcb0d7c35a628fee4e16616"
+  integrity sha512-loC+UafBR8nMnLkQ3suSkjMTVMlLsUaI7BiBmFYYFjy1eqEkPwA+Pa51Tbu0KIunR/1alpEjOxP1MBz1Vc1FFg==
   dependencies:
     d3-ease "^1.0.0"
     d3-interpolate "^1.1.1"
     d3-scale "^1.0.0"
     d3-shape "^1.2.0"
     d3-timer "^1.0.0"
-    lodash "^4.17.4"
+    lodash "^4.17.5"
+    react-fast-compare "^2.0.0"
 
-victory-pie@^11.4.2:
-  version "11.4.2"
-  resolved "https://registry.yarnpkg.com/victory-pie/-/victory-pie-11.4.2.tgz#333722696bea2b973fcb5420197721c5b02109de"
-  integrity sha1-MzciaWvqK5c/y1QgGXchxbAhCd4=
+victory-pie@^16.1.0:
+  version "16.1.0"
+  resolved "https://registry.yarnpkg.com/victory-pie/-/victory-pie-16.1.0.tgz#12216935bef911c427f3316c80b15b9ca6563252"
+  integrity sha512-OV1C2e7KGkGjrPUf7Hr68PWuDzxsFqQkdC9E/dZ2HGQKqaYZ9bdkLC0lZYEr7mKsUs6D8iPe4RTWXyEfX84nMA==
   dependencies:
     d3-shape "^1.0.0"
-    lodash "^4.17.4"
-    victory-core "^17.0.0"
+    lodash "^4.17.5"
+    victory-core "^24.0.0"
 
 victory-pie@^8.0.0:
   version "8.0.0"
@@ -6957,14 +6969,14 @@ victory-pie@^8.0.0:
     lodash "^4.12.0"
     victory-core "^10.0.0"
 
-victory@^0.21.2:
-  version "0.21.5"
-  resolved "https://registry.yarnpkg.com/victory/-/victory-0.21.5.tgz#f31c6123f620d777f3cd87bfc9cf5bc2af738470"
-  integrity sha1-8xxhI/Yg13fzzYe/yc9bwq9zhHA=
+victory@^0.27.2:
+  version "0.27.2"
+  resolved "https://registry.yarnpkg.com/victory/-/victory-0.27.2.tgz#1e6cdef88b29466befea194f26788549befa0ea3"
+  integrity sha512-/yxEJbaxmA4OJn2Zn6n8mAxzgUoOfJDElKnGhAphgtdFg++iWUFlwXtG2IOMqBZ+8olb1gJMqNC3mPTJ/7bUkw==
   dependencies:
-    victory-chart "^21.6.1"
-    victory-core "^17.2.5"
-    victory-pie "^11.4.2"
+    victory-chart "^27.1.0"
+    victory-core "^24.0.0"
+    victory-pie "^16.1.0"
 
 vm-browserify@^1.0.1:
   version "1.1.2"
