@@ -101,4 +101,4 @@ The App's state and url query params are kept in sync via a custom routing middl
 
 ### Graph Styling
 
-The styling for the graphs can be found in [theme.js](https://github.com/guardian/editorial-production-metrics/tree/master/public/js/components/ChartTheme/theme.js)
+The styling for the graphs can be found in [theme.js](https://github.com/guardian/editorial-production-metrics/tree/main/public/js/components/ChartTheme/theme.js)
