@@ -39,7 +39,7 @@
     "webpack": "2.5.0"
   },
   "dependencies": {
-    "axios": "^0.18.1",
+    "axios": "^0.21.1",
     "babel-eslint": "^8.2.1",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "classnames": "^2.2.5",
