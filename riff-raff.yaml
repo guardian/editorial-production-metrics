@@ -14,7 +14,7 @@ deployments:
     parameters:
       amiTags:
         BuiltBy: amigo
-        Recipe: editorial-tools-xenial-java8
+        Recipe: editorial-tools-bionic-java8-ARM
         AmigoStage: PROD
       amiEncrypted: true
       amiParameter: ImageId
