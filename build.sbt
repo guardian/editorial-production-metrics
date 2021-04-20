@@ -11,7 +11,7 @@ scalacOptions ++= Seq(
   "-deprecation",
   "-Ywarn-unused-import")
 
-lazy val awsVersion = "1.11.77"
+lazy val awsVersion = "1.11.678"
 
 val databaseDependencies = Seq(
   ws,
