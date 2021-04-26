@@ -5,8 +5,6 @@ version := "1.0"
 
 scalaVersion in ThisBuild := "2.11.11"
 
-resolvers ++= Seq("Guardian Bintray" at "https://dl.bintray.com/guardian/editorial-tools")
-
 scalacOptions ++= Seq(
   "-deprecation",
   "-Ywarn-unused-import")
