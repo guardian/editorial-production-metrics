@@ -5,8 +5,6 @@ version := "1.0"
 
 scalaVersion in ThisBuild := "2.11.11"
 
-resolvers ++= Seq("Guardian Bintray" at "https://dl.bintray.com/guardian/editorial-tools")
-
 scalacOptions ++= Seq(
   "-deprecation",
   "-Ywarn-unused-import")
@@ -43,7 +41,7 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala, RiffRaffArtifact
       "net.logstash.logback"   % "logstash-logback-encoder"      % "4.2",
       "com.gu"                 %% "configuration-magic-core"     % "1.3.0",
       "com.gu"                 %% "configuration-magic-play2-4"  % "1.3.0",
-      "com.gu"                 %% "panda-hmac"                   % "1.2.0",
+      "com.gu"                 %% "panda-hmac-play_2-5"          % "1.3.1",
       "org.postgresql"         % "postgresql"                    % "42.1.1",
       "org.scalatest"          %% "scalatest"                    % "3.0.1" % "test",
       "org.mockito"            % "mockito-core"                  % "1.9.5" % "test"
