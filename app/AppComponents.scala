@@ -14,7 +14,7 @@ import play.api.libs.ws.WSClient
 import play.api.BuiltInComponentsFromContext
 import play.filters.HttpFiltersComponents
 import com.gu.pandomainauth.PanDomainAuthSettingsRefresher
-import play.api.mvc.ControllerComponents
+import play.api.mvc.{ControllerComponents, EssentialFilter}
 
 import scala.concurrent.Future
 
@@ -39,6 +39,8 @@ class AppComponents(context: Context)
 
   //Closes connection to db on app termination
   applicationLifecycle.addStopHook(() => Future.successful(db.close()))
+
+  override lazy val httpFilters: Seq[EssentialFilter] = super.httpFilters.filterNot(_ == allowedHostsFilter)
 
   val awsCredentialsProvider: AWSCredentialsProvider =
     new AWSCredentialsProviderChain(
