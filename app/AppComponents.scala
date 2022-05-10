@@ -1,4 +1,3 @@
-import config.LogConfig
 import config.Config._
 import database.MetricsDB
 import lib.kinesis.ProductionMetricsStreamReader
@@ -15,7 +14,6 @@ import scala.concurrent.Future
 class AppComponents(context: Context)
   extends BuiltInComponentsFromContext(context) with AhcWSComponents with EvolutionsComponents with DBComponents with HikariCPComponents {
 
-  val logger = new LogConfig()
 
   //Lazy val needs to be accessed so that database evolutions are applied
   applicationEvolutions

@@ -21,12 +21,21 @@
         </encoder>
     </appender>
 
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
+    </appender>
+
+    <appender name="ASYNCSTDOUT" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="STDOUT" />
+    </appender>
+
     <logger name="play" level="INFO" />
     <logger name="application" level="INFO" />
     <logger name="com.amazonaws.services.kinesis.clientlibrary.lib.worker.Worker" level="OFF" />
 
     <root level="INFO">
         <appender-ref ref="FILE" />
+        <appender-ref ref="ASYNCSTDOUT"/>
     </root>
 
 </configuration>
