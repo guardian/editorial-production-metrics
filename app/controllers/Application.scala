@@ -1,6 +1,5 @@
 package controllers
 
-import cats.syntax.either._
 import com.gu.editorialproductionmetricsmodels.models.{ForkData, MetricOpt}
 import com.gu.pandahmac.HMACAuthActions
 import config.Config._

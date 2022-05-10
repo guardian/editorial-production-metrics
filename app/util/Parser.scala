@@ -1,6 +1,5 @@
 package util
 
-import cats.syntax.either._
 import com.gu.editorialproductionmetricsmodels.models.MetricOpt._
 import com.gu.editorialproductionmetricsmodels.models.{CapiData, KinesisEvent, MetricOpt}
 import io.circe.generic.auto._

@@ -2,7 +2,6 @@ package models.db
 
 import java.util.UUID
 
-import cats.syntax.either._
 import com.gu.editorialproductionmetricsmodels.models.{ForkData, MetricOpt, OriginatingSystem, ProductionOffice}
 import io.circe._
 import io.circe.generic.semiauto.{deriveDecoder, deriveEncoder}
@@ -130,7 +129,7 @@ object Metric {
   def updateMetric(metric: Metric, metricOpt: MetricOpt): Either[ProductionMetricsError, Metric] = {
     // We use a printer to remove the null values. Nulls are treated as values in Circe. Not removing them results
     // in replacing the existing values with null.
-    val printer = Printer.noSpaces.copy(dropNullKeys = true)
+    val printer = Printer.noSpaces.copy(dropNullValues = true)
     val jsonOpt: String = printer.pretty(metricOpt.asJson)
 
     val result = for {

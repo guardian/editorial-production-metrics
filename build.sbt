@@ -1,7 +1,7 @@
 name := "editorial-production-metrics"
 version := "1.0"
 
-scalaVersion in ThisBuild := "2.11.11"
+scalaVersion in ThisBuild := "2.12.15"
 
 scalacOptions ++= Seq(
   "-deprecation",
@@ -27,7 +27,7 @@ lazy val sharedDependencies = Seq(
   "io.circe"               %% "circe-parser"                     % "0.8.0",
   "io.circe"               %% "circe-generic"                    % "0.8.0",
   "com.beachape"           %% "enumeratum-circe"                 % "1.5.14",
-  "com.gu"                 %% "editorial-production-metrics-lib" % "0.17"
+  "com.gu"                 %% "editorial-production-metrics-lib" % "0.18"
 )
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala, RiffRaffArtifact, JDebPackaging, SystemdPlugin)
@@ -37,8 +37,8 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala, RiffRaffArtifact
       "com.gu"                 % "kinesis-logback-appender"      % "1.3.0",
       "com.amazonaws"          % "aws-java-sdk-ec2"              % awsVersion,
       "net.logstash.logback"   % "logstash-logback-encoder"      % "6.6",
-      "com.gu"                 %% "configuration-magic-core"     % "1.3.0",
-      "com.gu"                 %% "configuration-magic-play2-4"  % "1.3.0",
+      "com.gu"                 %% "configuration-magic-core"     % "1.4.0",
+      "com.gu"                 %% "configuration-magic-play2-6"  % "1.4.0",
       "com.gu"                 %% "panda-hmac-play_2-6"          % "2.0.0",
       "org.postgresql"         % "postgresql"                    % "42.1.1",
       "org.scalatest"          %% "scalatest"                    % "3.0.1" % "test",
