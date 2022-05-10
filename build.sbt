@@ -1,5 +1,3 @@
-import com.typesafe.sbt.packager.archetypes.ServerLoader.Systemd
-
 name := "editorial-production-metrics"
 version := "1.0"
 
@@ -32,7 +30,7 @@ lazy val sharedDependencies = Seq(
   "com.gu"                 %% "editorial-production-metrics-lib" % "0.17"
 )
 
-lazy val root = (project in file(".")).enablePlugins(PlayScala, RiffRaffArtifact, JDebPackaging)
+lazy val root = (project in file(".")).enablePlugins(PlayScala, RiffRaffArtifact, JDebPackaging, SystemdPlugin)
   .settings(Defaults.coreDefaultSettings: _*)
   .settings(
     libraryDependencies ++= Seq(
@@ -41,23 +39,19 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala, RiffRaffArtifact
       "net.logstash.logback"   % "logstash-logback-encoder"      % "6.6",
       "com.gu"                 %% "configuration-magic-core"     % "1.3.0",
       "com.gu"                 %% "configuration-magic-play2-4"  % "1.3.0",
-      "com.gu"                 %% "panda-hmac-play_2-5"          % "1.3.1",
+      "com.gu"                 %% "panda-hmac-play_2-6"          % "2.0.0",
       "org.postgresql"         % "postgresql"                    % "42.1.1",
       "org.scalatest"          %% "scalatest"                    % "3.0.1" % "test",
       "org.mockito"            % "mockito-core"                  % "1.9.5" % "test"
     ) ++ sharedDependencies ++ databaseDependencies,
     routesGenerator := InjectedRoutesGenerator,
 
-    serverLoading in Debian := Systemd,
-
     name in Universal := normalizedName.value,
     topLevelDirectory := Some(normalizedName.value),
     riffRaffPackageName := name.value,
     riffRaffManifestProjectName := s"editorial-tools:${name.value}",
-    riffRaffBuildIdentifier :=  Option(System.getenv("BUILD_NUMBER")).getOrElse("DEV"),
     riffRaffUploadArtifactBucket := Option("riffraff-artifact"),
     riffRaffUploadManifestBucket := Option("riffraff-builds"),
-    riffRaffManifestBranch := Option(System.getenv("BRANCH_NAME")).getOrElse("unknown_branch"),
     riffRaffArtifactResources := Seq(
       (packageBin in Debian).value -> "editorial-production-metrics/editorial-production-metrics_1.0_all.deb",
       baseDirectory.value / "riff-raff.yaml" -> "riff-raff.yaml",

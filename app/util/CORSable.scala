@@ -17,4 +17,6 @@ case class CORSable[A](origins: String*)(action: Action[A]) extends Action[A] {
   }
 
   lazy val parser: BodyParser[A] = action.parser
+
+  override def executionContext = action.executionContext
 }

@@ -2,6 +2,7 @@ package controllers
 
 import cats.syntax.either._
 import com.gu.editorialproductionmetricsmodels.models.{ForkData, MetricOpt}
+import com.gu.pandahmac.HMACAuthActions
 import config.Config._
 import database.MetricsDB
 import io.circe.generic.auto._
@@ -9,7 +10,7 @@ import models.{APIResponse, WordCountAPIResponse}
 import models.db.{CommissionedLength, Filters, FinalLength, Fork}
 import play.api.Logger
 import play.api.libs.ws.WSClient
-import play.api.mvc._
+import play.api.mvc.{BaseController, ControllerComponents}
 import util.CORSable
 import util.Parser._
 import util.Utils._
@@ -17,7 +18,9 @@ import util.Utils._
 // Implicit
 import models.db.CountResponse._
 
-class Application(implicit val wsClient: WSClient, val db: MetricsDB) extends Controller with PanDomainAuthActions {
+class Application(val wsClient: WSClient, val db: MetricsDB, val controllerComponents: ControllerComponents, authActions: HMACAuthActions) extends BaseController {
+
+  import authActions.{APIAuthAction, APIHMACAuthAction, AuthAction}
 
   def allowCORSAccess(methods: String, args: Any*) = CORSable(workflowUrl) {
     Action { implicit req =>
@@ -59,11 +62,10 @@ class Application(implicit val wsClient: WSClient, val db: MetricsDB) extends Co
   }
 
   def upsertMetric() = CORSable(workflowUrl) {
-    APIHMACAuthAction { req =>
+    APIHMACAuthAction(parse.text) { req =>
       APIResponse {
         for {
-          bodyString <- extractRequestBody(req.body.asJson.map(_.toString))
-          metricOpt <- extractFromString[MetricOpt](bodyString)
+          metricOpt <- extractFromString[MetricOpt](req.body)
           metricFromDb <- db.getPublishingMetricsWithComposerId(metricOpt.composerId)
           metric <- db.updateOrInsert(metricFromDb, metricOpt)
         } yield metric
@@ -71,15 +73,14 @@ class Application(implicit val wsClient: WSClient, val db: MetricsDB) extends Co
     }
   }
 
-  def insertFork() = APIHMACAuthAction { req =>
+  def insertFork() = APIHMACAuthAction(parse.text) { req =>
     APIResponse {
       for {
-        bodyString <- extractRequestBody(req.body.asJson.map(_.toString))
-        forkData <- extractFromString[ForkData](bodyString)
+        forkData <- extractFromString[ForkData](req.body)
         metricOpt = MetricOpt(forkData)
         metricFromDB <- db.getPublishingMetricsWithComposerId(Some(forkData.digitalDetails.composerId))
-        metric <- db.updateOrInsert(metricFromDB, metricOpt)
-        fork <- db.insertFork(Fork(forkData))
+        _ <- db.updateOrInsert(metricFromDB, metricOpt)
+        _ <- db.insertFork(Fork(forkData))
       } yield forkData
     }
   }

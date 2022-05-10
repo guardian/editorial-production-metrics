@@ -1,8 +1,8 @@
 package controllers
 
-import play.api.mvc.{Action, Controller}
+import play.api.mvc.{BaseController, ControllerComponents}
 
-class Healthcheck extends Controller {
+class Healthcheck(val controllerComponents: ControllerComponents) extends BaseController {
 
   def healthcheck = Action {
     Ok("Healthcheck")
