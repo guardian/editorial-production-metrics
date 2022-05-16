@@ -18,7 +18,7 @@ Setting up your local config:
  Connecting to the CODE database:
  * The database you use must match the config you have: use the DEV docker database with the DEV config and CODE database with CODE config.
  * Set up the Postgres database: We use a RDS Posgres database running in the composer account in AWS.
- * To connect to it locally run `./setup-ssh-tunnel.sh -t <Endpoint of of database without the port number>`. For this to work you need to have Janus credentials for the Composer AW account.
+ * To connect to it locally run `./setup-ssh-tunnel.sh -t <Endpoint of of database without the port number>`. For this to work you need to have Janus credentials for the Composer AWS account.
  * Get the endpoint by looking in the Composer AWS account.
  * If you want to connect to a different database, you must kill the process running on port 5902 first.
 
