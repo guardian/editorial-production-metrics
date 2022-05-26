@@ -36,9 +36,10 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala, RiffRaffArtifact
   .settings(Defaults.coreDefaultSettings: _*)
   .settings(
     libraryDependencies ++= Seq(
-      "com.gu"                 % "kinesis-logback-appender"      % "1.3.0",
+      "ch.qos.logback"         % "logback-core"                  % "1.2.7",
+      "ch.qos.logback"         % "logback-classic"               % "1.2.7",
       "com.amazonaws"          % "aws-java-sdk-ec2"              % awsVersion,
-      "net.logstash.logback"   % "logstash-logback-encoder"      % "4.2",
+      "net.logstash.logback"   % "logstash-logback-encoder"      % "6.6",
       "com.gu"                 %% "configuration-magic-core"     % "1.3.0",
       "com.gu"                 %% "configuration-magic-play2-4"  % "1.3.0",
       "com.gu"                 %% "panda-hmac-play_2-5"          % "1.3.1",
