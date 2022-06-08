@@ -53,7 +53,6 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala, RiffRaffArtifact
     riffRaffManifestProjectName := s"editorial-tools:${name.value}",
     riffRaffUploadArtifactBucket := Option("riffraff-artifact"),
     riffRaffUploadManifestBucket := Option("riffraff-builds"),
-    riffRaffManifestBranch := Option(System.getenv("BRANCH_NAME")).getOrElse("unknown_branch"),
 
     riffRaffPackageType := (packageBin in Debian).value,
 
