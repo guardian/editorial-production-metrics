@@ -5,7 +5,7 @@ set -e
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 red='\x1B[0;31m'
-
+plain='\x1b[0m'
 
 test $(which yarn)
 if [ $? != "0" ]; then
@@ -23,7 +23,7 @@ DESIRED_NODE_VERSION=$(cat "${DIR}/../.nvmrc")
 
 if [[ "${NODE_MAJOR_VERSION}" != *"${DESIRED_NODE_VERSION}"  ]]; then
   echo -e "${red}Your node version ${NODE_MAJOR_VERSION}" does not match "${DESIRED_NODE_VERSION}"
-  echo -e "${red}Please run 'nvm use' to get the desired node version"
+  echo -e "Please run 'nvm use' to get the desired node version${plain}"
   exit 1
 fi
 
