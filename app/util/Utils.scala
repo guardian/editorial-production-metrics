@@ -21,9 +21,6 @@ object Utils {
     Left(error)
   }
 
-  def extractRequestBody(body: Option[String]): Either[ProductionMetricsError, String] =
-    Either.cond(body.isDefined, body.get, NoRequestBodyError)
-
   def convertStringToDateTime(dateTime: String): Option[DateTime] = {
     val formatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
     try {
@@ -40,6 +37,6 @@ object Utils {
     OriginatingSystem.withNameOption(originatingSystem).fold(Left(InvalidOriginatingSystem):Either[ProductionMetricsError, OriginatingSystem])(Right(_))
 
   def getTrackingTags(wsClient: WSClient, tagManagerUrl: String): Either[ProductionMetricsError, WSResponse] = await {
-    wsClient.url(tagManagerUrl).withQueryString(List(("type", "Tracking"),("limit", "100")):_*).get
+    wsClient.url(tagManagerUrl).addQueryStringParameters(List(("type", "Tracking"),("limit", "100")):_*).get
   }
 }

@@ -2,7 +2,6 @@ package lib.kinesis
 
 import java.util.UUID
 
-import cats.syntax.either._
 import com.amazonaws.auth.AWSCredentialsProviderChain
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorFactory
 import com.gu.editorialproductionmetricsmodels.models.EventType.CapiContent
