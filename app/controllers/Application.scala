@@ -8,6 +8,7 @@ import io.circe.generic.auto._
 import models.{APIResponse, WordCountAPIResponse}
 import models.db.{CommissionedLength, Filters, FinalLength, Fork}
 import play.api.Logger
+import play.api.libs.circe.Circe
 import play.api.libs.ws.WSClient
 import play.api.mvc.{BaseController, ControllerComponents}
 import util.CORSable
@@ -17,7 +18,7 @@ import util.Utils._
 // Implicit
 import models.db.CountResponse._
 
-class Application(val wsClient: WSClient, val db: MetricsDB, val controllerComponents: ControllerComponents, authActions: HMACAuthActions) extends BaseController {
+class Application(val wsClient: WSClient, val db: MetricsDB, val controllerComponents: ControllerComponents, authActions: HMACAuthActions) extends BaseController with Circe {
 
   import authActions.{APIAuthAction, APIHMACAuthAction, AuthAction}
 
@@ -61,26 +62,24 @@ class Application(val wsClient: WSClient, val db: MetricsDB, val controllerCompo
   }
 
   def upsertMetric() = CORSable(workflowUrl) {
-    APIHMACAuthAction(parse.text) { req =>
+    APIHMACAuthAction(circe.json[MetricOpt]) { req =>
       APIResponse {
         for {
-          metricOpt <- extractFromString[MetricOpt](req.body)
-          metricFromDb <- db.getPublishingMetricsWithComposerId(metricOpt.composerId)
-          metric <- db.updateOrInsert(metricFromDb, metricOpt)
+          metricFromDb <- db.getPublishingMetricsWithComposerId(req.body.composerId)
+          metric <- db.updateOrInsert(metricFromDb, req.body)
         } yield metric
       }
     }
   }
 
-  def insertFork() = APIHMACAuthAction(parse.text) { req =>
+  def insertFork() = APIHMACAuthAction(circe.json[ForkData]) { req =>
     APIResponse {
+      val metricOpt = MetricOpt(req.body)
       for {
-        forkData <- extractFromString[ForkData](req.body)
-        metricOpt = MetricOpt(forkData)
-        metricFromDB <- db.getPublishingMetricsWithComposerId(Some(forkData.digitalDetails.composerId))
+        metricFromDB <- db.getPublishingMetricsWithComposerId(Some(req.body.digitalDetails.composerId))
         _ <- db.updateOrInsert(metricFromDB, metricOpt)
-        _ <- db.insertFork(Fork(forkData))
-      } yield forkData
+        _ <- db.insertFork(Fork(req.body))
+      } yield req.body
     }
   }
 

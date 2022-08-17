@@ -47,10 +47,4 @@ object Parser {
   def jsonToCapiData(json: Json): Either[ProductionMetricsError, CapiData] =
     json.as[CapiData].fold(processException, Right(_))
 
-  def extractFromString[A](str: String)(implicit decoder: Decoder[A]): Either[ProductionMetricsError, A] =
-    for {
-      json <- stringToJson(str)
-      result <- json.as[A].fold(processException, m => Right(m))
-    } yield result
-
 }
