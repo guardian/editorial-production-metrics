@@ -5,7 +5,7 @@ import com.amazonaws.services.ec2.AmazonEC2ClientBuilder
 import com.amazonaws.services.ec2.model.{DescribeTagsRequest, Filter}
 import com.amazonaws.util.EC2MetadataUtils
 
-import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 
 
 object EC2Client {
@@ -26,7 +26,7 @@ trait AwsInstanceTags {
           new Filter("key").withValues(tagName)
         )
       )
-      tagsResult.getTags.find(_.getKey == tagName).map(_.getValue)
+      tagsResult.getTags.asScala.find(_.getKey == tagName).map(_.getValue)
     }
   }
 }
