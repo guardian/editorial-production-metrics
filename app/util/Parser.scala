@@ -3,7 +3,7 @@ package util
 import com.gu.editorialproductionmetricsmodels.models.MetricOpt._
 import com.gu.editorialproductionmetricsmodels.models.{CapiData, KinesisEvent, MetricOpt}
 import io.circe.generic.auto._
-import io.circe.{Decoder, Json, parser}
+import io.circe.{Json, parser}
 import models.db.Metric
 import models.db.Metric._
 import models.{CommissioningDesks, ProductionMetricsError}
