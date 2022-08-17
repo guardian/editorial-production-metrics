@@ -3,7 +3,7 @@ package util
 import com.gu.editorialproductionmetricsmodels.models.MetricOpt._
 import com.gu.editorialproductionmetricsmodels.models.{CapiData, KinesisEvent, MetricOpt}
 import io.circe.generic.auto._
-import io.circe.{Decoder, Json, parser}
+import io.circe.{Json, parser}
 import models.db.Metric
 import models.db.Metric._
 import models.{CommissioningDesks, ProductionMetricsError}
@@ -46,11 +46,5 @@ object Parser {
 
   def jsonToCapiData(json: Json): Either[ProductionMetricsError, CapiData] =
     json.as[CapiData].fold(processException, Right(_))
-
-  def extractFromString[A](str: String)(implicit decoder: Decoder[A]): Either[ProductionMetricsError, A] =
-    for {
-      json <- stringToJson(str)
-      result <- json.as[A].fold(processException, m => Right(m))
-    } yield result
 
 }
