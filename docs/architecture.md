@@ -1,6 +1,6 @@
 # Architecture
 
-![metrics diagram](MetricsArchitecture.jpg)
+![metrics diagram](assets/MetricsArchitecture.jpg)
 
 The app is a scala play app with a react frontend and a RDS postgres database.
 
