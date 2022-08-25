@@ -1,5 +1,3 @@
-import com.amazonaws.auth.profile.ProfileCredentialsProvider
-import com.amazonaws.auth.{AWSCredentialsProvider, AWSCredentialsProviderChain, InstanceProfileCredentialsProvider}
 import config.Config._
 import controllers.{AssetsComponents, PanDomainAuthActions}
 import database.MetricsDB
@@ -42,17 +40,12 @@ class AppComponents(context: Context)
 
   override lazy val httpFilters: Seq[EssentialFilter] = super.httpFilters.filterNot(_ == allowedHostsFilter)
 
-  val awsCredentialsProvider: AWSCredentialsProvider =
-    new AWSCredentialsProviderChain(
-      new ProfileCredentialsProvider(configuration.getOptional[String]("panda.awsCredsProfile").getOrElse("panda")),
-      new InstanceProfileCredentialsProvider(false)
-    )
-
   private val panDomainSettings = new PanDomainAuthSettingsRefresher(
-    domain = configuration.get[String]("panda.domain"),
+    domain = pandaDomain,
     system = "video",
-    actorSystem,
-    awsCredentialsProvider
+    bucketName = "pan-domain-auth-settings",
+    settingsFileKey = s"$pandaDomain.settings",
+    s3Client = pandaS3Client,
   )
 
   private val hmacAuthActions = new PanDomainAuthActions {

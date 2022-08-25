@@ -34,14 +34,14 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala, RiffRaffArtifact
   .settings(Defaults.coreDefaultSettings: _*)
   .settings(
     libraryDependencies ++= Seq(
-      "com.dripower"           %% "play-circe"                   % "2611.0",
+      "com.dripower"           %% "play-circe"                   % "2712.0",
       "ch.qos.logback"         % "logback-core"                  % "1.2.7",
       "ch.qos.logback"         % "logback-classic"               % "1.2.7",
       "com.amazonaws"          % "aws-java-sdk-ec2"              % awsVersion,
       "net.logstash.logback"   % "logstash-logback-encoder"      % "6.6",
       "com.gu"                 %% "configuration-magic-core"     % "1.4.0",
       "com.gu"                 %% "configuration-magic-play2-6"  % "1.4.0",
-      "com.gu"                 %% "panda-hmac-play_2-6"          % "2.0.0",
+      "com.gu"                 %% "panda-hmac-play_2-7"          % "2.0.1",
       "org.postgresql"         % "postgresql"                    % "42.1.1",
       "org.scalatest"          %% "scalatest"                    % "3.0.1" % "test",
       "org.mockito"            % "mockito-core"                  % "1.9.5" % "test"

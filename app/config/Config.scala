@@ -1,8 +1,9 @@
 package config
 
 import com.amazonaws.auth.profile.ProfileCredentialsProvider
-import com.amazonaws.auth.{AWSCredentialsProviderChain, InstanceProfileCredentialsProvider}
+import com.amazonaws.auth.{AWSCredentialsProvider, AWSCredentialsProviderChain, InstanceProfileCredentialsProvider}
 import com.amazonaws.regions.Region
+import com.amazonaws.services.s3.{AmazonS3, AmazonS3ClientBuilder}
 import com.gu.cm.{Mode, Configuration => ConfigurationMagic}
 import services.AwsInstanceTags
 
@@ -33,10 +34,19 @@ object Config extends AwsInstanceTags {
   val pandaDomain: String = config.getString("panda.domain")
   val pandaAuthCallback: String = config.getString("panda.authCallback")
   val pandaSystem: String = config.getString("panda.system")
+  val pandaAwsCredsProfile: String = getPropertyWithDefault("panda.awsCredsProfile", config.getString, "panda")
+
+  val pandaAwsCredentialsProvider: AWSCredentialsProvider =
+    new AWSCredentialsProviderChain(
+      new ProfileCredentialsProvider(pandaAwsCredsProfile),
+      new InstanceProfileCredentialsProvider(false)
+    )
+
+  val pandaS3Client: AmazonS3 = AmazonS3ClientBuilder.standard().withCredentials(pandaAwsCredentialsProvider).withRegion(region.getName).build()
 
   val publishingMetricsKinesisStream: String = config.getString("kinesis.publishingMetricsStream")
 
-  val tagManagerUrl = s"${getPropertyWithDefault("tagManager.url", config.getString, default = "http://tagmanager.gutools.co.uk")}/hyper/tags"
+  val tagManagerUrl: String = getPropertyWithDefault("tagManager.url", config.getString, default = "https://tagmanager.gutools.co.uk") + "/hyper/tags"
 
 //  This is for uniquely identifying the kinesis application when running the app locally on multiple DEV machines
   val devIdentifier: String = if(stage == "DEV") config.getString("user") else ""
