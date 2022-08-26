@@ -2,7 +2,7 @@ package controllers
 
 import com.gu.editorialproductionmetricsmodels.models.{ForkData, MetricOpt}
 import com.gu.pandahmac.HMACAuthActions
-import config.Config._
+import config.AppConfig
 import database.MetricsDB
 import io.circe.generic.auto._
 import models.{APIResponse, WordCountAPIResponse}
@@ -18,11 +18,11 @@ import util.Utils._
 // Implicit
 import models.db.CountResponse._
 
-class Application(val wsClient: WSClient, val db: MetricsDB, val controllerComponents: ControllerComponents, authActions: HMACAuthActions) extends BaseController with Circe {
+class Application(val wsClient: WSClient, val db: MetricsDB, val controllerComponents: ControllerComponents, authActions: HMACAuthActions, config: AppConfig) extends BaseController with Circe {
 
   import authActions.{APIAuthAction, APIHMACAuthAction, AuthAction}
 
-  def allowCORSAccess(methods: String, args: Any*) = CORSable(workflowUrl) {
+  def allowCORSAccess(methods: String, args: Any*) = CORSable(config.workflowUrl) {
     Action { implicit req =>
       val requestedHeaders = req.headers("Access-Control-Request-Headers")
       NoContent.withHeaders("Access-Control-Allow-Methods" -> methods, "Access-Control-Allow-Headers" -> requestedHeaders)
@@ -30,14 +30,14 @@ class Application(val wsClient: WSClient, val db: MetricsDB, val controllerCompo
   }
 
   def index(path: String) = AuthAction {
-    Logger.info(s"I am the $appName")
+    Logger.info(s"I am the ${config.appName}")
     Ok(views.html.index())
   }
 
   def getCommissioningDeskList = APIAuthAction {
     APIResponse {
       for {
-        tagManagerResponse <- getTrackingTags(wsClient, tagManagerUrl)
+        tagManagerResponse <- getTrackingTags(wsClient, config.tagManagerUrl)
         commissioningDesks <- stringToCommissioningDesks(tagManagerResponse.body)
       } yield commissioningDesks.data.map(_.data.path)
     }
@@ -61,7 +61,7 @@ class Application(val wsClient: WSClient, val db: MetricsDB, val controllerCompo
     }
   }
 
-  def upsertMetric() = CORSable(workflowUrl) {
+  def upsertMetric() = CORSable(config.workflowUrl) {
     APIHMACAuthAction(circe.json[MetricOpt]) { req =>
       APIResponse {
         for {

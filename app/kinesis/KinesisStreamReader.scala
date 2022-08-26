@@ -4,18 +4,20 @@ import java.util.UUID
 import java.util.concurrent.Executors
 
 import com.amazonaws.auth.AWSCredentialsProvider
+import com.amazonaws.regions.Region
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorFactory
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.{InitialPositionInStream, KinesisClientLibConfiguration, Worker}
 import com.amazonaws.services.kinesis.metrics.impl.NullMetricsFactory
 import com.google.common.util.concurrent.ThreadFactoryBuilder
-import config.Config._
 
 trait KinesisStreamReader {
 
   val streamName: String
   val stage: String
+  val devIdentifier: String
   val kinesisCredentialsProvider: AWSCredentialsProvider
   val dynamoCredentialsProvider: AWSCredentialsProvider
+  val region: Region
 
   /* This application name is used by KCL to store the checkpoint data
    * about how much of the stream we have consumed. The application

@@ -1,17 +1,16 @@
-import config.Config._
 import controllers.{AssetsComponents, PanDomainAuthActions}
-import database.MetricsDB
+import database.{DatabaseConfiguration, MetricsDB}
 import lib.kinesis.ProductionMetricsStreamReader
 import play.api.ApplicationLoader.Context
 import play.api.db.evolutions.EvolutionsComponents
 import play.api.db.{DBComponents, HikariCPComponents}
 import play.api.libs.ws.ahc.AhcWSComponents
 import router.Routes
-import database.DatabaseConfiguration.db
 import play.api.libs.ws.WSClient
 import play.api.BuiltInComponentsFromContext
 import play.filters.HttpFiltersComponents
 import com.gu.pandomainauth.PanDomainAuthSettingsRefresher
+import config.AppConfig
 import play.api.mvc.{ControllerComponents, EssentialFilter}
 
 import scala.concurrent.Future
@@ -23,7 +22,10 @@ class AppComponents(context: Context)
     with DBComponents
     with HikariCPComponents
     with AssetsComponents
-    with HttpFiltersComponents {
+    with HttpFiltersComponents
+    with DatabaseConfiguration {
+
+  val config = new AppConfig(configuration)
 
 
   //Lazy val needs to be accessed so that database evolutions are applied
@@ -32,7 +34,7 @@ class AppComponents(context: Context)
 
   lazy val metricsDb = new MetricsDB()
 
-  lazy val kinesisStreamConsumer = new ProductionMetricsStreamReader(publishingMetricsKinesisStream, stage, metricsDb)
+  lazy val kinesisStreamConsumer = new ProductionMetricsStreamReader(config, metricsDb)
   kinesisStreamConsumer.start
 
   //Closes connection to db on app termination
@@ -41,14 +43,16 @@ class AppComponents(context: Context)
   override lazy val httpFilters: Seq[EssentialFilter] = super.httpFilters.filterNot(_ == allowedHostsFilter)
 
   private val panDomainSettings = new PanDomainAuthSettingsRefresher(
-    domain = pandaDomain,
+    domain = config.pandaDomain,
     system = "video",
     bucketName = "pan-domain-auth-settings",
-    settingsFileKey = s"$pandaDomain.settings",
-    s3Client = pandaS3Client,
+    settingsFileKey = s"${config.pandaDomain}.settings",
+    s3Client = config.pandaS3Client,
   )
 
   private val hmacAuthActions = new PanDomainAuthActions {
+    override val pandaAuthCallback: String = config.pandaAuthCallback
+    override val hmacSecret: String = config.hmacSecret
 
     override def wsClient: WSClient = AppComponents.this.wsClient
 
@@ -58,7 +62,7 @@ class AppComponents(context: Context)
   }
 
   lazy val router = new Routes(httpErrorHandler, appController, healthcheckController, loginController, assets)
-  lazy val appController = new controllers.Application(wsClient, metricsDb, controllerComponents, hmacAuthActions)
+  lazy val appController = new controllers.Application(wsClient, metricsDb, controllerComponents, hmacAuthActions, config)
   lazy val loginController = new controllers.Login(wsClient, controllerComponents, hmacAuthActions)
   lazy val healthcheckController = new controllers.Healthcheck(controllerComponents)
 }

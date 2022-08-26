@@ -10,9 +10,9 @@ import play.api.Logger
 import slick.jdbc.PostgresProfile.api._
 import util.AsyncHelpers._
 import util.PostgresOpsImport._
-import config.Config._
 
 class MetricsDB(implicit val db: Database) {
+  private val maxNumberOfArticlesToReturn: Int = 1000
 
   private def upsertPublishingMetric(metric: Metric): Either[ProductionMetricsError, Metric] = {
     val result: Either[ProductionMetricsError, Int] = await(db.run(metricsTable.insertOrUpdate(metric)))
