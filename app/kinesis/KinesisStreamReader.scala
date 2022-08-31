@@ -4,7 +4,6 @@ import java.util.UUID
 import java.util.concurrent.Executors
 
 import com.amazonaws.auth.AWSCredentialsProvider
-import com.amazonaws.regions.Region
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorFactory
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.{InitialPositionInStream, KinesisClientLibConfiguration, Worker}
 import com.amazonaws.services.kinesis.metrics.impl.NullMetricsFactory

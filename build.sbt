@@ -24,10 +24,10 @@ val databaseDependencies = Seq(
 lazy val sharedDependencies = Seq(
   "com.amazonaws"          % "aws-java-sdk-core"                 % awsVersion,
   "com.amazonaws"          % "amazon-kinesis-client"             % "1.7.6",
-  "io.circe"               %% "circe-parser"                     % "0.12.0",
-  "io.circe"               %% "circe-generic"                    % "0.12.0",
+  "io.circe"               %% "circe-parser"                     % "0.12.1",
+  "io.circe"               %% "circe-generic"                    % "0.12.1",
   "com.beachape"           %% "enumeratum-circe"                 % "1.5.14",
-  "com.gu"                 %% "editorial-production-metrics-lib" % "0.18"
+  "com.gu"                 %% "editorial-production-metrics-lib" % "0.19"
 )
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala, RiffRaffArtifact, JDebPackaging, SystemdPlugin)
