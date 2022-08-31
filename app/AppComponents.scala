@@ -1,3 +1,4 @@
+import com.gu.AppIdentity
 import controllers.{AssetsComponents, PanDomainAuthActions}
 import database.{DatabaseConfiguration, MetricsDB}
 import lib.kinesis.ProductionMetricsStreamReader
@@ -15,7 +16,7 @@ import play.api.mvc.{ControllerComponents, EssentialFilter}
 
 import scala.concurrent.Future
 
-class AppComponents(context: Context)
+class AppComponents(context: Context, identity: AppIdentity)
   extends BuiltInComponentsFromContext(context)
     with AhcWSComponents
     with EvolutionsComponents
@@ -25,12 +26,10 @@ class AppComponents(context: Context)
     with HttpFiltersComponents
     with DatabaseConfiguration {
 
-  val config = new AppConfig(configuration)
-
+  val config = new AppConfig(configuration, identity)
 
   //Lazy val needs to be accessed so that database evolutions are applied
   applicationEvolutions
-  //Context is created here so we can add a stop hook to kill the db connection when the app terminates
 
   lazy val metricsDb = new MetricsDB()
 
@@ -50,7 +49,6 @@ class AppComponents(context: Context)
     s3Client = config.pandaS3Client,
   )
 
-
   private val hmacAuthActions = new PanDomainAuthActions {
     override def wsClient: WSClient = AppComponents.this.wsClient
 
@@ -68,5 +66,4 @@ class AppComponents(context: Context)
   lazy val loginController = new controllers.Login(wsClient, controllerComponents, hmacAuthActions)
   lazy val healthcheckController = new controllers.Healthcheck(controllerComponents)
 }
-
 

@@ -3,7 +3,6 @@ package lib.kinesis
 import java.util.UUID
 
 import com.amazonaws.auth.AWSCredentialsProviderChain
-import com.amazonaws.regions.Region
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorFactory
 import com.gu.editorialproductionmetricsmodels.models.EventType.CapiContent
 import com.gu.editorialproductionmetricsmodels.models.{CapiData, KinesisEvent, MetricOpt}
@@ -26,9 +25,9 @@ class ProductionMetricsStreamReader(config: AppConfig, val db: MetricsDB)
   override val streamName: String = config.publishingMetricsKinesisStream
   override val stage: String = config.stage
   override val devIdentifier: String = config.devIdentifier
-  override val region: Region = config.region
+  override val region: String = config.region
 
-  val kinesisCredentialsProvider: AWSCredentialsProviderChain = config.awsCredsProvider
+  val kinesisCredentialsProvider: AWSCredentialsProviderChain = config.kinesisAwsCredentials
 
   val dynamoCredentialsProvider: AWSCredentialsProviderChain = kinesisCredentialsProvider
 

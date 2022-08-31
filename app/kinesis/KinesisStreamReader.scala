@@ -17,7 +17,7 @@ trait KinesisStreamReader {
   val devIdentifier: String
   val kinesisCredentialsProvider: AWSCredentialsProvider
   val dynamoCredentialsProvider: AWSCredentialsProvider
-  val region: Region
+  val region: String
 
   /* This application name is used by KCL to store the checkpoint data
    * about how much of the stream we have consumed. The application
@@ -34,7 +34,7 @@ trait KinesisStreamReader {
   private lazy val kinesisConfig =
     new KinesisClientLibConfiguration(applicationName, streamName, kinesisCredentialsProvider, dynamoCredentialsProvider, null, workerId)
       .withInitialPositionInStream(initialPosition)
-      .withRegionName(region.getName)
+      .withRegionName(region)
       .withInitialLeaseTableReadCapacity(10)
       .withInitialLeaseTableWriteCapacity(10)
 

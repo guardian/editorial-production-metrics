@@ -1,4 +1,4 @@
-import software.amazon.awssdk.auth.credentials.{AwsCredentialsProvider, DefaultCredentialsProvider => DefaultCredentialsProviderV2, ProfileCredentialsProvider => ProfileCredentialsProviderV2}
+import software.amazon.awssdk.auth.credentials.{AwsCredentialsProvider, DefaultCredentialsProvider, ProfileCredentialsProvider}
 import com.gu.{AppIdentity, AwsIdentity, DevIdentity}
 
 import java.util.TimeZone
@@ -21,26 +21,25 @@ class AppLoader extends ApplicationLoader {
      * The JDBC driver interprets these using the JVM's default timezone which is
      * almost certainly what no sane person ever wants to do.
      */
-
     System.setProperty("user.timezone", "UTC")
     TimeZone.setDefault(TimeZone.getTimeZone("UTC"))
 
     val defaultAppName = "editorial-production-metrics"
     val identity = AppIdentity.whoAmI(defaultAppName)
 
-    val creds: AwsCredentialsProvider = identity match {
-      case _: DevIdentity => ProfileCredentialsProviderV2.create("composer")
-      case _ => DefaultCredentialsProviderV2.create()
+    val awsCredentials: AwsCredentialsProvider = identity match {
+      case _: DevIdentity => ProfileCredentialsProvider.create("composer")
+      case _ => DefaultCredentialsProvider.create()
     }
 
-    val loadedConfig = ConfigurationLoader.load(identity, creds) {
+    val loadedConfig = ConfigurationLoader.load(identity, awsCredentials) {
       case identity: AwsIdentity => SSMConfigurationLocation.default(identity)
       case _: DevIdentity =>
         val home = System.getProperty("user.home")
         FileConfigurationLocation(new File(s"$home/.gu/$defaultAppName.conf"))
     }
 
-    new AppComponents(context.copy(initialConfiguration = context.initialConfiguration ++ Configuration(loadedConfig))).application
+    new AppComponents(context.copy(initialConfiguration = context.initialConfiguration ++ Configuration(loadedConfig)), identity).application
   }
 
 }
