@@ -35,7 +35,7 @@ class AppComponents(context: Context)
   lazy val metricsDb = new MetricsDB()
 
   lazy val kinesisStreamConsumer = new ProductionMetricsStreamReader(config, metricsDb)
-  kinesisStreamConsumer.start
+  kinesisStreamConsumer.start()
 
   //Closes connection to db on app termination
   applicationLifecycle.addStopHook(() => Future.successful(db.close()))
@@ -50,15 +50,17 @@ class AppComponents(context: Context)
     s3Client = config.pandaS3Client,
   )
 
-  private val hmacAuthActions = new PanDomainAuthActions {
-    override val pandaAuthCallback: String = config.pandaAuthCallback
-    override val hmacSecret: String = config.hmacSecret
 
+  private val hmacAuthActions = new PanDomainAuthActions {
     override def wsClient: WSClient = AppComponents.this.wsClient
 
     override def panDomainSettings: PanDomainAuthSettingsRefresher = AppComponents.this.panDomainSettings
 
     override def controllerComponents: ControllerComponents = AppComponents.this.controllerComponents
+
+    override def authCallbackUrl: String = config.pandaAuthCallback
+
+    override def secret: String = config.hmacSecret
   }
 
   lazy val router = new Routes(httpErrorHandler, appController, healthcheckController, loginController, assets)
