@@ -7,7 +7,7 @@ import database.MetricsDB
 import io.circe.generic.auto._
 import models.{APIResponse, WordCountAPIResponse}
 import models.db.{CommissionedLength, Filters, FinalLength, Fork}
-import play.api.Logger
+import play.api.Logging
 import play.api.libs.circe.Circe
 import play.api.libs.ws.WSClient
 import play.api.mvc.{BaseController, ControllerComponents}
@@ -18,7 +18,13 @@ import util.Utils._
 // Implicit
 import models.db.CountResponse._
 
-class Application(val wsClient: WSClient, val db: MetricsDB, val controllerComponents: ControllerComponents, authActions: HMACAuthActions, config: AppConfig) extends BaseController with Circe {
+class Application(
+                   val wsClient: WSClient,
+                   val db: MetricsDB,
+                   val controllerComponents: ControllerComponents,
+                   authActions: HMACAuthActions,
+                   config: AppConfig
+                 ) extends BaseController with Circe with Logging {
 
   import authActions.{APIAuthAction, APIHMACAuthAction, AuthAction}
 
@@ -30,7 +36,7 @@ class Application(val wsClient: WSClient, val db: MetricsDB, val controllerCompo
   }
 
   def index(path: String) = AuthAction {
-    Logger.info(s"I am the ${config.appName}")
+    logger.info(s"I am the ${config.appName}")
     Ok(views.html.index())
   }
 

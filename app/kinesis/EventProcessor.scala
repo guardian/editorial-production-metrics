@@ -9,7 +9,7 @@ import com.amazonaws.services.kinesis.model.Record
 import com.gu.editorialproductionmetricsmodels.models.KinesisEvent
 import lib.kinesis.EventProcessor.EventWithSize
 import models.ProductionMetricsError
-import play.api.Logger
+import play.api.Logging
 import util.Parser._
 
 import scala.collection.JavaConverters._
@@ -18,7 +18,8 @@ import scala.concurrent.duration._
 abstract class EventProcessor[T <: KinesisEvent](
   checkpointInterval: Duration = 30.seconds,
   maxCheckpointBatchSize: Int = 20)
-  extends IRecordProcessor {
+  extends IRecordProcessor
+  with Logging {
 
   def isActivated: Boolean
 
@@ -30,7 +31,7 @@ abstract class EventProcessor[T <: KinesisEvent](
 
   override def initialize(shardId: String): Unit = {
     this.shardId = shardId
-    Logger.info(s"Initialized an event processor for shard $shardId")
+    logger.info(s"Initialized an event processor for shard $shardId")
   }
 
   override def processRecords(records: JList[Record], checkpointer: IRecordProcessorCheckpointer): Unit = {
@@ -52,7 +53,7 @@ abstract class EventProcessor[T <: KinesisEvent](
       deserializeEvent(buffer) match {
         case Right(event) => Some(EventWithSize(event, buffer.length))
         case Left(error) =>
-          Logger.error(error.message)
+          logger.error(error.message)
           None
       }
     }
@@ -88,7 +89,7 @@ abstract class EventProcessor[T <: KinesisEvent](
     if (reason == ShutdownReason.TERMINATE) {
       checkpointer.checkpoint()
     }
-    Logger.info(s"Shutdown event processor for shard $shardId because $reason")
+    logger.info(s"Shutdown event processor for shard $shardId because $reason")
   }
 
 }

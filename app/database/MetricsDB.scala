@@ -6,12 +6,12 @@ import models.ProductionMetricsError
 import models.db.Schema._
 import models.db._
 import org.joda.time.DateTime
-import play.api.Logger
+import play.api.Logging
 import slick.jdbc.PostgresProfile.api._
 import util.AsyncHelpers._
 import util.PostgresOpsImport._
 
-class MetricsDB(implicit val db: Database) {
+class MetricsDB(implicit val db: Database) extends Logging {
   private val maxNumberOfArticlesToReturn: Int = 1000
 
   private def upsertPublishingMetric(metric: Metric): Either[ProductionMetricsError, Metric] = {
@@ -27,11 +27,11 @@ class MetricsDB(implicit val db: Database) {
       Metric.updateMetric(m, metricOpt).fold(
         err => Left(err),
         updated => {
-          Logger.info(s"Metric found, updating entry with: $updated")
+          logger.info(s"Metric found, updating entry with: $updated")
           upsertPublishingMetric(updated)
         })
     case None =>
-      Logger.info(s"Inserting new metric: $metricOpt")
+      logger.info(s"Inserting new metric: $metricOpt")
       upsertPublishingMetric(Metric(metricOpt))
   }
 

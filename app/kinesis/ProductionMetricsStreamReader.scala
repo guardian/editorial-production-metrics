@@ -13,7 +13,7 @@ import lib.kinesis.EventProcessor.EventWithSize
 import lib.kinesis.ProductionMetricsStreamReader.ProductionMetricsEventProcessor
 import models.db.Metric
 import models.{ProductionMetricsError, UnexpectedExceptionError}
-import play.api.Logger
+import play.api.Logging
 import util.Parser
 import util.Utils.convertStringToDateTime
 
@@ -49,7 +49,8 @@ object ProductionMetricsStreamReader {
     checkpointInterval: Duration = 30.seconds,
     maxCheckpointBatchSize: Int = 20)
     extends EventProcessor[KinesisEvent](checkpointInterval, maxCheckpointBatchSize)
-      with SingleEventProcessor[KinesisEvent] {
+      with SingleEventProcessor[KinesisEvent]
+      with Logging {
 
     def isActivated = true
 
@@ -60,14 +61,14 @@ object ProductionMetricsStreamReader {
       val eventType = event.eventType
       eventType match {
         case CapiContent => processCapiEvent(event.eventJson)
-        case _ => Logger.error(s"Invalid event type on kinesis stream could not be processed $event")
+        case _ => logger.error(s"Invalid event type on kinesis stream could not be processed $event")
       }
     }
 
     private def processCapiEvent(json: Json): Unit =
       Parser.jsonToCapiData(json) match {
-        case Right(data) => putCapiDataInDB(data).fold(err => Logger.error(s"Error while trying to save CAPI data in db $err"), _ => ())
-        case Left(error) => Logger.error(error.message)
+        case Right(data) => putCapiDataInDB(data).fold(err => logger.error(s"Error while trying to save CAPI data in db $err"), _ => ())
+        case Left(error) => logger.error(error.message)
       }
 
 

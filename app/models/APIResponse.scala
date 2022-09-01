@@ -4,7 +4,7 @@ import io.circe._
 import io.circe.generic.semiauto._
 import io.circe.syntax._
 import models.db.ArticleWordCountResponseList
-import play.api.Logger
+import play.api.Logging
 import play.api.mvc._
 
 
@@ -20,9 +20,9 @@ object MetricsAPIResponse{
   implicit val metricsApiResponseEncoder: Encoder[MetricsAPIResponse] = deriveEncoder[MetricsAPIResponse]
 }
 
-object APIResponse extends Results {
+object APIResponse extends Results with Logging {
   def apiErrorToResult(e: ProductionMetricsError) = {
-    Logger.error(e.message)
+    logger.error(e.message)
     InternalServerError(MetricsAPIResponse(e.message).asJson.noSpaces)
   }
 
