@@ -16,7 +16,7 @@ if [ $? != "0" ]; then
     exit 1
 fi
 
-printf "\n\rSetting up client side dependancies... \n\r\n\r"
+printf "\n\rSetting up client side dependencies... \n\r\n\r"
 
 NODE_MAJOR_VERSION=$(node -v | cut -d "." -f 1)
 DESIRED_NODE_VERSION=$(cat "${DIR}/../.nvmrc")
