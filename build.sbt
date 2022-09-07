@@ -13,8 +13,8 @@ val databaseDependencies = Seq(
   ws,
   evolutions,
   jdbc,
-  "com.typesafe.slick"   %% "slick"             % "3.2.1",
-  "com.typesafe.slick"   %% "slick-hikaricp"    % "3.2.1",
+  "com.typesafe.slick"   %% "slick"             % "3.3.3",
+  "com.typesafe.slick"   %% "slick-hikaricp"    % "3.3.3",
   "com.github.tototoshi" %% "slick-joda-mapper" % "2.3.0",
   "org.postgresql"       % "postgresql"         % "9.4-1206-jdbc41",
   "joda-time"            % "joda-time"          % "2.7",
@@ -24,24 +24,23 @@ val databaseDependencies = Seq(
 lazy val sharedDependencies = Seq(
   "com.amazonaws"          % "aws-java-sdk-core"                 % awsVersion,
   "com.amazonaws"          % "amazon-kinesis-client"             % "1.7.6",
-  "io.circe"               %% "circe-parser"                     % "0.11.0",
-  "io.circe"               %% "circe-generic"                    % "0.11.0",
+  "io.circe"               %% "circe-parser"                     % "0.12.1",
+  "io.circe"               %% "circe-generic"                    % "0.12.1",
   "com.beachape"           %% "enumeratum-circe"                 % "1.5.14",
-  "com.gu"                 %% "editorial-production-metrics-lib" % "0.18"
+  "com.gu"                 %% "editorial-production-metrics-lib" % "0.19"
 )
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala, RiffRaffArtifact, JDebPackaging, SystemdPlugin)
   .settings(Defaults.coreDefaultSettings: _*)
   .settings(
     libraryDependencies ++= Seq(
-      "com.dripower"           %% "play-circe"                   % "2611.0",
+      "com.dripower"           %% "play-circe"                   % "2712.0",
       "ch.qos.logback"         % "logback-core"                  % "1.2.7",
       "ch.qos.logback"         % "logback-classic"               % "1.2.7",
       "com.amazonaws"          % "aws-java-sdk-ec2"              % awsVersion,
       "net.logstash.logback"   % "logstash-logback-encoder"      % "6.6",
-      "com.gu"                 %% "configuration-magic-core"     % "1.4.0",
-      "com.gu"                 %% "configuration-magic-play2-6"  % "1.4.0",
-      "com.gu"                 %% "panda-hmac-play_2-6"          % "2.0.0",
+      "com.gu"                 %% "simple-configuration-ssm"     % "1.5.6",
+      "com.gu"                 %% "panda-hmac-play_2-7"          % "2.0.1",
       "org.postgresql"         % "postgresql"                    % "42.1.1",
       "org.scalatest"          %% "scalatest"                    % "3.0.1" % "test",
       "org.mockito"            % "mockito-core"                  % "1.9.5" % "test"

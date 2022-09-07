@@ -9,7 +9,7 @@ import io.circe.parser._
 import io.circe.syntax._
 import models.ProductionMetricsError
 import org.joda.time.DateTime
-import play.api.Logger
+import play.api.Logging
 import util.Parser.jsonToMetric
 import util.Utils.processException
 
@@ -36,7 +36,7 @@ case class Metric(
    commissionedWordCount: Option[Int] = None,
    headline: Option[String] = None)
 
-object Metric {
+object Metric extends Logging {
   def apply(metricOpt: MetricOpt): Metric = Metric(
     id = metricOpt.id.getOrElse(UUID.randomUUID().toString),
     originatingSystem = metricOpt.originatingSystem.getOrElse(OriginatingSystem.Composer),
@@ -130,7 +130,7 @@ object Metric {
     // We use a printer to remove the null values. Nulls are treated as values in Circe. Not removing them results
     // in replacing the existing values with null.
     val printer = Printer.noSpaces.copy(dropNullValues = true)
-    val jsonOpt: String = printer.pretty(metricOpt.asJson)
+    val jsonOpt: String = printer.print(metricOpt.asJson)
 
     val result = for {
       j1 <- parse(jsonOpt)
@@ -139,7 +139,7 @@ object Metric {
 
     result.fold(
       err => {
-        Logger.error(s"Json merging failed for $metric and $metricOpt: ${err.message}")
+        logger.error(s"Json merging failed for $metric and $metricOpt: ${err.message}")
         processException(err)
       },
       r => jsonToMetric(r))

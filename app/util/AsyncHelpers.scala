@@ -1,15 +1,15 @@
 package util
 
 import models.{FailedFutureError, ProductionMetricsError}
-import play.api.Logger
+import play.api.Logging
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
 
-object AsyncHelpers {
+object AsyncHelpers extends Logging {
   private def io[A](future: Future[A]): Future[A] = {
-    future.failed.foreach(e => Logger.error(s"Error when running query; message: ${e.getMessage}", e))
+    future.failed.foreach(e => logger.error(s"Error when running query; message: ${e.getMessage}", e))
     future
   }
 

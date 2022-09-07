@@ -5,19 +5,19 @@ import io.circe.{DecodingFailure, ParsingFailure}
 import models._
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
-import play.api.Logger
+import play.api.Logging
 import play.api.libs.ws.{WSClient, WSResponse}
 import util.AsyncHelpers.await
 
 
-object Utils {
+object Utils extends Logging {
   def processException(exception: Exception): Either[ProductionMetricsError, Nothing] = {
     val error = exception match {
       case e: ParsingFailure => InvalidJsonError(e.message)
       case e: DecodingFailure => InvalidJsonError(e.message)
       case _ => UnexpectedExceptionError
     }
-    Logger.error(error.message, exception)
+    logger.error(error.message, exception)
     Left(error)
   }
 
@@ -28,7 +28,7 @@ object Utils {
     }
     catch {
       case e: Throwable =>
-        Logger.error(s"String $dateTime could not be converted to datetime. $e")
+        logger.error(s"String $dateTime could not be converted to datetime. $e")
         None
     }
   }

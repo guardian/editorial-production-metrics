@@ -6,23 +6,28 @@ import com.amazonaws.auth.AWSCredentialsProviderChain
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorFactory
 import com.gu.editorialproductionmetricsmodels.models.EventType.CapiContent
 import com.gu.editorialproductionmetricsmodels.models.{CapiData, KinesisEvent, MetricOpt}
-import config.Config._
+import config.AppConfig
 import database.MetricsDB
 import io.circe.Json
 import lib.kinesis.EventProcessor.EventWithSize
 import lib.kinesis.ProductionMetricsStreamReader.ProductionMetricsEventProcessor
 import models.db.Metric
 import models.{ProductionMetricsError, UnexpectedExceptionError}
-import play.api.Logger
+import play.api.Logging
 import util.Parser
 import util.Utils.convertStringToDateTime
 
 import scala.concurrent.duration.{Duration, _}
 
-class ProductionMetricsStreamReader(override val streamName: String, override val stage: String, val db: MetricsDB)
+class ProductionMetricsStreamReader(config: AppConfig, val db: MetricsDB)
   extends KinesisStreamReader {
 
-  val kinesisCredentialsProvider: AWSCredentialsProviderChain = awsCredsProvider
+  override val streamName: String = config.publishingMetricsKinesisStream
+  override val stage: String = config.stage
+  override val devIdentifier: String = config.devIdentifier
+  override val region: String = config.region
+
+  val kinesisCredentialsProvider: AWSCredentialsProviderChain = config.kinesisAwsCredentials
 
   val dynamoCredentialsProvider: AWSCredentialsProviderChain = kinesisCredentialsProvider
 
@@ -44,7 +49,8 @@ object ProductionMetricsStreamReader {
     checkpointInterval: Duration = 30.seconds,
     maxCheckpointBatchSize: Int = 20)
     extends EventProcessor[KinesisEvent](checkpointInterval, maxCheckpointBatchSize)
-      with SingleEventProcessor[KinesisEvent] {
+      with SingleEventProcessor[KinesisEvent]
+      with Logging {
 
     def isActivated = true
 
@@ -55,14 +61,14 @@ object ProductionMetricsStreamReader {
       val eventType = event.eventType
       eventType match {
         case CapiContent => processCapiEvent(event.eventJson)
-        case _ => Logger.error(s"Invalid event type on kinesis stream could not be processed $event")
+        case _ => logger.error(s"Invalid event type on kinesis stream could not be processed $event")
       }
     }
 
     private def processCapiEvent(json: Json): Unit =
       Parser.jsonToCapiData(json) match {
-        case Right(data) => putCapiDataInDB(data).fold(err => Logger.error(s"Error while trying to save CAPI data in db $err"), _ => ())
-        case Left(error) => Logger.error(error.message)
+        case Right(data) => putCapiDataInDB(data).fold(err => logger.error(s"Error while trying to save CAPI data in db $err"), _ => ())
+        case Left(error) => logger.error(error.message)
       }
 
 

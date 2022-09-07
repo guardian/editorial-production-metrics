@@ -7,10 +7,10 @@ import io.circe.{Json, parser}
 import models.db.Metric
 import models.db.Metric._
 import models.{CommissioningDesks, ProductionMetricsError}
-import play.api.Logger
+import play.api.Logging
 import util.Utils._
 
-object Parser {
+object Parser extends Logging {
 
   def stringToKinesisEvent(atomString: String): Either[ProductionMetricsError, KinesisEvent] = for {
     json <- stringToJson(atomString)
@@ -25,7 +25,7 @@ object Parser {
 
   def jsonToMetricOpt(json: Json): Either[ProductionMetricsError, MetricOpt] =
     json.as[MetricOpt].fold(err => {
-      Logger.error(s"Json parsing failed for $json with error: ${err.message}")
+      logger.error(s"Json parsing failed for $json with error: ${err.message}")
       processException(err)
     }, m => Right(m))
 
