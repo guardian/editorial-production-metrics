@@ -5,7 +5,7 @@ deployments:
   editorial-production-metrics:
     type: autoscaling
     parameters:
-      bucket: composer-dist
+      bucketSsmLookup: true
     dependencies:
     - editorial-production-metrics-ami-update
   editorial-production-metrics-ami-update:
