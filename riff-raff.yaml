@@ -4,8 +4,6 @@ stacks: [flexible]
 deployments:
   editorial-production-metrics:
     type: autoscaling
-    parameters:
-      bucketSsmLookup: true
     dependencies:
     - editorial-production-metrics-ami-update
   editorial-production-metrics-ami-update:
