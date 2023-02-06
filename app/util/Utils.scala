@@ -37,6 +37,6 @@ object Utils extends Logging {
     OriginatingSystem.withNameOption(originatingSystem).fold(Left(InvalidOriginatingSystem):Either[ProductionMetricsError, OriginatingSystem])(Right(_))
 
   def getTrackingTags(wsClient: WSClient, tagManagerUrl: String): Either[ProductionMetricsError, WSResponse] = await {
-    wsClient.url(tagManagerUrl).addQueryStringParameters(List(("type", "Tracking"),("limit", "100")):_*).get
+    wsClient.url(tagManagerUrl).addQueryStringParameters(List(("type", "Tracking"),("limit", "100")):_*).get()
   }
 }
