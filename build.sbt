@@ -3,11 +3,11 @@ import scala.sys.process._
 name := "editorial-production-metrics"
 version := "1.0"
 
-ThisBuild / scalaVersion := "2.12.15"
+ThisBuild / scalaVersion := "2.13.10"
 
 scalacOptions ++= Seq(
   "-deprecation",
-  "-Ywarn-unused-import")
+  "-Ywarn-unused:imports")
 
 lazy val awsVersion = "1.11.678"
 
@@ -17,7 +17,7 @@ val databaseDependencies = Seq(
   jdbc,
   "com.typesafe.slick"   %% "slick"             % "3.3.3",
   "com.typesafe.slick"   %% "slick-hikaricp"    % "3.3.3",
-  "com.github.tototoshi" %% "slick-joda-mapper" % "2.3.0",
+  "com.github.tototoshi" %% "slick-joda-mapper" % "2.6.0",
   "org.postgresql"       % "postgresql"         % "9.4-1206-jdbc41",
   "joda-time"            % "joda-time"          % "2.7",
   "org.joda"             % "joda-convert"       % "1.7"
@@ -26,27 +26,39 @@ val databaseDependencies = Seq(
 lazy val sharedDependencies = Seq(
   "com.amazonaws"          % "aws-java-sdk-core"                 % awsVersion,
   "com.amazonaws"          % "amazon-kinesis-client"             % "1.7.6",
-  "io.circe"               %% "circe-parser"                     % "0.12.1",
-  "io.circe"               %% "circe-generic"                    % "0.12.1",
-  "com.beachape"           %% "enumeratum-circe"                 % "1.5.14",
-  "com.gu"                 %% "editorial-production-metrics-lib" % "0.19"
+  "com.gu"                 %% "editorial-production-metrics-lib" % "0.20-SNAPSHOT"
+)
+
+// these Jackson dependencies are required to resolve issues in Play 2.8.x https://github.com/orgs/playframework/discussions/11222
+lazy val jacksonVersion = "2.13.4"
+lazy val jacksonDatabindVersion = "2.13.4.2"
+val jacksonOverrides = Seq(
+  "com.fasterxml.jackson.core" % "jackson-core",
+  "com.fasterxml.jackson.core" % "jackson-annotations",
+  "com.fasterxml.jackson.datatype" % "jackson-datatype-jdk8",
+  "com.fasterxml.jackson.datatype" % "jackson-datatype-jsr310",
+  "com.fasterxml.jackson.module" %% "jackson-module-scala",
+).map(_ % jacksonVersion)
+
+val jacksonDatabindOverrides = Seq(
+  "com.fasterxml.jackson.core" % "jackson-databind" % jacksonDatabindVersion
 )
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala, RiffRaffArtifact, JDebPackaging, SystemdPlugin)
   .settings(Defaults.coreDefaultSettings: _*)
   .settings(
     libraryDependencies ++= Seq(
-      "com.dripower"           %% "play-circe"                   % "2712.0",
+      "com.dripower"           %% "play-circe"                   % "2814.2",
       "ch.qos.logback"         % "logback-core"                  % "1.2.7",
       "ch.qos.logback"         % "logback-classic"               % "1.2.7",
       "com.amazonaws"          % "aws-java-sdk-ec2"              % awsVersion,
       "net.logstash.logback"   % "logstash-logback-encoder"      % "6.6",
       "com.gu"                 %% "simple-configuration-ssm"     % "1.5.6",
-      "com.gu"                 %% "panda-hmac-play_2-7"          % "2.0.1",
+      "com.gu"                 %% "panda-hmac-play_2-8"          % "2.1.0",
       "org.postgresql"         % "postgresql"                    % "42.1.1",
-      "org.scalatest"          %% "scalatest"                    % "3.0.1" % "test",
+      "org.scalatest"          %% "scalatest"                    % "3.2.15" % "test",
       "org.mockito"            % "mockito-core"                  % "1.9.5" % "test"
-    ) ++ sharedDependencies ++ databaseDependencies,
+    ) ++ sharedDependencies ++ databaseDependencies ++ jacksonOverrides ++ jacksonDatabindOverrides,
     routesGenerator := InjectedRoutesGenerator,
 
     Universal / name := normalizedName.value,

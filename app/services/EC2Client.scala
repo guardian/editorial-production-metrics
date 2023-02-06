@@ -5,7 +5,7 @@ import com.amazonaws.services.ec2.AmazonEC2ClientBuilder
 import com.amazonaws.services.ec2.model.{DescribeTagsRequest, Filter}
 import com.amazonaws.util.EC2MetadataUtils
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 
 object EC2Client {
