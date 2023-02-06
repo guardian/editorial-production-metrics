@@ -6,9 +6,8 @@ import com.amazonaws.services.s3.{AmazonS3, AmazonS3ClientBuilder}
 import com.gu.{AppIdentity, AwsIdentity, DevIdentity}
 import com.typesafe.config.Config
 import play.api.Configuration
-import services.AwsInstanceTags
 
-class AppConfig(playConfig: Configuration, identity: AppIdentity) extends AwsInstanceTags {
+class AppConfig(playConfig: Configuration, identity: AppIdentity) {
   val config: Config = playConfig.underlying
 
   val (appName, stage, stack, region) = identity match {
@@ -29,19 +28,14 @@ class AppConfig(playConfig: Configuration, identity: AppIdentity) extends AwsIns
 
   val pandaDomain: String = config.getString("panda.domain")
   val pandaAuthCallback: String = config.getString("panda.authCallback")
-  val pandaSystem: String = config.getString("panda.system")
   val pandaS3Client: AmazonS3 = AmazonS3ClientBuilder.standard().withCredentials(pandaAwsCredentials).withRegion(region).build()
 
-  val elkKinesisStream: String = config.getString("elk.kinesis.stream")
-  val elkLoggingEnabled: Boolean = getPropertyWithDefault("elk.logging.enabled", config.getBoolean, default = true)
-
   val publishingMetricsKinesisStream: String = config.getString("kinesis.publishingMetricsStream")
-
-  val tagManagerUrl: String = getPropertyWithDefault("tagManager.url", config.getString, default = "https://tagmanager.gutools.co.uk") + "/hyper/tags"
 
   //This is for uniquely identifying the kinesis application when running the app locally on multiple DEV machines
   val devIdentifier: String = if(stage == "DEV") config.getString("user.name") else ""
 
+  val tagManagerUrl: String = config.getString("tagManager.url") + "/hyper/tags"
   val workflowUrl: String =  config.getString("workflow.url")
 
   val hmacSecret: String = config.getString("hmacSecret")

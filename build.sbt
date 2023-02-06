@@ -18,14 +18,14 @@ val databaseDependencies = Seq(
   "com.typesafe.slick"   %% "slick"             % "3.4.1",
   "com.typesafe.slick"   %% "slick-hikaricp"    % "3.4.1",
   "com.github.tototoshi" %% "slick-joda-mapper" % "2.6.0",
-  "org.postgresql"       % "postgresql"         % "42.5.3",
-  "joda-time"            % "joda-time"          % "2.12.2",
-  "org.joda"             % "joda-convert"       % "2.2.2"
+  "org.postgresql"       %  "postgresql"        % "42.5.3",
+  "joda-time"            %  "joda-time"         % "2.12.2",
+  "org.joda"             %  "joda-convert"      % "2.2.2"
 )
 
 lazy val sharedDependencies = Seq(
-  "com.amazonaws"          % "aws-java-sdk-core"                 % awsVersion,
-  "com.amazonaws"          % "amazon-kinesis-client"             % "1.14.9",
+  "com.amazonaws"          %  "aws-java-sdk-core"                % awsVersion,
+  "com.amazonaws"          %  "amazon-kinesis-client"            % "1.14.9",
   "com.gu"                 %% "editorial-production-metrics-lib" % "0.20-SNAPSHOT"
 )
 
@@ -33,11 +33,11 @@ lazy val sharedDependencies = Seq(
 lazy val jacksonVersion = "2.13.4"
 lazy val jacksonDatabindVersion = "2.13.4.2"
 val jacksonOverrides = Seq(
-  "com.fasterxml.jackson.core" % "jackson-core",
-  "com.fasterxml.jackson.core" % "jackson-annotations",
-  "com.fasterxml.jackson.datatype" % "jackson-datatype-jdk8",
-  "com.fasterxml.jackson.datatype" % "jackson-datatype-jsr310",
-  "com.fasterxml.jackson.module" %% "jackson-module-scala",
+  "com.fasterxml.jackson.core"     %  "jackson-core",
+  "com.fasterxml.jackson.core"     %  "jackson-annotations",
+  "com.fasterxml.jackson.datatype" %  "jackson-datatype-jdk8",
+  "com.fasterxml.jackson.datatype" %  "jackson-datatype-jsr310",
+  "com.fasterxml.jackson.module"   %% "jackson-module-scala",
 ).map(_ % jacksonVersion)
 
 val jacksonDatabindOverrides = Seq(
@@ -49,10 +49,7 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala, RiffRaffArtifact
   .settings(
     libraryDependencies ++= Seq(
       "com.dripower"           %% "play-circe"                   % "2814.2",
-      "ch.qos.logback"         % "logback-core"                  % "1.2.7",
-      "ch.qos.logback"         % "logback-classic"               % "1.2.7",
-      "com.amazonaws"          % "aws-java-sdk-ec2"              % awsVersion,
-      "net.logstash.logback"   % "logstash-logback-encoder"      % "7.2",
+      "net.logstash.logback"   %  "logstash-logback-encoder"     % "7.2",
       "com.gu"                 %% "simple-configuration-ssm"     % "1.5.7",
       "com.gu"                 %% "panda-hmac-play_2-8"          % "2.1.0",
       "org.scalatest"          %% "scalatest"                    % "3.2.15" % "test",
@@ -64,9 +61,6 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala, RiffRaffArtifact
     topLevelDirectory := Some(normalizedName.value),
     riffRaffPackageName := name.value,
     riffRaffManifestProjectName := s"editorial-tools:${name.value}",
-    riffRaffUploadArtifactBucket := Option("riffraff-artifact"),
-    riffRaffUploadManifestBucket := Option("riffraff-builds"),
-
     riffRaffPackageType := (Debian / packageBin).value,
 
     debianPackageDependencies := Seq("openjdk-8-jre-headless"),
