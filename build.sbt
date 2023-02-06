@@ -57,7 +57,7 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala, RiffRaffArtifact
       "com.gu"                 %% "panda-hmac-play_2-8"          % "2.1.0",
       "org.postgresql"         % "postgresql"                    % "42.1.1",
       "org.scalatest"          %% "scalatest"                    % "3.2.15" % "test",
-      "org.mockito"            % "mockito-core"                  % "1.9.5" % "test"
+      "org.scalatestplus"      %% "mockito-4-6"                  % "3.2.15.0" % "test"
     ) ++ sharedDependencies ++ databaseDependencies ++ jacksonOverrides ++ jacksonDatabindOverrides,
     routesGenerator := InjectedRoutesGenerator,
 
