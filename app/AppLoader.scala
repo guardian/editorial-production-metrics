@@ -2,10 +2,9 @@ import software.amazon.awssdk.auth.credentials.{AwsCredentialsProvider, DefaultC
 import com.gu.{AppIdentity, AwsIdentity, DevIdentity}
 
 import java.util.TimeZone
-import play.api.{Application, ApplicationLoader, LoggerConfigurator}
+import play.api.{Application, ApplicationLoader, LoggerConfigurator, Configuration}
 import play.api.ApplicationLoader.Context
 import com.gu.conf.{ConfigurationLoader, FileConfigurationLocation, SSMConfigurationLocation}
-import play.api._
 
 import java.io.File
 
@@ -39,7 +38,10 @@ class AppLoader extends ApplicationLoader {
         FileConfigurationLocation(new File(s"$home/.gu/$defaultAppName.conf"))
     }
 
-    new AppComponents(context.copy(initialConfiguration = context.initialConfiguration ++ Configuration(loadedConfig)), identity).application
+    new AppComponents(context.copy(
+      initialConfiguration = Configuration(loadedConfig).withFallback(context.initialConfiguration)),
+      identity
+    ).application
   }
 
 }

@@ -1,8 +1,8 @@
-addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.7.0")
+addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.8.18")
 
 addSbtPlugin("com.gu" % "sbt-riffraff-artifact" % "1.1.18")
 
-libraryDependencies += "org.vafer" % "jdeb" % "1.10" artifacts (Artifact("jdeb", "jar", "jar"))
+libraryDependencies += "org.vafer" % "jdeb" % "1.10" artifacts Artifact("jdeb", "jar", "jar")
 
 addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.10.4")
 
