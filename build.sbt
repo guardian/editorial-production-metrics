@@ -9,23 +9,23 @@ scalacOptions ++= Seq(
   "-deprecation",
   "-Ywarn-unused:imports")
 
-lazy val awsVersion = "1.11.678"
+lazy val awsVersion = "1.12.400"
 
 val databaseDependencies = Seq(
   ws,
   evolutions,
   jdbc,
-  "com.typesafe.slick"   %% "slick"             % "3.3.3",
-  "com.typesafe.slick"   %% "slick-hikaricp"    % "3.3.3",
+  "com.typesafe.slick"   %% "slick"             % "3.4.1",
+  "com.typesafe.slick"   %% "slick-hikaricp"    % "3.4.1",
   "com.github.tototoshi" %% "slick-joda-mapper" % "2.6.0",
-  "org.postgresql"       % "postgresql"         % "9.4-1206-jdbc41",
-  "joda-time"            % "joda-time"          % "2.7",
-  "org.joda"             % "joda-convert"       % "1.7"
+  "org.postgresql"       % "postgresql"         % "42.5.3",
+  "joda-time"            % "joda-time"          % "2.12.2",
+  "org.joda"             % "joda-convert"       % "2.2.2"
 )
 
 lazy val sharedDependencies = Seq(
   "com.amazonaws"          % "aws-java-sdk-core"                 % awsVersion,
-  "com.amazonaws"          % "amazon-kinesis-client"             % "1.7.6",
+  "com.amazonaws"          % "amazon-kinesis-client"             % "1.14.9",
   "com.gu"                 %% "editorial-production-metrics-lib" % "0.20-SNAPSHOT"
 )
 
@@ -52,10 +52,9 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala, RiffRaffArtifact
       "ch.qos.logback"         % "logback-core"                  % "1.2.7",
       "ch.qos.logback"         % "logback-classic"               % "1.2.7",
       "com.amazonaws"          % "aws-java-sdk-ec2"              % awsVersion,
-      "net.logstash.logback"   % "logstash-logback-encoder"      % "6.6",
+      "net.logstash.logback"   % "logstash-logback-encoder"      % "7.2",
       "com.gu"                 %% "simple-configuration-ssm"     % "1.5.6",
       "com.gu"                 %% "panda-hmac-play_2-8"          % "2.1.0",
-      "org.postgresql"         % "postgresql"                    % "42.1.1",
       "org.scalatest"          %% "scalatest"                    % "3.2.15" % "test",
       "org.scalatestplus"      %% "mockito-4-6"                  % "3.2.15.0" % "test"
     ) ++ sharedDependencies ++ databaseDependencies ++ jacksonOverrides ++ jacksonDatabindOverrides,
