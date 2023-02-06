@@ -1,7 +1,9 @@
+import scala.sys.process._
+
 name := "editorial-production-metrics"
 version := "1.0"
 
-scalaVersion in ThisBuild := "2.12.15"
+ThisBuild / scalaVersion := "2.12.15"
 
 scalacOptions ++= Seq(
   "-deprecation",
@@ -47,21 +49,21 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala, RiffRaffArtifact
     ) ++ sharedDependencies ++ databaseDependencies,
     routesGenerator := InjectedRoutesGenerator,
 
-    name in Universal := normalizedName.value,
+    Universal / name := normalizedName.value,
     topLevelDirectory := Some(normalizedName.value),
     riffRaffPackageName := name.value,
     riffRaffManifestProjectName := s"editorial-tools:${name.value}",
     riffRaffUploadArtifactBucket := Option("riffraff-artifact"),
     riffRaffUploadManifestBucket := Option("riffraff-builds"),
 
-    riffRaffPackageType := (packageBin in Debian).value,
+    riffRaffPackageType := (Debian / packageBin).value,
 
     debianPackageDependencies := Seq("openjdk-8-jre-headless"),
     maintainer := "Editorial Tools <digitalcms.dev@guardian.co.uk>",
     packageSummary := "Editorial Production Metrics",
     packageDescription := """Metrics about the editorial production process""",
 
-    javaOptions in Universal ++= Seq(
+    Universal / javaOptions ++= Seq(
       "-Dpidfile.path=/dev/null"
     )
   )
@@ -70,15 +72,15 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala, RiffRaffArtifact
 
 lazy val IntegrationTests = config("it").extend(Test)
 
-sourceDirectory in IntegrationTests := baseDirectory.value / "/test-integration"
+IntegrationTests / sourceDirectory := baseDirectory.value / "/test-integration"
 
-javaSource in IntegrationTests := baseDirectory.value / "/test-integration"
+IntegrationTests / javaSource := baseDirectory.value / "/test-integration"
 
-resourceDirectory in IntegrationTests := baseDirectory.value / "/test-integration/resources"
+IntegrationTests / resourceDirectory := baseDirectory.value / "/test-integration/resources"
 
-scalaSource in IntegrationTests := baseDirectory.value / "/test-integration"
+IntegrationTests / scalaSource := baseDirectory.value / "/test-integration"
 
-testOptions in IntegrationTests += Tests.Setup(_ => {
+IntegrationTests / testOptions += Tests.Setup(_ => {
   println(s"Launching docker container with PostgreSQL")
   s"docker-compose up -d".!
 
@@ -88,8 +90,5 @@ testOptions in IntegrationTests += Tests.Setup(_ => {
 
 addCommandAlias("testAll", "; test ; it:test")
 
-lazy val kinesisLocal = (project in file("kinesisLocal"))
-  .settings(
-    name := "kinesis-local",
-    libraryDependencies ++= sharedDependencies
-  )
+lazy val kinesisLocal = Project("kinesis-local", file("kinesisLocal"))
+  .settings(libraryDependencies ++= sharedDependencies)
