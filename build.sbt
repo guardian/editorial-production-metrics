@@ -53,7 +53,7 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala, RiffRaffArtifact
       "ch.qos.logback"         % "logback-classic"               % "1.2.7",
       "com.amazonaws"          % "aws-java-sdk-ec2"              % awsVersion,
       "net.logstash.logback"   % "logstash-logback-encoder"      % "7.2",
-      "com.gu"                 %% "simple-configuration-ssm"     % "1.5.6",
+      "com.gu"                 %% "simple-configuration-ssm"     % "1.5.7",
       "com.gu"                 %% "panda-hmac-play_2-8"          % "2.1.0",
       "org.scalatest"          %% "scalatest"                    % "3.2.15" % "test",
       "org.scalatestplus"      %% "mockito-4-6"                  % "3.2.15.0" % "test"

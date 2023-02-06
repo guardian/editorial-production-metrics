@@ -1,10 +1,10 @@
-import software.amazon.awssdk.auth.credentials.{AwsCredentialsProvider, DefaultCredentialsProvider, ProfileCredentialsProvider}
 import com.gu.{AppIdentity, AwsIdentity, DevIdentity}
 
 import java.util.TimeZone
-import play.api.{Application, ApplicationLoader, LoggerConfigurator, Configuration}
+import play.api.{Application, ApplicationLoader, Configuration, LoggerConfigurator}
 import play.api.ApplicationLoader.Context
 import com.gu.conf.{ConfigurationLoader, FileConfigurationLocation, SSMConfigurationLocation}
+import config.AWS.credentials
 
 import java.io.File
 
@@ -24,14 +24,9 @@ class AppLoader extends ApplicationLoader {
     TimeZone.setDefault(TimeZone.getTimeZone("UTC"))
 
     val defaultAppName = "editorial-production-metrics"
-    val identity = AppIdentity.whoAmI(defaultAppName)
+    val identity: AppIdentity = AppIdentity.whoAmI(defaultAppName, credentials).getOrElse(DevIdentity(defaultAppName))
 
-    val awsCredentials: AwsCredentialsProvider = identity match {
-      case _: DevIdentity => ProfileCredentialsProvider.create("composer")
-      case _ => DefaultCredentialsProvider.create()
-    }
-
-    val loadedConfig = ConfigurationLoader.load(identity, awsCredentials) {
+    val loadedConfig = ConfigurationLoader.load(identity, credentials) {
       case identity: AwsIdentity => SSMConfigurationLocation.default(identity)
       case _: DevIdentity =>
         val home = System.getProperty("user.home")
