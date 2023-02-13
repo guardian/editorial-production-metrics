@@ -26,7 +26,7 @@ val databaseDependencies = Seq(
 lazy val sharedDependencies = Seq(
   "com.amazonaws"          %  "aws-java-sdk-core"                % awsVersion,
   "com.amazonaws"          %  "amazon-kinesis-client"            % "1.14.9",
-  "com.gu"                 %% "editorial-production-metrics-lib" % "0.20-SNAPSHOT"
+  "com.gu"                 %% "editorial-production-metrics-lib" % "0.20"
 )
 
 // these Jackson dependencies are required to resolve issues in Play 2.8.x https://github.com/orgs/playframework/discussions/11222
