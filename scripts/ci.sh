@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 echo "##teamcity[compilationStarted compiler='yarn']"
 npm install --global yarn
 yarn install
