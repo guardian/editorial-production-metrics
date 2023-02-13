@@ -109,6 +109,6 @@ object Filters {
   private def commonFilters(metric: Schema.DBMetric)(implicit filters: Filters): Rep[Option[Boolean]] = {
     import MetricHelpers._
     filters.desk.fold(TrueOptCol)(d => metric.commissioningDesk.toLowerCase === d.toLowerCase) &&
-      filters.productionOffice.fold(TrueOptCol)(po => metric.productionOffice === po)
+      filters.productionOffice.fold(TrueOptCol)(po => metric.productionOffice.? === Option(po))
   }
 }

@@ -14,7 +14,7 @@ object Schema {
   class DBMetric(tag: Tag) extends Table[Metric](tag, "metrics") {
     import MetricHelpers._
     def id                    = column[String]("id", O.PrimaryKey)
-    def originatingSystem     = column[OriginatingSystem]("originating_system")
+    def originatingSystem     = column[OriginatingSystem]("originating_system")(originatingSystemEncDec)
     def composerId            = column[Option[String]]("composer_id")
     def storyBundleId         = column[Option[String]]("story_bundle_id")
     def commissioningDesk     = column[Option[String]]("commissioning_desk")
@@ -24,7 +24,7 @@ object Schema {
     def creationTime          = column[DateTime]("creation_time")
     def firstPublicationTime  = column[Option[DateTime]]("publication_time")
     def roundTrip             = column[Boolean]("round_trip")
-    def productionOffice      = column[Option[ProductionOffice]]("production_office")
+    def productionOffice      = column[Option[ProductionOffice]]("production_office")(productionOfficeEncDec)
     def issueDate             = column[Option[DateTime]]("issue_date")
     def bookSectionName       = column[Option[String]]("book_section_name")
     def bookSectionCode       = column[Option[String]]("book_section_code")
@@ -83,5 +83,5 @@ object Schema {
 
 object MetricHelpers {
   implicit val originatingSystemEncDec = MappedColumnType.base[OriginatingSystem, String](os => os.entryName, name => OriginatingSystem.withName(name))
-  implicit val productionOfficeEncDec = MappedColumnType.base[ProductionOffice, String](po => po.entryName, name => ProductionOffice.withName(name))
+  implicit val productionOfficeEncDec = MappedColumnType.base[Option[ProductionOffice], String](po => po.map(_.entryName).getOrElse(""), name => ProductionOffice.withNameOption(name))
 }
