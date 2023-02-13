@@ -62,7 +62,8 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala, RiffRaffArtifact
     riffRaffPackageName := name.value,
     riffRaffManifestProjectName := s"editorial-tools:${name.value}",
     riffRaffPackageType := (Debian / packageBin).value,
-
+    riffRaffUploadArtifactBucket := Option("riffraff-artifact"),
+    riffRaffUploadManifestBucket := Option("riffraff-builds"),
     debianPackageDependencies := Seq("openjdk-8-jre-headless"),
     maintainer := "Editorial Tools <digitalcms.dev@guardian.co.uk>",
     packageSummary := "Editorial Production Metrics",
