@@ -2,20 +2,20 @@ GET     /api/originatingSystem/:system             controllers.Application.getSt
 GET     /api/commissioningDesks                    controllers.Application.getCommissioningDeskList
 GET     /api/inWorkflow/:inWorkflow                controllers.Application.getWorkflowData(inWorkflow: Boolean)
 GET     /api/fork/*newspaperBook                   controllers.Application.getForks(newspaperBook: String)
-GET     /api/newspaperBooks                        controllers.Application.getNewspaperBookList
-GET     /api/wordCount/articles                    controllers.Application.getArticlesWithWordCounts
-GET     /api/wordCount/grouped/finalLength         controllers.Application.getArticlesGroupedByFinalLength
-GET     /api/wordCount/grouped/commissionedLength  controllers.Application.getArticlesGroupedByCommissionedLength
+GET     /api/newspaperBooks                        controllers.Application.getNewspaperBookList()
+GET     /api/wordCount/articles                    controllers.Application.getArticlesWithWordCounts()
+GET     /api/wordCount/grouped/finalLength         controllers.Application.getArticlesGroupedByFinalLength()
+GET     /api/wordCount/grouped/commissionedLength  controllers.Application.getArticlesGroupedByCommissionedLength()
 
 # endpoints for posting data from other apps
 OPTIONS /api/metric/*url                  controllers.Application.allowCORSAccess(methods = "PUT, POST, DELETE", url: String)
 POST    /api/metric/digital               controllers.Application.upsertMetric()
 POST    /api/metric/fork                  controllers.Application.insertFork()
 
-GET     /healthcheck                      controllers.Healthcheck.healthcheck
+GET     /healthcheck                      controllers.Healthcheck.healthcheck()
 
-GET     /oauthCallback                    controllers.Login.oauthCallback
-GET     /reauth                           controllers.Login.reauth
+GET     /oauthCallback                    controllers.Login.oauthCallback()
+GET     /reauth                           controllers.Login.reauth()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file                     controllers.Assets.versioned(path="/public", file: Asset)

@@ -1,8 +1,9 @@
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
+
 import java.util.TimeZone
 
-import org.scalatest.{FunSuite, Matchers}
-
-class BaseSuite extends FunSuite with Matchers {
+class BaseSuite extends AnyFunSuite with Matchers {
   System.setProperty("user.timezone", "UTC")
   TimeZone.setDefault(TimeZone.getTimeZone("UTC"))
 }

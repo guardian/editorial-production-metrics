@@ -29,7 +29,7 @@ trait PostgresHelpers extends Suite with BeforeAndAfterAll with BeforeAndAfterEa
   )
   implicit lazy val db: Database = Database.forURL(setupJdbcUrl, driver = driver, user = testDbUser, password = testDbPassword)
 
-  override def beforeAll() {
+  override def beforeAll(): Unit = {
     Evolutions.applyEvolutions(database)
 
     await(db.run(DBIO.seq(
@@ -40,7 +40,7 @@ trait PostgresHelpers extends Suite with BeforeAndAfterAll with BeforeAndAfterEa
     TestData.setup
   }
 
-  override def afterAll() {
+  override def afterAll(): Unit = {
     await(db.run(DBIO.seq(
       sqlu"DELETE FROM forks",
       sqlu"DELETE FROM metrics"

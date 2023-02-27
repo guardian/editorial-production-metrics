@@ -6,13 +6,12 @@ import helpers.{PostgresHelpers, TestData}
 import models.ProductionMetricsError
 import models.db.{Filters, ForkResponse, Metric}
 import org.joda.time.DateTime
-import org.scalatest.mockito.MockitoSugar
-import org.scalatest.{FunSuite, Matchers}
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
+import org.scalatestplus.mockito.MockitoSugar
 import play.api.mvc.Results
 
-import scala.util.Right
-
-class MetricsDBSpec extends FunSuite with MockitoSugar with Matchers with Results with PostgresHelpers {
+class MetricsDBSpec extends AnyFunSuite with MockitoSugar with Matchers with Results with PostgresHelpers {
   implicit val metricsDb: MetricsDB = new MetricsDB()
 
   private[this] def metricToMetricOpt(metric: Metric): MetricOpt = MetricOpt(
@@ -41,7 +40,7 @@ class MetricsDBSpec extends FunSuite with MockitoSugar with Matchers with Result
     val result: Either[ProductionMetricsError, Metric] = metricsDb.updateOrInsert(None, metricToMetricOpt(testMetric))
     result shouldBe a [Right[_,_]]
 
-    val actualMetric = result.right.get
+    val actualMetric = result.toOption.get
     val expectedMetric = testMetric.copy(id = actualMetric.id)
     actualMetric shouldBe expectedMetric
   }
@@ -54,7 +53,7 @@ class MetricsDBSpec extends FunSuite with MockitoSugar with Matchers with Result
     val result: Either[ProductionMetricsError, Metric] = metricsDb.updateOrInsert(Some(testMetric), updatedMetricOpt)
     result shouldBe a [Right[_,_]]
 
-    val actualMetric = result.right.get
+    val actualMetric = result.toOption.get
     val expectedMetric = testMetric.copy(commissioningDesk = updatedMetricOpt.commissioningDesk)
     actualMetric shouldBe expectedMetric
   }
@@ -72,7 +71,7 @@ class MetricsDBSpec extends FunSuite with MockitoSugar with Matchers with Result
     val getFilteredForks = metricsDb.getForks(Filters(desk = Some("testFilters")))
     getFilteredForks shouldBe a [Right[_,_]]
 
-    val filteredResult = getFilteredForks.right.get
+    val filteredResult = getFilteredForks.toOption.get
     filteredResult should have length 2
 
     val expectedResult: List[ForkResponse] = List(ForkResponse(new DateTime("2017-01-01"), 1234), ForkResponse(new DateTime("2017-11-11"), 4321))

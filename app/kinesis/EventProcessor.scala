@@ -2,7 +2,6 @@ package lib.kinesis
 
 import java.util.concurrent.atomic.{AtomicInteger, AtomicLong}
 import java.util.{List => JList}
-
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.{IRecordProcessor, IRecordProcessorCheckpointer}
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.ShutdownReason
 import com.amazonaws.services.kinesis.model.Record
@@ -12,7 +11,8 @@ import models.ProductionMetricsError
 import play.api.Logging
 import util.Parser._
 
-import scala.collection.JavaConverters._
+import scala.collection.mutable
+import scala.jdk.CollectionConverters._
 import scala.concurrent.duration._
 
 abstract class EventProcessor[T <: KinesisEvent](
@@ -68,7 +68,7 @@ abstract class EventProcessor[T <: KinesisEvent](
     }
   }
 
-  protected def processEvents(events: Seq[EventWithSize[KinesisEvent]]): Unit
+  protected def processEvents(events: mutable.Buffer[EventWithSize[KinesisEvent]]): Unit
 
   /* Checkpoint after every X seconds or every Y records */
   private def shouldCheckpointNow =
@@ -96,7 +96,7 @@ abstract class EventProcessor[T <: KinesisEvent](
 
 trait SingleEventProcessor[T <: KinesisEvent] extends EventProcessor[T] {
 
-  override protected def processEvents(events: Seq[EventWithSize[KinesisEvent]]) = events foreach processEvent
+  override protected def processEvents(events: mutable.Buffer[EventWithSize[KinesisEvent]]) = events foreach processEvent
   protected def processEvent(eventWithSize: EventWithSize[KinesisEvent]): Unit
 
 }

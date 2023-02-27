@@ -11,7 +11,7 @@ import util.AsyncHelpers.await
 
 object TestData {
   private[this] val sampleSize = 50
-  private[this] val random = new scala.util.Random(scala.util.Random.nextLong)
+  private[this] val random = new scala.util.Random(scala.util.Random.nextLong())
   private[this] val composerIds = composerIdsGenerator(Nil, sampleSize)
   private[this] val originatingSystems: List[OriginatingSystem] = OriginatingSystem.values.toList
   private[this] val commissioningDesks: List[String] = List("tracking/commissioningdesk/uk-science", "tracking/commissioningdesk/cities", "tracking/commissioningdesk/uk-culture")
@@ -41,7 +41,7 @@ object TestData {
 
   private[this] def chooseDate: DateTime = DateTime.now().minusHours(random.nextInt(24 * 50))
 
-  private[this] def chooseInt: Int = Math.abs(random.nextInt)
+  private[this] def chooseInt: Int = Math.abs(random.nextInt())
 
   private[this] def opt[A](a: A): Option[A] = if (chooseBool) Some(a) else None
 
