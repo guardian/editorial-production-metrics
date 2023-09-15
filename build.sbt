@@ -44,7 +44,7 @@ val jacksonDatabindOverrides = Seq(
   "com.fasterxml.jackson.core" % "jackson-databind" % jacksonDatabindVersion
 )
 
-lazy val root = (project in file(".")).enablePlugins(PlayScala, RiffRaffArtifact, JDebPackaging, SystemdPlugin)
+lazy val root = (project in file(".")).enablePlugins(PlayScala, JDebPackaging, SystemdPlugin)
   .settings(Defaults.coreDefaultSettings: _*)
   .settings(
     libraryDependencies ++= Seq(
@@ -59,9 +59,6 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala, RiffRaffArtifact
 
     Universal / name := normalizedName.value,
     topLevelDirectory := Some(normalizedName.value),
-    riffRaffPackageName := name.value,
-    riffRaffManifestProjectName := s"editorial-tools:${name.value}",
-    riffRaffPackageType := (Debian / packageBin).value,
     debianPackageDependencies := Seq("openjdk-8-jre-headless"),
     maintainer := "Editorial Tools <digitalcms.dev@guardian.co.uk>",
     packageSummary := "Editorial Production Metrics",
