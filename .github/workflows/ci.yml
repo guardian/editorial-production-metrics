@@ -29,6 +29,17 @@ jobs:
 
       - uses: actions/checkout@v3
 
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+          cache: npm
+          cache-dependency-path: 'package-lock.json'
+
+      - name: JS Build
+        run: |
+          npm install
+          npm run build
+
       - uses: actions/setup-java@v3
         with:
           java-version: '8'
@@ -37,7 +48,7 @@ jobs:
 
       - name: Scala Build
         run: |
-          sbt clean compile test Debian/packageBin
+          sbt clean compile testAll Debian/packageBin
 
       # Fetch AWS credentials, allowing us to upload to Riff-Raff (well, S3)
       - uses: aws-actions/configure-aws-credentials@v2
