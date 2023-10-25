@@ -33,12 +33,12 @@ jobs:
         with:
           node-version-file: '.nvmrc'
           cache: npm
-          cache-dependency-path: 'package-lock.json'
+          cache-dependency-path: 'yarn.lock'
 
       - name: JS Build
         run: |
-          npm install
-          npm run build
+          yarn install
+          yarn build
 
       - uses: actions/setup-java@v3
         with:
