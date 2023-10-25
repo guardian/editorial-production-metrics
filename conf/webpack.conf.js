@@ -1,22 +1,23 @@
-var path = require("path");
-var ExtractTextPlugin = require("extract-text-webpack-plugin");
+const path = require("path");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
-module.exports = {
+module.exports = env => ({
     devtool: "source-map",
+    output: {
+        filename: 'app.js',
+        path:  path.resolve(__dirname,  '../public/build')
+    },
+    entry: path.resolve(__dirname, '../', 'public/js/index.js'),
+    mode: env.development ? "development" : "production",
     module: {
         rules: [
             {
                 test: /\.js$/,
                 exclude: /node_modules/,
-                loaders: {
+                use: {
                     loader: "babel-loader",
                     options: {
-                        presets: ["es2015", "react"],
-                        plugins: [
-                            "transform-object-assign",
-                            "transform-object-rest-spread",
-                            "transform-class-properties",
-                        ],
+                        presets: ["@babel/preset-env", "@babel/preset-react"],
                     },
                 },
             },
@@ -24,7 +25,7 @@ module.exports = {
                 enforce: "pre",
                 test: /\.js$/,
                 exclude: /node_modules/,
-                loaders: {
+                use: {
                     loader: "eslint-loader",
                     options: {
                         quiet: true,
@@ -36,39 +37,43 @@ module.exports = {
                 include: [
                     path.resolve(__dirname, "../node_modules/panda-session"),
                 ],
-                loaders: ["babel-loader"],
+                use: {
+                    loader: "babel-loader",
+                },
             },
             {
                 test: /\.scss$/,
-                loader: ExtractTextPlugin.extract({
-                    fallback: "style-loader",
-                    use: "css-loader?sourceMap!sass-loader?sourceMap",
-                }),
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    "css-loader",
+                    "sass-loader",
+                ],
             },
             {
                 test: /\.css$/,
-                loader: ExtractTextPlugin.extract({
-                    fallback: "style-loader",
-                    use: "css-loader?sourceMap",
-                }),
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    "css-loader",
+                ],
                 exclude: /flexboxgrid/,
             },
             {
                 test: /\.css$/,
-                loader: "style-loader!css-loader",
+                use: ["style-loader", "css-loader"],
                 include: /flexboxgrid/,
             },
             {
-                test: /\.woff(2)?(\?v=[0-9].[0-9].[0-9])?$/,
-                loader: "url-loader?mimetype=application/font-woff&limit=10000",
-            },
-            {
-                test: /\.(ttf|eot|svg|gif|png)(\?v=[0-9].[0-9].[0-9])?$/,
-                loader: "file-loader?name=[name].[ext]",
+                test: /\.(woff(2)?|ttf|eot|svg|gif|png)(\?v=[0-9].[0-9].[0-9])?$/,
+                use: {
+                    loader: "file-loader",
+                    options: {
+                        url: false,
+                        name: "[name].[ext]",
+                    },
+                },
             },
         ],
     },
-
     resolve: {
         extensions: [".js", ".jsx", ".json", ".scss"],
         alias: {
@@ -81,6 +86,7 @@ module.exports = {
             helpers: path.resolve(__dirname, "../public/js/helpers/"),
         },
     },
-
-    plugins: [new ExtractTextPlugin("main.css")],
-};
+    plugins: [new MiniCssExtractPlugin({
+        filename: "main.css"
+    })],
+});
