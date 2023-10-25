@@ -1,13 +1,14 @@
 const path = require("path");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
-module.exports = {
+module.exports = env => ({
     devtool: "source-map",
     output: {
         filename: 'app.js',
         path:  path.resolve(__dirname,  '../public/build')
     },
     entry: path.resolve(__dirname, '../', 'public/js/index.js'),
+    mode: env.development ? "development" : "production",
     module: {
         rules: [
             {
@@ -88,4 +89,4 @@ module.exports = {
     plugins: [new MiniCssExtractPlugin({
         filename: "main.css"
     })],
-};
+});
